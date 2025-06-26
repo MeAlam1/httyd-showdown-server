@@ -1,19 +1,19 @@
 {
-  "id": "hypnosis",
-  "name": "Hypnosis",
+  "id": "healing_algae",
+  "name": "Healing Algae",
   "description": "TBD",
   "type": "mystery",
   "category": "status",
   "power": 0,
-  "accuracy": 60,
+  "accuracy": 100,
   "pp": 10,
   "effect": {
-    "enemy": [
+    "self": [
       {
-        "status": "sleep",
+        "status": "health",
         "type": "percentage",
         "value": 25,
-        "chance": 90
+        "chance": 100
       }
     ]
   }

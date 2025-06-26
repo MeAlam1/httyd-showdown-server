@@ -1,0 +1,20 @@
+{
+  "id": "wing_shield",
+  "name": "Wing Shield",
+  "description": "TBD",
+  "type": "general",
+  "category": "status",
+  "power": 0,
+  "accuracy": 100,
+  "pp": 5,
+  "effect": {
+    "self": [
+      {
+        "status": "protect",
+        "type": "flat",
+        "value": 1,
+        "chance": 100
+      }
+    ]
+  }
+}

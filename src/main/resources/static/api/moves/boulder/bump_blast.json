@@ -1,0 +1,11 @@
+{
+  "id": "bump_blast",
+  "name": "Bump Blast",
+  "description": "TBD",
+  "type": "boulder",
+  "category": "ranged",
+  "power": 20,
+  "accuracy": 60,
+  "pp": 20,
+  "effect": {}
+}

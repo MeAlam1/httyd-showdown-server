@@ -1,8 +1,8 @@
 {
-  "id": "fire_veil",
-  "name": "Fire Veil",
+  "id": "electrical_field",
+  "name": "Electrical Field",
   "description": "TBD",
-  "type": "stoker",
+  "type": "strike",
   "category": "status",
   "power": 0,
   "accuracy": 90,
@@ -10,13 +10,7 @@
   "effect": {
     "self": [
       {
-        "status": "burn",
-        "type": "percentage",
-        "value": 25,
-        "chance": 100
-      },
-      {
-        "status": "health",
+        "status": "shocked",
         "type": "percentage",
         "value": 20,
         "chance": 100

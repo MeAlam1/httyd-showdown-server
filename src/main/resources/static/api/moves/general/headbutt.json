@@ -1,0 +1,20 @@
+{
+  "id": "headbutt",
+  "name": "Headbutt",
+  "description": "TBD",
+  "type": "general",
+  "category": "physical",
+  "power": 15,
+  "accuracy": 80,
+  "pp": 30,
+  "effect": {
+    "self": [
+      {
+        "status": "harm",
+        "type": "based_on_enemy",
+        "value": 5,
+        "chance": 95
+      }
+    ]
+  }
+}

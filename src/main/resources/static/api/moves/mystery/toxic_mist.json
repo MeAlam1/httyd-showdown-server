@@ -1,16 +1,16 @@
 {
-  "id": "spine_shot",
-  "name": "Spine Shot",
+  "id": "toxic_mist",
+  "name": "Toxic Mist",
   "description": "TBD",
-  "type": "tracker",
+  "type": "mystery",
   "category": "ranged",
-  "power": 20,
-  "accuracy": 40,
-  "pp": 20,
+  "power": 5,
+  "accuracy": 90,
+  "pp": 15,
   "effect": {
     "enemy": [
       {
-        "status": "poison",
+        "status": "paralysis",
         "type": "percentage",
         "value": 15,
         "chance": 100

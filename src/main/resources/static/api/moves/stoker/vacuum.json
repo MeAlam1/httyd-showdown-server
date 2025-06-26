@@ -1,0 +1,11 @@
+{
+  "id": "vacuum",
+  "name": "Vacuum",
+  "description": "TBD",
+  "type": "stoker",
+  "category": "ranged",
+  "power": 50,
+  "accuracy": 90,
+  "pp": 5,
+  "effect": {}
+}

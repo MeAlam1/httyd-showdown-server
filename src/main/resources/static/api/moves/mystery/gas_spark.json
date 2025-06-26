@@ -1,0 +1,20 @@
+{
+  "id": "gas_spark",
+  "name": "Gas Spark",
+  "description": "TBD",
+  "type": "mystery",
+  "category": "ranged",
+  "power": 15,
+  "accuracy": 80,
+  "pp": 20,
+  "effect": {
+    "enemy": [
+      {
+        "status": "burn",
+        "type": "percentage",
+        "value": 10,
+        "chance": 85
+      }
+    ]
+  }
+}

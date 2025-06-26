@@ -1,0 +1,28 @@
+{
+  "id": "flaming_wheel",
+  "name": "Flaming Wheel",
+  "description": "TBD",
+  "type": "mystery",
+  "category": "ranged",
+  "power": 15,
+  "accuracy": 75,
+  "pp": 15,
+  "effect": {
+    "enemy": [
+      {
+        "status": "stunned",
+        "type": "percentage",
+        "value": 20,
+        "chance": 100
+      }
+    ],
+    "self": [
+      {
+        "status": "burn",
+        "type": "percentage",
+        "value": 5,
+        "chance": 95
+      }
+    ]
+  }
+}

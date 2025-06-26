@@ -1,22 +1,22 @@
 {
-  "id": "fire_veil",
-  "name": "Fire Veil",
+  "id": "alpha",
+  "name": "Alpha",
   "description": "TBD",
-  "type": "stoker",
+  "type": "mystery",
   "category": "status",
   "power": 0,
   "accuracy": 90,
-  "pp": 15,
+  "pp": 5,
   "effect": {
-    "self": [
+    "enemy": [
       {
-        "status": "burn",
+        "status": "confusion",
         "type": "percentage",
-        "value": 25,
-        "chance": 100
+        "value": 35,
+        "chance": 90
       },
       {
-        "status": "health",
+        "status": "stunned",
         "type": "percentage",
         "value": 20,
         "chance": 100

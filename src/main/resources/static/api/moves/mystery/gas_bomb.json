@@ -1,19 +1,19 @@
 {
-  "id": "hypnosis",
-  "name": "Hypnosis",
+  "id": "gas_bomb",
+  "name": "Gas Bomb",
   "description": "TBD",
   "type": "mystery",
-  "category": "status",
+  "category": "ranged",
   "power": 0,
-  "accuracy": 60,
-  "pp": 10,
+  "accuracy": 100,
+  "pp": 15,
   "effect": {
     "enemy": [
       {
-        "status": "sleep",
+        "status": "poison",
         "type": "percentage",
         "value": 25,
-        "chance": 90
+        "chance": 100
       }
     ]
   }

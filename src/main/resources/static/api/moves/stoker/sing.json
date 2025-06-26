@@ -1,0 +1,20 @@
+{
+  "id": "sing",
+  "name": "Sing",
+  "description": "TBD",
+  "type": "stoker",
+  "category": "status",
+  "power": 0,
+  "accuracy": 100,
+  "pp": 15,
+  "effect": {
+    "self": [
+      {
+        "status": "no_sleep",
+        "type": "percentage",
+        "value": 35,
+        "chance": 100
+      }
+    ]
+  }
+}

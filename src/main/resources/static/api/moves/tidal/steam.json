@@ -1,18 +1,18 @@
 {
-  "id": "spine_shot",
-  "name": "Spine Shot",
+  "id": "steam",
+  "name": "Steam",
   "description": "TBD",
-  "type": "tracker",
+  "type": "mystery",
   "category": "ranged",
-  "power": 20,
-  "accuracy": 40,
-  "pp": 20,
+  "power": 5,
+  "accuracy": 100,
+  "pp": 15,
   "effect": {
     "enemy": [
       {
         "status": "poison",
         "type": "percentage",
-        "value": 15,
+        "value": 20,
         "chance": 100
       }
     ]

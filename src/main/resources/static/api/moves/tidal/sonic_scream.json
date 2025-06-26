@@ -1,0 +1,34 @@
+{
+  "id": "sonic_scream",
+  "name": "Sonic Scream",
+  "description": "TBD",
+  "type": "tidal",
+  "category": "ranged",
+  "power": 0,
+  "accuracy": 100,
+  "pp": 10,
+  "effect": {
+    "self": [
+      {
+        "status": "no_sleep",
+        "type": "percentage",
+        "value": 30,
+        "chance": 100
+      }
+    ],
+    "enemy": [
+      {
+        "status": "confusion",
+        "type": "percentage",
+        "value": 20,
+        "chance": 80
+      },
+      {
+        "status": "stunned",
+        "type": "percentage",
+        "value": 15,
+        "chance": 75
+      }
+    ]
+  }
+}
