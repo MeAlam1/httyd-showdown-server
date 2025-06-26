@@ -1,0 +1,38 @@
+{
+  "id": "curling_up",
+  "name": "Curling Up",
+  "type": "boulder",
+  "category": "physical",
+  "power": 50,
+  "accuracy": 75,
+  "pp": 10,
+  "effect": {
+    "self/enemy": [
+      {
+        "status": "harm",
+        "type": "flat",
+        "value": 10,
+        "chance": 80
+      },
+      {
+        "status": "heal",
+        "type": "precentage",
+        "value": 10,
+        "chance": 50
+      },
+      {
+        "status": "stunned",
+        "type": "based_on_damage",
+        "value": 5,
+        "chance": 30
+      },
+      {
+        "status": "sleep",
+        "type": "based_on_target",
+        "value": 10,
+        "chance": 20
+      }
+    ]
+  }
+}
+}

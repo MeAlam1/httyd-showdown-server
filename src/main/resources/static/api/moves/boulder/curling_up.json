@@ -1,0 +1,20 @@
+{
+  "id": "curling_up",
+  "name": "Curling Up",
+  "description": "The dragon curls into a ball and launches itself at the enemy. Reckless, but effective.",
+  "type": "boulder",
+  "category": "physical",
+  "power": 50,
+  "accuracy": 75,
+  "pp": 10,
+  "effect": {
+    "self": [
+      {
+        "status": "harm",
+        "type": "flat",
+        "value": 10,
+        "chance": 80
+      }
+    ]
+  }
+}
