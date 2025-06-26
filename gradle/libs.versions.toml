@@ -1,0 +1,36 @@
+[versions]
+spring-boot = "3.5.3"
+spring-dependency-management = "1.1.7"
+graalvm-buildtools-native = "0.10.6"
+spring-modulith = "1.4.1"
+lombok = "1.18.32"
+junit-platform-launcher = "1.10.2"
+gson = "2.10.1"
+fastutil = "8.5.13"
+spotless = "6.25.0"
+license = "0.16.1"
+annotations = "24.0.0"
+lang3 = "3.14.0"
+
+[libraries]
+spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "spring-boot" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
+spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools", version.ref = "spring-boot" }
+spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor", version.ref = "spring-boot" }
+spring-modulith-starter-core = { module = "org.springframework.modulith:spring-modulith-starter-core", version.ref = "spring-modulith" }
+spring-modulith-starter-test = { module = "org.springframework.modulith:spring-modulith-starter-test", version.ref = "spring-modulith" }
+spring-modulith-bom = { module = "org.springframework.modulith:spring-modulith-bom", version.ref = "spring-modulith" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform-launcher" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+fastutil = { module = "it.unimi.dsi:fastutil", version.ref = "fastutil" }
+annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "lang3" }
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
+graalvm-buildtools-native = { id = "org.graalvm.buildtools.native", version.ref = "graalvm-buildtools-native" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+license = { id = "com.github.hierynomus.license", version.ref = "license" }

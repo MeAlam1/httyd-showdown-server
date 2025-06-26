@@ -1,0 +1,132 @@
+package com.mealam.showdown.loader;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.mealam.showdown.Constants;
+import com.mealam.showdown.loader.cache.dragons.DragonsCache;
+import com.mealam.showdown.loader.json.deserialize.Dragons;
+import com.mealam.showdown.utils.json.GsonHelper;
+import com.mealam.showdown.utils.logging.LogLevel;
+import com.mealam.showdown.utils.logging.Logger;
+import it.unimi.dsi.fastutil.Pair;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+public class JsonLoader {
+	private static final Gson DRAGONS_GSON = new GsonBuilder().setPrettyPrinting().setLenient()
+			.registerTypeAdapter(Dragons.class, Dragons.deserializer())
+			.create();
+
+	protected static CompletableFuture<Map<String, DragonsCache>> loadStaticDragons(Executor pBackgroundExecutor) {
+		return bakeJsonResources(
+				pBackgroundExecutor,
+				Constants.Loader.DRAGONS_PATH,
+				JsonLoader::bakeDragons,
+				ex -> {
+					Logger.log(LogLevel.ERROR, "Exception while baking dragons: " + ex.getMessage());
+					return null;
+				}
+		).whenComplete((result, ex) -> {
+			if (ex != null) {
+				Logger.log(LogLevel.ERROR, "Failed to load static dragons: " + ex.getMessage());
+			} else {
+				Logger.log(LogLevel.INFO, "Successfully loaded static dragons. Count: " + (result != null ? result.size() : 0));
+			}
+		});
+	}
+
+	protected static <BAKED> CompletableFuture<Map<String, BAKED>> bakeJsonResources(
+			Executor pBackgroundExecutor,
+			String pAssetPath,
+			BiFunction<String, JsonObject, BAKED> pElementFactory,
+			Function<Throwable, BAKED> pExceptionalFactory) {
+
+		Logger.log(LogLevel.INFO, "Baking JSON resources from: " + pAssetPath);
+		return loadResources(pBackgroundExecutor, pAssetPath, "json")
+				.thenCompose(resources -> {
+					Logger.log(LogLevel.INFO, "Found " + resources.size() + " JSON resources in: " + pAssetPath);
+					List<CompletableFuture<Pair<String, BAKED>>> tasks = new ObjectArrayList<>(resources.size());
+					resources.forEach(pair -> tasks.add(
+							CompletableFuture.supplyAsync(() -> {
+								try {
+									String key = cleanFileName(pair.left());
+									return Pair.of(key, pElementFactory.apply(pair.left(), pair.right()));
+								} catch (Exception ex) {
+									Logger.log(LogLevel.ERROR, "Error processing resource " + pair.left() + ": " + ex.getMessage());
+									throw ex;
+								}
+							}, pBackgroundExecutor).exceptionally(ex -> {
+								Logger.log(LogLevel.ERROR, "Exceptionally handled resource: " + pair.left() + " - " + ex.getMessage());
+								return Pair.of(pair.left(), pExceptionalFactory.apply(ex));
+							})
+					));
+					return CompletableFuture.allOf(tasks.toArray(new CompletableFuture[0]))
+							.thenApply(ignored -> tasks.stream().map(CompletableFuture::join).filter(Objects::nonNull)
+									.collect(Collectors.toMap(Pair::left, Pair::right)));
+				});
+	}
+
+
+	protected static CompletableFuture<List<Pair<String, JsonObject>>> loadResources(
+			Executor pBackgroundExecutor,
+			String pAssetPath,
+			String pFileType) {
+
+		Logger.log(LogLevel.INFO, "Loading resources from: " + pAssetPath + " with file type: " + pFileType);
+		return CompletableFuture.supplyAsync(() -> {
+			try {
+				PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+				String pattern = "classpath*:" + pAssetPath + "/**/*." + pFileType;
+				Resource[] resources = resolver.getResources(pattern);
+
+				List<Pair<String, Resource>> files = new ObjectArrayList<>();
+				for (Resource resource : resources) {
+					if (resource.exists() && resource.isReadable()) {
+						String filename = resource.getFilename();
+						files.add(Pair.of(filename, resource));
+					}
+				}
+				return files;
+			} catch (IOException pIoException) {
+				throw new RuntimeException("Failed to list resources in " + pAssetPath, pIoException);
+			}
+		}, pBackgroundExecutor).thenCompose(files -> {
+			List<CompletableFuture<Pair<String, JsonObject>>> tasks = new ObjectArrayList<>(files.size());
+			files.forEach(pair -> tasks.add(
+					CompletableFuture.supplyAsync(() -> {
+						try (Reader reader = new java.io.InputStreamReader(pair.right().getInputStream())) {
+							return Pair.of(pair.left(), GsonHelper.parse(reader));
+						} catch (IOException e) {
+							throw new RuntimeException("Failed to read resource: " + pair.left(), e);
+						}
+					}, pBackgroundExecutor)
+			));
+			return CompletableFuture.allOf(tasks.toArray(new CompletableFuture[0]))
+					.thenApply(ignored -> tasks.stream().map(CompletableFuture::join).filter(Objects::nonNull).toList());
+		});
+	}
+
+	private static String cleanFileName(String pFileName) {
+		String noPrefix = Constants.Loader.PREFIX_STRIPPER.matcher(pFileName).replaceFirst("");
+		return Constants.Loader.SUFFIX_STRIPPER.matcher(noPrefix).replaceFirst("");
+	}
+
+	@NotNull
+	protected static DragonsCache bakeDragons(String pResourceName, JsonObject pJsonObject) {
+		return DRAGONS_GSON.fromJson(pJsonObject, DragonsCache.class);
+	}
+}
