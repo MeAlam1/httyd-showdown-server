@@ -16,7 +16,9 @@ public class Constants {
 	public static boolean isLoggingEnabled = true;
 
 	public static class Loader {
-		public static final String DRAGONS_PATH = "static/api/dragons";
+		private static final String BASE_PATH = "static/api/";
+		public static final String DRAGONS_PATH = BASE_PATH + "dragons";
+		public static final String MOVES_PATH = BASE_PATH + "moves";
 		public static final Pattern SUFFIX_STRIPPER = Pattern.compile("\\.json$");
 		public static final Pattern PREFIX_STRIPPER = Pattern.compile("^(dob/)((httyd/)|(httyd2/)|(the_hidden_world/)|(rob/)|(rtte/))?");
 	}

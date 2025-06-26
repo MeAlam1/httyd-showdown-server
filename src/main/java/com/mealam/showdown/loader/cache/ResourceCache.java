@@ -2,6 +2,7 @@ package com.mealam.showdown.loader.cache;
 
 import com.mealam.showdown.loader.JsonLoader;
 import com.mealam.showdown.loader.cache.dragons.DragonsCache;
+import com.mealam.showdown.loader.cache.moves.MovesCache;
 import com.mealam.showdown.utils.logging.LogLevel;
 import com.mealam.showdown.utils.logging.Logger;
 
@@ -12,9 +13,14 @@ import java.util.concurrent.Executor;
 
 public class ResourceCache extends JsonLoader {
 	private static Map<String, DragonsCache> DRAGONS = Collections.emptyMap();
+	private static Map<String, MovesCache> MOVES = Collections.emptyMap();
 
 	public static Map<String, DragonsCache> getDragons() {
 		return DRAGONS;
+	}
+
+	public static Map<String, MovesCache> getMoves() {
+		return MOVES;
 	}
 
 	public static CompletableFuture<Void> reload(
@@ -23,16 +29,20 @@ public class ResourceCache extends JsonLoader {
 		clearCaches();
 
 		CompletableFuture<Map<String, DragonsCache>> dragons = loadStaticDragons(pBackgroundExecutor);
+		CompletableFuture<Map<String, MovesCache>> moves = loadStaticMoves(pBackgroundExecutor);
 
 		return CompletableFuture.allOf(dragons)
 				.thenRunAsync(() -> {
 					ResourceCache.DRAGONS = dragons.join();
+					ResourceCache.MOVES = moves.join();
 
 					Logger.log(LogLevel.SUCCESS, "Dragons Cache: " + ResourceCache.DRAGONS);
+					Logger.log(LogLevel.SUCCESS, "Moves Cache: " + ResourceCache.MOVES);
 				}, pServerExecutor);
 	}
 
 	private static void clearCaches() {
 		ResourceCache.DRAGONS = Collections.emptyMap();
+		ResourceCache.MOVES = Collections.emptyMap();
 	}
 }

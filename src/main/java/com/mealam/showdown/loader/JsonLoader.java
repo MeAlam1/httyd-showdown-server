@@ -5,7 +5,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.mealam.showdown.Constants;
 import com.mealam.showdown.loader.cache.dragons.DragonsCache;
-import com.mealam.showdown.loader.json.deserialize.Dragons;
+import com.mealam.showdown.loader.cache.moves.MovesCache;
+import com.mealam.showdown.loader.json.deserialize.dragons.Dragons;
+import com.mealam.showdown.loader.json.deserialize.moves.Effect;
+import com.mealam.showdown.loader.json.deserialize.moves.EffectTarget;
+import com.mealam.showdown.loader.json.deserialize.moves.Moves;
 import com.mealam.showdown.utils.json.GsonHelper;
 import com.mealam.showdown.utils.logging.LogLevel;
 import com.mealam.showdown.utils.logging.Logger;
@@ -31,20 +35,46 @@ public class JsonLoader {
 			.registerTypeAdapter(Dragons.class, Dragons.deserializer())
 			.create();
 
+	private static final Gson MOVES_GSON = new GsonBuilder().setPrettyPrinting().setLenient()
+			.registerTypeAdapter(Moves.class, Moves.deserializer())
+			.registerTypeAdapter(Effect.class, Effect.deserializer())
+			.registerTypeAdapter(EffectTarget.class, EffectTarget.deserializer())
+			.create();
+
 	protected static CompletableFuture<Map<String, DragonsCache>> loadStaticDragons(Executor pBackgroundExecutor) {
-		return bakeJsonResources(
+		return bakeGeneral(
 				pBackgroundExecutor,
 				Constants.Loader.DRAGONS_PATH,
-				JsonLoader::bakeDragons,
+				JsonLoader::bakeDragons
+		);
+	}
+
+	protected static CompletableFuture<Map<String, MovesCache>> loadStaticMoves(Executor pBackgroundExecutor) {
+		return bakeGeneral(
+				pBackgroundExecutor,
+				Constants.Loader.MOVES_PATH,
+				JsonLoader::bakeMoves
+		);
+	}
+
+	protected static <T> CompletableFuture<Map<String, T>> bakeGeneral(
+			Executor pBackgroundExecutor,
+			String pPath,
+			BiFunction<String, JsonObject, T> pFactory) {
+
+		return bakeJsonResources(
+				pBackgroundExecutor,
+				pPath,
+				pFactory,
 				ex -> {
-					Logger.log(LogLevel.ERROR, "Exception while baking dragons: " + ex.getMessage());
+					Logger.log(LogLevel.ERROR, "Exception while baking " + pPath + ": " + ex.getMessage());
 					return null;
 				}
 		).whenComplete((result, ex) -> {
 			if (ex != null) {
-				Logger.log(LogLevel.ERROR, "Failed to load static dragons: " + ex.getMessage());
+				Logger.log(LogLevel.ERROR, "Failed to load static " + pPath + ": " + ex.getMessage());
 			} else {
-				Logger.log(LogLevel.INFO, "Successfully loaded static dragons. Count: " + (result != null ? result.size() : 0));
+				Logger.log(LogLevel.INFO, "Successfully loaded static " + pPath + ". Count: " + (result != null ? result.size() : 0));
 			}
 		});
 	}
@@ -128,5 +158,10 @@ public class JsonLoader {
 	@NotNull
 	protected static DragonsCache bakeDragons(String pResourceName, JsonObject pJsonObject) {
 		return DRAGONS_GSON.fromJson(pJsonObject, DragonsCache.class);
+	}
+
+	@NotNull
+	protected static MovesCache bakeMoves(String pResourceName, JsonObject pJsonObject) {
+		return MOVES_GSON.fromJson(pJsonObject, MovesCache.class);
 	}
 }

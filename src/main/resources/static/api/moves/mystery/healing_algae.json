@@ -10,7 +10,7 @@
   "effect": {
     "self": [
       {
-        "status": "health",
+        "status": "heal",
         "type": "percentage",
         "value": 25,
         "chance": 100
