@@ -5,8 +5,8 @@ plugins {
     alias(libs.plugins.graalvm.buildtools.native)
     alias(libs.plugins.spotless)
     alias(libs.plugins.license)
-    kotlin("jvm") version "1.9.23" // Add this line
-    kotlin("plugin.spring") version "1.9.23" // For Spring support
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.spring)
 }
 
 group = property("group") as String
@@ -36,7 +36,6 @@ dependencies {
     implementation(libs.spring.modulith.starter.core)
     implementation(libs.spring.boot.starter.web)
     implementation(libs.spring.boot.starter.actuator)
-    implementation("org.springframework.modulith:spring-modulith-core")
     implementation(libs.gson)
     implementation(libs.fastutil)
     implementation(libs.annotations)

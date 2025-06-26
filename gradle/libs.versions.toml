@@ -1,4 +1,5 @@
 [versions]
+kotlin = "1.9.23"
 spring-boot = "3.5.3"
 spring-dependency-management = "1.1.7"
 graalvm-buildtools-native = "0.10.6"
@@ -29,6 +30,8 @@ annotations = { module = "org.jetbrains:annotations", version.ref = "annotations
 commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "lang3" }
 
 [plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
 graalvm-buildtools-native = { id = "org.graalvm.buildtools.native", version.ref = "graalvm-buildtools-native" }
