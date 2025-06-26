@@ -1,0 +1,20 @@
+{
+  "id": "plasma_blast",
+  "name": "Plasma Blast",
+  "description": "TBD",
+  "type": "strike",
+  "category": "ranged",
+  "power": 30,
+  "accuracy": 95,
+  "pp": 10,
+  "effect": {
+    "enemy": [
+      {
+        "status": "stunned",
+        "type": "flat",
+        "value": 15,
+        "chance": 25
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "copy",
+  "name": "Copy",
+  "description": "TBD",
+  "type": "mystery",
+  "category": "status",
+  "power": 0,
+  "accuracy": 100,
+  "pp": 20,
+  "effect": {
+    "self": [
+      {
+        "status": "copy",
+        "type": "flat",
+        "value": 1,
+        "chance": 100
+      }
+    ]
+  }
+}

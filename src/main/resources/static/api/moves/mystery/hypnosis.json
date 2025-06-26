@@ -1,0 +1,26 @@
+{
+  "id": "hypnosis",
+  "name": "Hypnosis",
+  "description": "TBD",
+  "type": "mystery",
+  "category": "status",
+  "power": 0,
+  "accuracy": 60,
+  "pp": 10,
+  "effect": {
+    "enemy": [
+      {
+        "status": "confusion",
+        "type": "percentage",
+        "value": 25,
+        "chance": 90
+      },
+      {
+        "status": "stunned",
+        "type": "percentage",
+        "value": 10,
+        "chance": 80
+      }
+    ]
+  }
+}

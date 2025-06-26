@@ -1,0 +1,11 @@
+{
+  "id": "tail_whip",
+  "name": "Tail Whip",
+  "description": "TBD",
+  "type": "general",
+  "category": "physical",
+  "power": 10,
+  "accuracy": 90,
+  "pp": 20,
+  "effect": {}
+}

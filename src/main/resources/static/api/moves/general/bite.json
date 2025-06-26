@@ -1,0 +1,20 @@
+{
+  "id": "bite",
+  "name": "Bite",
+  "description": "TBD",
+  "type": "general",
+  "category": "physical",
+  "power": 15,
+  "accuracy": 80,
+  "pp": 20,
+  "effect": {
+    "enemy": [
+      {
+        "status": "fear",
+        "type": "based_on_enemy",
+        "value": 10,
+        "chance": 50
+      }
+    ]
+  }
+}

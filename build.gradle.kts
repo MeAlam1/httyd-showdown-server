@@ -36,6 +36,7 @@ dependencies {
     implementation(libs.spring.modulith.starter.core)
     implementation(libs.spring.boot.starter.web)
     implementation(libs.spring.boot.starter.actuator)
+    implementation("org.springframework.modulith:spring-modulith-core")
     implementation(libs.gson)
     implementation(libs.fastutil)
     implementation(libs.annotations)

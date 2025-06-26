@@ -1,0 +1,20 @@
+{
+  "id": "echolocation",
+  "name": "Echolocation",
+  "description": "TBD",
+  "type": "strike",
+  "category": "status",
+  "power": 0,
+  "accuracy": 100,
+  "pp": 20,
+  "effect": {
+    "enemy": [
+      {
+        "status": "confusion",
+        "type": "percentage",
+        "value": 20,
+        "chance": 100
+      }
+    ]
+  }
+}

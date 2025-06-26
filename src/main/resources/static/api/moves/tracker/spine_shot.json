@@ -1,0 +1,11 @@
+{
+  "id": "spine_shot",
+  "name": "Spine Shot",
+  "description": "TBD",
+  "type": "tracker",
+  "category": "ranged",
+  "power": 20,
+  "accuracy": 40,
+  "pp": 20,
+  "effect": {}
+}

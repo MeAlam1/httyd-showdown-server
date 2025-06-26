@@ -1,0 +1,26 @@
+{
+  "id": "cloak",
+  "name": "Cloak",
+  "description": "TBD",
+  "type": "mystery",
+  "category": "status",
+  "power": 0,
+  "accuracy": 100,
+  "pp": 10,
+  "effect": {
+    "self": [
+      {
+        "status": "stealth",
+        "type": "percentage",
+        "value": 25,
+        "chance": 100
+      },
+      {
+        "status": "heal",
+        "type": "percentage",
+        "value": 5,
+        "chance": 80
+      }
+    ]
+  }
+}

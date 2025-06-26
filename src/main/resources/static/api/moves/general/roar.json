@@ -1,0 +1,20 @@
+{
+  "id": "roar",
+  "name": "Roar",
+  "description": "TBD",
+  "type": "general",
+  "category": "status",
+  "power": 0,
+  "accuracy": 95,
+  "pp": 20,
+  "effect": {
+    "self": [
+      {
+        "status": "confusion",
+        "type": "percentage",
+        "value": 10,
+        "chance": 100
+      }
+    ]
+  }
+}
