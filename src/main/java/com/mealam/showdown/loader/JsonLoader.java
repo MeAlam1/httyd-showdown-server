@@ -6,10 +6,12 @@ import com.google.gson.JsonObject;
 import com.mealam.showdown.Constants;
 import com.mealam.showdown.loader.cache.dragons.DragonsCache;
 import com.mealam.showdown.loader.cache.moves.MovesCache;
+import com.mealam.showdown.loader.json.CacheFactory;
 import com.mealam.showdown.loader.json.deserialize.dragons.Dragons;
 import com.mealam.showdown.loader.json.deserialize.moves.Effect;
 import com.mealam.showdown.loader.json.deserialize.moves.EffectTarget;
 import com.mealam.showdown.loader.json.deserialize.moves.Moves;
+import com.mealam.showdown.loader.json.moves.MovesCacheFactory;
 import com.mealam.showdown.utils.json.GsonHelper;
 import com.mealam.showdown.utils.logging.LogLevel;
 import com.mealam.showdown.utils.logging.Logger;
@@ -162,6 +164,8 @@ public class JsonLoader {
 
 	@NotNull
 	protected static MovesCache bakeMoves(String pResourceName, JsonObject pJsonObject) {
-		return MOVES_GSON.fromJson(pJsonObject, MovesCache.class);
+		Moves moves = MOVES_GSON.fromJson(pJsonObject, Moves.class);
+
+		return CacheFactory.constructWithFactory(MovesCacheFactory.INSTANCE, moves);
 	}
 }
