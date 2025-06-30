@@ -7,15 +7,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 public class Main {
-	public static void main(String[] pArgs) {
-		SpringApplication.run(Main.class, pArgs);
-	}
 
-	@RestController
-	static class TestKotlin {
-		@GetMapping("/test-kt")
-		public String test() {
-			return Test.greet("Kotlin");
-		}
-	}
+    public static void main(String[] pArgs) {
+        SpringApplication.run(Main.class, pArgs);
+    }
+
+    @RestController
+    static class TestKotlin {
+
+        @GetMapping("/test-kt")
+        public String test() {
+            return Test.greet("Kotlin");
+        }
+    }
 }

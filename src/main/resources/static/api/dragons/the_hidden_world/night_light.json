@@ -3,7 +3,7 @@
   "name": "Night Light",
   "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/3/30/THW-Night_Lights-Transparent.png",
   "origin": "The Hidden World",
-  "class": [
+  "classes": [
     "Strike"
   ],
   "attack": 15,

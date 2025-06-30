@@ -3,7 +3,7 @@
   "name": "Snifflehunch",
   "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/d/da/1481799170734.png",
   "origin": "How To Train Your Dragon 2",
-  "class": [
+  "classes": [
     "Tracker"
   ],
   "attack": 0,

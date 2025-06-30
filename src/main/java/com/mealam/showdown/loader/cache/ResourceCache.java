@@ -5,44 +5,44 @@ import com.mealam.showdown.loader.cache.dragons.DragonsCache;
 import com.mealam.showdown.loader.cache.moves.MovesCache;
 import com.mealam.showdown.utils.logging.LogLevel;
 import com.mealam.showdown.utils.logging.Logger;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class ResourceCache extends JsonLoader {
-	private static Map<String, DragonsCache> DRAGONS = Collections.emptyMap();
-	private static Map<String, MovesCache> MOVES = Collections.emptyMap();
 
-	public static Map<String, DragonsCache> getDragons() {
-		return DRAGONS;
-	}
+    private static Map<String, DragonsCache> DRAGONS = Collections.emptyMap();
+    private static Map<String, MovesCache> MOVES = Collections.emptyMap();
 
-	public static Map<String, MovesCache> getMoves() {
-		return MOVES;
-	}
+    public static Map<String, DragonsCache> getDragons() {
+        return DRAGONS;
+    }
 
-	public static CompletableFuture<Void> reload(
-			Executor pBackgroundExecutor,
-			Executor pServerExecutor) {
-		clearCaches();
+    public static Map<String, MovesCache> getMoves() {
+        return MOVES;
+    }
 
-		CompletableFuture<Map<String, DragonsCache>> dragons = loadStaticDragons(pBackgroundExecutor);
-		CompletableFuture<Map<String, MovesCache>> moves = loadStaticMoves(pBackgroundExecutor);
+    public static CompletableFuture<Void> reload(
+            Executor pBackgroundExecutor,
+            Executor pServerExecutor) {
+        clearCaches();
 
-		return CompletableFuture.allOf(dragons)
-				.thenRunAsync(() -> {
-					ResourceCache.DRAGONS = dragons.join();
-					ResourceCache.MOVES = moves.join();
+        CompletableFuture<Map<String, DragonsCache>> dragons = loadStaticDragons(pBackgroundExecutor);
+        CompletableFuture<Map<String, MovesCache>> moves = loadStaticMoves(pBackgroundExecutor);
 
-					Logger.log(LogLevel.SUCCESS, "Dragons Cache: " + ResourceCache.DRAGONS);
-					Logger.log(LogLevel.SUCCESS, "Moves Cache: " + ResourceCache.MOVES);
-				}, pServerExecutor);
-	}
+        return CompletableFuture.allOf(dragons)
+                .thenRunAsync(() -> {
+                    ResourceCache.DRAGONS = dragons.join();
+                    ResourceCache.MOVES = moves.join();
 
-	private static void clearCaches() {
-		ResourceCache.DRAGONS = Collections.emptyMap();
-		ResourceCache.MOVES = Collections.emptyMap();
-	}
+                    Logger.log(LogLevel.SUCCESS, "Dragons Cache: " + ResourceCache.DRAGONS);
+                    Logger.log(LogLevel.SUCCESS, "Moves Cache: " + ResourceCache.MOVES);
+                }, pServerExecutor);
+    }
+
+    private static void clearCaches() {
+        ResourceCache.DRAGONS = Collections.emptyMap();
+        ResourceCache.MOVES = Collections.emptyMap();
+    }
 }

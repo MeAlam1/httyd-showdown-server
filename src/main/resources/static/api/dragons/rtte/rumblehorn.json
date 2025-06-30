@@ -3,7 +3,7 @@
   "name": "Rumblehorn",
   "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/d/df/1481798442360.png",
   "origin": "Dragons: Race to the Edge",
-  "class": [
+  "classes": [
     "Tracker"
   ],
   "attack": 11,

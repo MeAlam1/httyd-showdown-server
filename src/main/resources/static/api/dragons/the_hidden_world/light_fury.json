@@ -3,7 +3,7 @@
   "name": "Light Fury",
   "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/d/d8/THW-Unnamed_Light_Fury-Transparent.png",
   "origin": "The Hidden World",
-  "class": [
+  "classes": [
     "Strike"
   ],
   "attack": 15,

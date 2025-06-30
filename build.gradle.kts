@@ -47,11 +47,6 @@ dependencies {
 
     annotationProcessor(libs.spring.boot.configuration.processor)
     annotationProcessor(libs.lombok)
-
-    testImplementation(libs.spring.boot.starter.test)
-    testImplementation(libs.spring.modulith.starter.test)
-
-    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 spotless {

@@ -3,7 +3,7 @@
   "name": "Dramillion",
   "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/e/ed/Dramillion_Render.png",
   "origin": "Dragons: Race to the Edge",
-  "class": [
+  "classes": [
     "Mystery"
   ],
   "attack": 18,

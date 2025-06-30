@@ -7,13 +7,12 @@
  */
 package com.mealam.showdown.utils.schedular;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import org.jetbrains.annotations.NotNull;
 
 public class DelayedScheduler {
 

@@ -9,9 +9,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LoadInitializer {
-	@PostConstruct
-	public void init() {
-		ResourceCache.reload(Constants.BACKGROUND_EXECUTOR, Constants.SERVER_EXECUTOR)
-				.thenRun(() -> Logger.log(LogLevel.INFO, "Resource cache loaded successfully."));
-	}
+
+    @PostConstruct
+    public void init() {
+        ResourceCache.reload(Constants.BACKGROUND_EXECUTOR, Constants.SERVER_EXECUTOR)
+                .thenRun(() -> Logger.log(LogLevel.INFO, "Resource cache loaded successfully."));
+    }
 }

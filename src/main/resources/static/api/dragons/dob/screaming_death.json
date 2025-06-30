@@ -3,7 +3,7 @@
   "name": "Screaming Death",
   "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/2/27/Grito_Mortal.png",
   "origin": "Dragons: Defenders of Berk",
-  "class": [
+  "classes": [
     "Boulder"
   ],
   "attack": 16,

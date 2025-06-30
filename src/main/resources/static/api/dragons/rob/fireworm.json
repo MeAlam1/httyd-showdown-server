@@ -3,7 +3,7 @@
   "name": "Fireworm",
   "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/0/00/HTTYD3-Fireworm1-Transparent.png",
   "origin": "Dragons: Riders of Berk",
-  "class": [
+  "classes": [
     "Stoker"
   ],
   "attack": 4,

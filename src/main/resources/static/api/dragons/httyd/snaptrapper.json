@@ -3,7 +3,7 @@
   "name": "Snaptrapper",
   "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/e/ea/1482442286402.png",
   "origin": "How To Train Your Dragon",
-  "class": [
+  "classes": [
     "Mystery"
   ],
   "attack": 10,

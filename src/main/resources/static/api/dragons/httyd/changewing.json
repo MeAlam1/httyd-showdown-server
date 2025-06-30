@@ -3,7 +3,7 @@
   "name": "Changewing",
   "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/f/f5/Alacambiante.png",
   "origin": "How To Train Your Dragon",
-  "class": [
+  "classes": [
     "Mystery"
   ],
   "attack": 9,

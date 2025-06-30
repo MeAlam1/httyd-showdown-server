@@ -3,7 +3,7 @@
   "name": "Grim Gnasher",
   "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/f/fb/Grimgnasher_Transparent.png",
   "origin": "Dragons: Race to the Edge",
-  "class": [
+  "classes": [
     "Sharp"
   ],
   "attack": 10,

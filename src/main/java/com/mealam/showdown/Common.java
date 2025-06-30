@@ -1,4 +1,3 @@
 package com.mealam.showdown;
 
-public class Common {
-}
+public class Common {}

@@ -3,7 +3,7 @@
   "name": "Seashocker",
   "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/a/a5/Capture_17.PNG",
   "origin": "Dragons: Race to the Edge",
-  "class": [
+  "classes": [
     "Tidal"
   ],
   "attack": 18,

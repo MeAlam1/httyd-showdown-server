@@ -3,7 +3,7 @@
   "name": "Snafflefang",
   "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/f/f8/1481596725144.png",
   "origin": "How To Train Your Dragon 2",
-  "class": [
+  "classes": [
     "Boulder"
   ],
   "attack": 9,
