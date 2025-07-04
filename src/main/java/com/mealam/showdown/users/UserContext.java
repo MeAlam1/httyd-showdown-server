@@ -1,7 +1,9 @@
 package com.mealam.showdown.users;
 
+import java.util.UUID;
+
 public record UserContext(
-    String userId,
-    String username
+		UUID userId,
+		String username
 ) {
 }

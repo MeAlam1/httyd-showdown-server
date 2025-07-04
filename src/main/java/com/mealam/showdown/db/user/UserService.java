@@ -1,9 +1,10 @@
-package com.mealam.showdown.db.service;
+package com.mealam.showdown.db.user;
 
-import com.mealam.showdown.db.model.User;
-import com.mealam.showdown.db.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -18,7 +19,8 @@ public class UserService {
 
 	public User register(String pUsername, String pPassword) {
 		if (userRepository.findByUsername(pUsername).isPresent()) {
-			throw new RuntimeException("Username already exists");
+			System.out.println("Warning: User already exists. Please login instead.");
+			return null;
 		}
 		User user = new User();
 		user.setUsername(pUsername);
@@ -30,5 +32,14 @@ public class UserService {
 		return userRepository.findByUsername(pUsername)
 				.map(user -> passwordEncoder.matches(pRawPassword, user.getPassword()))
 				.orElse(false);
+	}
+
+	public UUID getUserIdByUsername(String pUsername) {
+		Optional<User> userOpt = userRepository.findByUsername(pUsername);
+		if (userOpt.isEmpty()) {
+			System.out.println("Warning: User not found for username: " + pUsername);
+			return null;
+		}
+		return userOpt.get().getId();
 	}
 }
