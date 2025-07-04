@@ -11,12 +11,12 @@ import com.mealam.showdown.moves.Category;
 import com.mealam.showdown.moves.Type;
 
 public record MovesCache(
-        String id,
-        String name,
-        String description,
-        Type type,
-        Category category,
-        Integer power,
-        Integer accuracy,
-        Integer pp,
-        EffectCache effect) {}
+		String id,
+		String name,
+		String description,
+		Type type,
+		Category category,
+		Integer power,
+		Integer accuracy,
+		Integer pp,
+		EffectCache effect) {}

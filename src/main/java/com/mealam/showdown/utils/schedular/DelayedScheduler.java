@@ -16,33 +16,33 @@ import org.jetbrains.annotations.NotNull;
 
 public class DelayedScheduler {
 
-    private static final ScheduledExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
+	private static final ScheduledExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
 
-    @NotNull
-    public static CompletableFuture<Void> schedule(Runnable task, long delay, TimeUnit unit) {
-        CompletableFuture<Void> future = new CompletableFuture<>();
-        EXECUTOR_SERVICE.schedule(() -> {
-            try {
-                task.run();
-                future.complete(null);
-            } catch (Exception pException) {
-                future.completeExceptionally(pException);
-            }
-        }, delay, unit);
-        return future;
-    }
+	@NotNull
+	public static CompletableFuture<Void> schedule(Runnable task, long delay, TimeUnit unit) {
+		CompletableFuture<Void> future = new CompletableFuture<>();
+		EXECUTOR_SERVICE.schedule(() -> {
+			try {
+				task.run();
+				future.complete(null);
+			} catch (Exception pException) {
+				future.completeExceptionally(pException);
+			}
+		}, delay, unit);
+		return future;
+	}
 
-    @NotNull
-    public static <A> CompletableFuture<A> schedule(Supplier<A> supplier, long delay, TimeUnit unit) {
-        CompletableFuture<A> future = new CompletableFuture<>();
-        EXECUTOR_SERVICE.schedule(() -> {
-            try {
-                A a = supplier.get();
-                future.complete(a);
-            } catch (Exception pException) {
-                future.completeExceptionally(pException);
-            }
-        }, delay, unit);
-        return future;
-    }
+	@NotNull
+	public static <A> CompletableFuture<A> schedule(Supplier<A> supplier, long delay, TimeUnit unit) {
+		CompletableFuture<A> future = new CompletableFuture<>();
+		EXECUTOR_SERVICE.schedule(() -> {
+			try {
+				A a = supplier.get();
+				future.complete(a);
+			} catch (Exception pException) {
+				future.completeExceptionally(pException);
+			}
+		}, delay, unit);
+		return future;
+	}
 }

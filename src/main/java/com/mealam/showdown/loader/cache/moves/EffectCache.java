@@ -11,5 +11,5 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 public record EffectCache(
-        @Nullable List<EffectTargetCache> self,
-        @Nullable List<EffectTargetCache> effect) {}
+		@Nullable List<EffectTargetCache> self,
+		@Nullable List<EffectTargetCache> effect) {}

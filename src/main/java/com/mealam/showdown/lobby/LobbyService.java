@@ -13,31 +13,31 @@ import org.springframework.stereotype.Service;
 @Service
 public class LobbyService {
 
-    private final Map<String, Lobby> lobbies = new ConcurrentHashMap<>();
+	private final Map<String, Lobby> lobbies = new ConcurrentHashMap<>();
 
-    public Lobby createLobby(String pHost, int pMaxPlayers) {
-        String id = UUID.randomUUID().toString();
-        Lobby lobby = Lobby.create(id, pHost, pMaxPlayers);
-        lobbies.put(id, lobby);
-        return lobby;
-    }
+	public Lobby createLobby(String pHost, int pMaxPlayers) {
+		String id = UUID.randomUUID().toString();
+		Lobby lobby = Lobby.create(id, pHost, pMaxPlayers);
+		lobbies.put(id, lobby);
+		return lobby;
+	}
 
-    public Lobby joinLobby(String pLobbyId, String pPlayer) {
-        Lobby lobby = lobbies.get(pLobbyId);
-        if (lobby != null) {
-            Lobby updatedLobby = lobby.addPlayer(pPlayer);
-            lobbies.put(pLobbyId, updatedLobby);
-            return updatedLobby;
-        }
-        Logger.log(LogLevel.ERROR, String.format("Lobby with ID %s not found", pLobbyId));
-        return null;
-    }
+	public Lobby joinLobby(String pLobbyId, String pPlayer) {
+		Lobby lobby = lobbies.get(pLobbyId);
+		if (lobby != null) {
+			Lobby updatedLobby = lobby.addPlayer(pPlayer);
+			lobbies.put(pLobbyId, updatedLobby);
+			return updatedLobby;
+		}
+		Logger.log(LogLevel.ERROR, String.format("Lobby with ID %s not found", pLobbyId));
+		return null;
+	}
 
-    public void deleteLobby(String pLobbyId) {
-        lobbies.remove(pLobbyId);
-    }
+	public void deleteLobby(String pLobbyId) {
+		lobbies.remove(pLobbyId);
+	}
 
-    public List<Lobby> getLobbies() {
-        return new ArrayList<>(lobbies.values());
-    }
+	public List<Lobby> getLobbies() {
+		return new ArrayList<>(lobbies.values());
+	}
 }

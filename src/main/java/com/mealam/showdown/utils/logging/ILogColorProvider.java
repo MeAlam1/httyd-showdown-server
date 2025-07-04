@@ -4,5 +4,5 @@ import java.util.logging.Level;
 
 public interface ILogColorProvider {
 
-    int getColor(Level pLevel);
+	int getColor(Level pLevel);
 }

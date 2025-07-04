@@ -9,25 +9,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LobbyController {
 
-    private final LobbyService lobbyService;
+	private final LobbyService lobbyService;
 
-    public LobbyController(LobbyService pLobbyService) {
-        this.lobbyService = pLobbyService;
-    }
+	public LobbyController(LobbyService pLobbyService) {
+		this.lobbyService = pLobbyService;
+	}
 
-    @GetMapping("/lobbies")
-    public List<Lobby> getLobbies() {
-        return lobbyService.getLobbies();
-    }
+	@GetMapping("/lobbies")
+	public List<Lobby> getLobbies() {
+		return lobbyService.getLobbies();
+	}
 
-    //@PostMapping("/create")
-    @GetMapping("/create")
-    public Lobby createLobby(@RequestParam String host, @RequestParam int maxPlayers) {
-        return lobbyService.createLobby(host, maxPlayers);
-    }
+	//@PostMapping("/create")
+	@GetMapping("/create")
+	public Lobby createLobby(@RequestParam String host, @RequestParam int maxPlayers) {
+		return lobbyService.createLobby(host, maxPlayers);
+	}
 
-    @GetMapping("/join")
-    public Lobby joinLobby(@RequestParam String lobbyId, @RequestParam String player) {
-        return lobbyService.joinLobby(lobbyId, player);
-    }
+	@GetMapping("/join")
+	public Lobby joinLobby(@RequestParam String lobbyId, @RequestParam String player) {
+		return lobbyService.joinLobby(lobbyId, player);
+	}
 }
