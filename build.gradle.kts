@@ -36,12 +36,17 @@ dependencies {
     implementation(libs.spring.modulith.starter.core)
     implementation(libs.spring.boot.starter.web)
     implementation(libs.spring.boot.starter.actuator)
+    implementation(libs.spring.boot.starter.data.jpa)
+    implementation(libs.spring.boot.starter.security)
     implementation(libs.gson)
     implementation(libs.fastutil)
     implementation(libs.annotations)
     implementation(libs.commons.lang3)
+    implementation(libs.dotenv.java)
 
     compileOnly(libs.lombok)
+
+    runtimeOnly(libs.mysql)
 
     developmentOnly(libs.spring.boot.devtools)
 

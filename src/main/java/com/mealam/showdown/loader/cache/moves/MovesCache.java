@@ -7,8 +7,8 @@
  */
 package com.mealam.showdown.loader.cache.moves;
 
-import com.mealam.showdown.moves.Category;
-import com.mealam.showdown.moves.Type;
+import com.mealam.showdown.moves.enums.Category;
+import com.mealam.showdown.moves.enums.Type;
 
 public record MovesCache(
 		String id,

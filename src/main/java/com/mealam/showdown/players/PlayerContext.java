@@ -1,15 +1,20 @@
 package com.mealam.showdown.players;
 
-import com.mealam.showdown.battle.BattleContext;
 import com.mealam.showdown.dragons.DragonContext;
+import com.mealam.showdown.users.UserContext;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public record PlayerContext(
 		String playerId,
-		String username,
-		List<PlayerContext> friends,
+		@Nullable UserContext user,
+		List<String> friendIds,
 		List<DragonContext> party,
-		BattleContext currentBattle
+		int totalWins,
+		int totalLosses,
+		long lastActiveTimestamp,
+		String avatarUrl,
+		List<String> achievements
 ) {
 }

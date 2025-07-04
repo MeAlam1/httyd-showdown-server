@@ -1,4 +1,4 @@
-package com.mealam.showdown.moves;
+package com.mealam.showdown.moves.enums;
 
 public enum Type {
 

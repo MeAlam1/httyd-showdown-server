@@ -1,17 +1,17 @@
 package com.mealam.showdown.battle;
 
-import com.mealam.showdown.dragons.DragonContext;
-import com.mealam.showdown.players.PlayerContext;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
 
 public record BattleContext(
 		String battleId,
-		List<PlayerContext> players,
-		Map<String, DragonContext> dragons, // dragonId -> DragonContext
+		List<String> playerIds,
+		Map<String, DragonBattleContext> dragons, // dragonId -> DragonBattleContext
 		int turnNumber,
-		String status,
-		Map<String, String> activeMoves // dragonId -> moveId
+		Map<String, String> activeMoves, // dragonId -> moveId
+		String phase, // e.g., "START", "IN_PROGRESS", "FINISHED"
+		@Nullable String winnerPlayerId
 ) {
 }
