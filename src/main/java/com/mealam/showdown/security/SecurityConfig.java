@@ -24,7 +24,16 @@ public class SecurityConfig {
 		pHttp
 				.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/auth/login", "/auth/register").permitAll()
+						.requestMatchers(
+								"/auth/login",
+								"/auth/register",
+								"/test-kt",
+								"/error",
+								"/actuator",
+								"/actuator/health",
+								"/actuator/health/**",
+								"/webjars/**"
+						).permitAll()
 						.anyRequest().authenticated()
 				)
 				.addFilterBefore(pJwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
