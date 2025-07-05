@@ -11,7 +11,7 @@ import com.mealam.showdown.loader.json.deserialize.moves.Effect;
 import com.mealam.showdown.loader.json.deserialize.moves.EffectTarget;
 import com.mealam.showdown.loader.json.deserialize.moves.Moves;
 import com.mealam.showdown.loader.json.moves.MovesCacheFactory;
-import com.mealam.showdown.utils.json.GsonHelper;
+import com.mealam.showdown.utils.json.GsonExtensionsKt;
 import com.mealam.showdown.utils.logging.LogLevel;
 import com.mealam.showdown.utils.logging.Logger;
 import it.unimi.dsi.fastutil.Pair;
@@ -133,7 +133,7 @@ public class JsonLoader {
 			files.forEach(pair -> tasks.add(
 					CompletableFuture.supplyAsync(() -> {
 						try (Reader reader = new java.io.InputStreamReader(pair.right().getInputStream())) {
-							return Pair.of(pair.left(), GsonHelper.parse(reader));
+							return Pair.of(pair.left(), GsonExtensionsKt.parseJsonObject(reader, false));
 						} catch (IOException e) {
 							throw new RuntimeException("Failed to read resource: " + pair.left(), e);
 						}

@@ -10,7 +10,7 @@ public class Logger {
 	private Logger() {}
 
 	static {
-		LoggerConfig.configureLogger(Constants.LOGGER, new DefaultLogColorProvider());
+		LoggerExtensionsKt.configure(Constants.LOGGER, new DefaultLogColorProvider());
 	}
 
 	public static void log(Level pLogLevel, Supplier<String> pMessageSupplier, Throwable... pThrowable) {

@@ -3,7 +3,7 @@ package com.mealam.showdown.loader.json.deserialize.moves;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.mealam.showdown.utils.json.GsonHelper;
+import com.mealam.showdown.utils.json.JsonObjectExtensionsKt;
 
 public record EffectTarget(
 		String status,
@@ -15,10 +15,10 @@ public record EffectTarget(
 		return (json, pType, context) -> {
 			JsonObject obj = json.getAsJsonObject();
 
-			String status = GsonHelper.getAsString(obj, "status");
-			String type = GsonHelper.getAsString(obj, "type");
-			Integer value = GsonHelper.getAsInt(obj, "value");
-			Integer chance = GsonHelper.getAsInt(obj, "chance");
+			String status = JsonObjectExtensionsKt.getAsString(obj, "status");
+			String type = JsonObjectExtensionsKt.getAsString(obj, "type");
+			Integer value = JsonObjectExtensionsKt.getAsInt(obj, "value");
+			Integer chance = JsonObjectExtensionsKt.getAsInt(obj, "chance");
 
 			return new EffectTarget(
 					status,

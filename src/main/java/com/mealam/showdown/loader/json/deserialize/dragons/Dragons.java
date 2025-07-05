@@ -10,8 +10,9 @@ package com.mealam.showdown.loader.json.deserialize.dragons;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.mealam.showdown.utils.json.GsonHelper;
-import com.mealam.showdown.utils.json.JsonUtils;
+import com.mealam.showdown.utils.json.JsonArrayExtensionsKt;
+import com.mealam.showdown.utils.json.JsonObjectExtensionsKt;
+
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,19 +35,19 @@ public record Dragons(
 		return (json, type, context) -> {
 			JsonObject obj = json.getAsJsonObject();
 
-			String id = GsonHelper.getAsString(obj, "id");
-			String name = GsonHelper.getAsString(obj, "name");
-			String img = JsonUtils.getOptionalString(obj, "img");
-			String origin = GsonHelper.getAsString(obj, "origin");
-			List<String> classes = JsonUtils.jsonArrayToStringList(GsonHelper.getAsJsonArray(obj, "classes"));
-			Float attack = JsonUtils.getOptionalFloat(obj, "attack");
-			Float speed = JsonUtils.getOptionalFloat(obj, "speed");
-			Float armor = JsonUtils.getOptionalFloat(obj, "armor");
-			Float firePower = JsonUtils.getOptionalFloat(obj, "firepower");
-			Float shotLimit = JsonUtils.getOptionalFloat(obj, "shot_limit");
-			Float venom = JsonUtils.getOptionalFloat(obj, "venom");
-			Float jawStrength = JsonUtils.getOptionalFloat(obj, "jaw_strength");
-			Float stealth = JsonUtils.getOptionalFloat(obj, "stealth");
+			String id = JsonObjectExtensionsKt.getAsString(obj, "id");
+			String name = JsonObjectExtensionsKt.getAsString(obj, "name");
+			String img = JsonObjectExtensionsKt.getOptionalString(obj, "img");
+			String origin = JsonObjectExtensionsKt.getAsString(obj, "origin");
+			List<String> classes = JsonArrayExtensionsKt.toStringList(JsonObjectExtensionsKt.getAsJsonArrayKt(obj, "classes"));
+			Float attack = JsonObjectExtensionsKt.getOptionalFloat(obj, "attack");
+			Float speed = JsonObjectExtensionsKt.getOptionalFloat(obj, "speed");
+			Float armor = JsonObjectExtensionsKt.getOptionalFloat(obj, "armor");
+			Float firePower = JsonObjectExtensionsKt.getOptionalFloat(obj, "firepower");
+			Float shotLimit = JsonObjectExtensionsKt.getOptionalFloat(obj, "shot_limit");
+			Float venom = JsonObjectExtensionsKt.getOptionalFloat(obj, "venom");
+			Float jawStrength = JsonObjectExtensionsKt.getOptionalFloat(obj, "jaw_strength");
+			Float stealth = JsonObjectExtensionsKt.getOptionalFloat(obj, "stealth");
 
 			return new Dragons(
 					id,

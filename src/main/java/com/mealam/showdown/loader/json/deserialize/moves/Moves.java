@@ -10,7 +10,7 @@ package com.mealam.showdown.loader.json.deserialize.moves;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.mealam.showdown.utils.json.GsonHelper;
+import com.mealam.showdown.utils.json.JsonObjectExtensionsKt;
 
 public record Moves(
 		String id,
@@ -29,15 +29,15 @@ public record Moves(
 		return (json, pType, context) -> {
 			JsonObject obj = json.getAsJsonObject();
 
-			String id = GsonHelper.getAsString(obj, "id");
-			String name = GsonHelper.getAsString(obj, "name");
-			String description = GsonHelper.getAsString(obj, "description");
-			String type = GsonHelper.getAsString(obj, "type");
-			String category = GsonHelper.getAsString(obj, "category");
-			Integer power = GsonHelper.getAsInt(obj, "power");
-			Integer accuracy = GsonHelper.getAsInt(obj, "accuracy");
-			Integer pp = GsonHelper.getAsInt(obj, "pp");
-			Effect effect = GsonHelper.getAsObject(obj, "effect", context, Effect.class);
+			String id = JsonObjectExtensionsKt.getAsString(obj, "id");
+			String name = JsonObjectExtensionsKt.getAsString(obj, "name");
+			String description = JsonObjectExtensionsKt.getAsString(obj, "description");
+			String type = JsonObjectExtensionsKt.getAsString(obj, "type");
+			String category = JsonObjectExtensionsKt.getAsString(obj, "category");
+			Integer power = JsonObjectExtensionsKt.getAsInt(obj, "power");
+			Integer accuracy = JsonObjectExtensionsKt.getAsInt(obj, "accuracy");
+			Integer pp = JsonObjectExtensionsKt.getAsInt(obj, "pp");
+			Effect effect = JsonObjectExtensionsKt.getAsObject(obj, "effect", context, Effect.class);
 
 			return new Moves(
 					id,

@@ -3,9 +3,11 @@ package com.mealam.showdown.loader.json.deserialize.moves;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.mealam.showdown.utils.json.JsonUtils;
-import java.util.List;
+import com.mealam.showdown.utils.json.JsonArrayExtensionsKt;
+import com.mealam.showdown.utils.json.JsonObjectExtensionsKt;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public record Effect(
 		@Nullable List<EffectTarget> self,
@@ -15,8 +17,8 @@ public record Effect(
 		return (json, pType, context) -> {
 			JsonObject obj = json.getAsJsonObject();
 
-			List<EffectTarget> self = JsonUtils.jsonArrayToObjectList(JsonUtils.getOptionalJsonArray(obj, "self"), context, EffectTarget.class);
-			List<EffectTarget> effect = JsonUtils.jsonArrayToObjectList(JsonUtils.getOptionalJsonArray(obj, "enemy"), context, EffectTarget.class);
+			List<EffectTarget> self = JsonArrayExtensionsKt.toObjectList(JsonObjectExtensionsKt.getOptionalJsonArray(obj, "self"), context, EffectTarget.class);
+			List<EffectTarget> effect = JsonArrayExtensionsKt.toObjectList(JsonObjectExtensionsKt.getOptionalJsonArray(obj, "enemy"), context, EffectTarget.class);
 
 			return new Effect(
 					self,
