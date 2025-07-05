@@ -1,4 +1,4 @@
-package com.mealam.showdown.moves.enums;
+package com.mealam.showdown.move.enums;
 
 public enum Status {
 

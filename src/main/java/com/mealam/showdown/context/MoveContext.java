@@ -1,4 +1,4 @@
-package com.mealam.showdown.moves;
+package com.mealam.showdown.context;
 
 import com.mealam.showdown.loader.cache.moves.MovesCache;
 import org.jetbrains.annotations.Nullable;

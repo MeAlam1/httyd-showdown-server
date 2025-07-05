@@ -43,11 +43,14 @@ dependencies {
     implementation(libs.annotations)
     implementation(libs.commons.lang3)
     implementation(libs.dotenv.java)
-
+    implementation(libs.jjwt.api)
+    
     compileOnly(libs.lombok)
 
     runtimeOnly(libs.mysql)
-
+    runtimeOnly(libs.jjwt.impl)
+    runtimeOnly(libs.jjwt.jackson)
+    
     developmentOnly(libs.spring.boot.devtools)
 
     annotationProcessor(libs.spring.boot.configuration.processor)

@@ -1,6 +1,6 @@
-package com.mealam.showdown.battle;
+package com.mealam.showdown.context.battle;
 
-import com.mealam.showdown.players.PlayerContext;
+import com.mealam.showdown.context.PlayerContext;
 
 import java.util.List;
 

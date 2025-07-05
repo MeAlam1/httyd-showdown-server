@@ -1,4 +1,4 @@
-package com.mealam.showdown.battle;
+package com.mealam.showdown.context.battle;
 
 import org.jetbrains.annotations.Nullable;
 

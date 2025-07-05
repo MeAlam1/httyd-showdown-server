@@ -1,4 +1,4 @@
-package com.mealam.showdown.db.security;
+package com.mealam.showdown.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -19,10 +20,14 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http
+	public SecurityFilterChain filterChain(HttpSecurity pHttp, JwtAuthFilter pJwtAuthFilter) throws Exception {
+		pHttp
 				.csrf(AbstractHttpConfigurer::disable)
-				.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
-		return http.build();
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/auth/login", "/auth/register").permitAll()
+						.anyRequest().authenticated()
+				)
+				.addFilterBefore(pJwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+		return pHttp.build();
 	}
 }

@@ -1,4 +1,4 @@
-package com.mealam.showdown.users;
+package com.mealam.showdown.context.user;
 
 import org.springframework.stereotype.Service;
 

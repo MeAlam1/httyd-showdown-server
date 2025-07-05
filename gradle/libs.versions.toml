@@ -14,6 +14,7 @@ annotations = "24.0.0"
 lang3 = "3.14.0"
 dotenv-java = "3.0.0"
 mysql = "8.4.0"
+jjwt = "0.12.5"
 
 [libraries]
 spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "spring-boot" }
@@ -34,6 +35,9 @@ fastutil = { module = "it.unimi.dsi:fastutil", version.ref = "fastutil" }
 annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
 commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "lang3" }
 dotenv-java = { module = "io.github.cdimascio:dotenv-java", version.ref = "dotenv-java" }
+jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
+jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

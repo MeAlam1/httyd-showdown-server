@@ -1,4 +1,4 @@
-package com.mealam.showdown.moves;
+package com.mealam.showdown.move;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

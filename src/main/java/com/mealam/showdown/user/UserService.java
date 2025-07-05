@@ -1,4 +1,4 @@
-package com.mealam.showdown.db.user;
+package com.mealam.showdown.user;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

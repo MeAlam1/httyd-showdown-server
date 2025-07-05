@@ -1,4 +1,4 @@
-package com.mealam.showdown.db.user;
+package com.mealam.showdown.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

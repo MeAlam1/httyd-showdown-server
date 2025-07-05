@@ -1,7 +1,6 @@
-package com.mealam.showdown.players;
+package com.mealam.showdown.context;
 
-import com.mealam.showdown.dragons.DragonContext;
-import com.mealam.showdown.users.UserContext;
+import com.mealam.showdown.context.user.UserContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

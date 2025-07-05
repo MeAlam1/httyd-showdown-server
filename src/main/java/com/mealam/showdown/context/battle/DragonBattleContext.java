@@ -1,6 +1,6 @@
-package com.mealam.showdown.battle;
+package com.mealam.showdown.context.battle;
 
-import com.mealam.showdown.moves.enums.Status;
+import com.mealam.showdown.move.enums.Status;
 
 import java.util.List;
 

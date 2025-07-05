@@ -1,8 +1,7 @@
-package com.mealam.showdown.dragons;
+package com.mealam.showdown.context;
 
 import com.mealam.showdown.loader.cache.dragons.DragonsCache;
-import com.mealam.showdown.moves.MoveContext;
-import com.mealam.showdown.moves.enums.Status;
+import com.mealam.showdown.move.enums.Status;
 
 import java.util.List;
 

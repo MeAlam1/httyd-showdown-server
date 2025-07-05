@@ -1,4 +1,4 @@
-package com.mealam.showdown.battle;
+package com.mealam.showdown.context.battle;
 
 public record SpectatorBattleContext(
 		String spectatorId,

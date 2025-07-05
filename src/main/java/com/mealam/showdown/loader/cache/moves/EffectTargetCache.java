@@ -7,7 +7,7 @@
  */
 package com.mealam.showdown.loader.cache.moves;
 
-import com.mealam.showdown.moves.enums.Status;
+import com.mealam.showdown.move.enums.Status;
 
 public record EffectTargetCache(
 		Status status,

@@ -1,4 +1,4 @@
-package com.mealam.showdown.db.user;
+package com.mealam.showdown.user;
 
 import jakarta.persistence.*;
 import lombok.Getter;
