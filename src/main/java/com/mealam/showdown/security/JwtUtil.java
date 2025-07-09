@@ -3,18 +3,20 @@ package com.mealam.showdown.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import org.springframework.stereotype.Component;
-
-import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.UUID;
+import javax.crypto.SecretKey;
+
+import lombok.Getter;
+import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
+
 	private final SecretKey key = Jwts.SIG.HS256.key().build();
+	@Getter
 	private final long expirationMs = 86400000; // 1 day
 
-	public String generateToken(UUID pUserId, String pUsername) {
+	public String generateToken(Long pUserId, String pUsername) {
 		return Jwts.builder()
 				.subject(pUserId.toString())
 				.claim("username", pUsername)

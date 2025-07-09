@@ -4,5 +4,6 @@ import com.mealam.showdown.context.MoveContext;
 
 @FunctionalInterface
 public interface SpecialMoveEffect {
+
 	void apply(MoveContext pContext);
 }

@@ -1,10 +1,8 @@
 package com.mealam.showdown.user;
 
+import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -34,12 +32,11 @@ public class UserService {
 				.orElse(false);
 	}
 
-	public UUID getUserIdByUsername(String pUsername) {
+	public Optional<Long> getUserIdByUsername(String pUsername) {
 		Optional<User> userOpt = userRepository.findByUsername(pUsername);
 		if (userOpt.isEmpty()) {
 			System.out.println("Warning: User not found for username: " + pUsername);
-			return null;
 		}
-		return userOpt.get().getId();
+		return userOpt.map(User::getId);
 	}
 }

@@ -4,6 +4,4 @@ public record MoveBattleContext(
 		String moveId,
 		String name,
 		int currentPP,
-		int maxPP
-) {
-}
+		int maxPP) {}

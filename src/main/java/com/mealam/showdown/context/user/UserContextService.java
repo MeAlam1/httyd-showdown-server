@@ -1,26 +1,25 @@
 package com.mealam.showdown.context.user;
 
-import org.springframework.stereotype.Service;
-
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserContextService {
-	private final Map<UUID, UserContext> userContexts = new ConcurrentHashMap<>();
 
-	public UserContext createContext(UUID pUserId, String pUsername) {
+	private final Map<Long, UserContext> userContexts = new ConcurrentHashMap<>();
+
+	public UserContext createContext(Long pUserId, String pUsername) {
 		UserContext context = new UserContext(pUserId, pUsername);
 		userContexts.put(pUserId, context);
 		return context;
 	}
 
-	public UserContext getContext(UUID pUserId) {
+	public UserContext getContext(Long pUserId) {
 		return userContexts.get(pUserId);
 	}
 
-	public void removeContext(UUID pUserId) {
+	public void removeContext(Long pUserId) {
 		userContexts.remove(pUserId);
 	}
 }

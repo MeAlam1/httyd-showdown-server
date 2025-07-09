@@ -19,5 +19,4 @@ public record MovesCache(
 		Integer power,
 		Integer accuracy,
 		Integer pp,
-		EffectCache effect) {
-}
+		EffectCache effect) {}

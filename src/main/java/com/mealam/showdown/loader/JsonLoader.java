@@ -69,12 +69,12 @@ public class JsonLoader {
 					Logger.log(LogLevel.ERROR, "Exception while baking " + pPath + ": " + ex.getMessage());
 					return null;
 				}).whenComplete((result, ex) -> {
-			if (ex != null) {
-				Logger.log(LogLevel.ERROR, "Failed to load static " + pPath + ": " + ex.getMessage());
-			} else {
-				Logger.log(LogLevel.INFO, "Successfully loaded static " + pPath + ". Count: " + (result != null ? result.size() : 0));
-			}
-		});
+					if (ex != null) {
+						Logger.log(LogLevel.ERROR, "Failed to load static " + pPath + ": " + ex.getMessage());
+					} else {
+						Logger.log(LogLevel.INFO, "Successfully loaded static " + pPath + ". Count: " + (result != null ? result.size() : 0));
+					}
+				});
 	}
 
 	protected static <BAKED> CompletableFuture<Map<String, BAKED>> bakeJsonResources(

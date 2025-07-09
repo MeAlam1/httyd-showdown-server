@@ -15,5 +15,4 @@ public record DragonsCache(
 		int shot_limit,
 		int venom,
 		int jaw_strength,
-		int stealth) {
-}
+		int stealth) {}

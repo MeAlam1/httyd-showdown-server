@@ -34,10 +34,9 @@ public class SecurityConfig {
 								"/actuator/health",
 								"/actuator/health/**",
 								"/webjars/**",
-								"/api/uuid/**"
-						).permitAll()
-						.anyRequest().authenticated()
-				)
+								"/api/uuid/**")
+						.permitAll()
+						.anyRequest().authenticated())
 				.addFilterBefore(pJwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 		return pHttp.build();
 	}

@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mealam.showdown.utils.json.JsonArrayExtensionsKt;
 import com.mealam.showdown.utils.json.JsonObjectExtensionsKt;
-
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
 

@@ -3,12 +3,14 @@ package com.mealam.showdown.user;
 import com.mealam.showdown.context.user.UserContextService;
 import com.mealam.showdown.security.CaptchaService;
 import com.mealam.showdown.security.JwtUtil;
+import java.util.Map;
+import java.util.Optional;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")
@@ -32,7 +34,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<String> register(@RequestBody Map<String, String> pBody) {
+	public ResponseEntity<String> register(@RequestBody Map<String, String> pBody, HttpServletResponse pResponse) {
 		String captchaId = pBody.get("captchaId");
 		String captchaAnswer = pBody.get("captchaAnswer");
 		if (captchaId == null || captchaAnswer == null || !captchaService.verify(captchaId, captchaAnswer)) {
@@ -45,14 +47,21 @@ public class AuthController {
 			}
 			userContextService.createContext(user.getId(), pBody.get("username"));
 			String token = jwtUtil.generateToken(user.getId(), user.getUsername());
-			return ResponseEntity.ok(token);
+
+			Cookie cookie = new Cookie("jwt", token);
+			cookie.setHttpOnly(true);
+			cookie.setPath("/");
+			cookie.setMaxAge((int) (jwtUtil.getExpirationMs() / 1000));
+			pResponse.addCookie(cookie);
+
+			return ResponseEntity.ok("Registration successful");
 		} catch (RuntimeException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody Map<String, String> pBody) {
+	public ResponseEntity<String> login(@RequestBody Map<String, String> pBody, HttpServletResponse pResponse) {
 		String captchaId = pBody.get("captchaId");
 		String captchaAnswer = pBody.get("captchaAnswer");
 		if (captchaId == null || captchaAnswer == null || !captchaService.verify(captchaId, captchaAnswer)) {
@@ -60,12 +69,23 @@ public class AuthController {
 		}
 		boolean success = userService.login(pBody.get("username"), pBody.get("password"));
 		if (success) {
-			UUID userId = userService.getUserIdByUsername(pBody.get("username"));
+			Optional<Long> userIdOpt = userService.getUserIdByUsername(pBody.get("username"));
+			if (userIdOpt.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+			}
+			Long userId = userIdOpt.get();
 			if (userContextService.getContext(userId) == null) {
 				userContextService.createContext(userId, pBody.get("username"));
 			}
 			String token = jwtUtil.generateToken(userId, pBody.get("username"));
-			return ResponseEntity.ok(token);
+
+			Cookie cookie = new Cookie("jwt", token);
+			cookie.setHttpOnly(true);
+			cookie.setPath("/");
+			cookie.setMaxAge((int) (jwtUtil.getExpirationMs() / 1000));
+			pResponse.addCookie(cookie);
+
+			return ResponseEntity.ok("Login successful");
 		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
 		}

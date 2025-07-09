@@ -2,7 +2,6 @@ package com.mealam.showdown.context;
 
 import com.mealam.showdown.loader.cache.dragons.DragonsCache;
 import com.mealam.showdown.move.enums.Status;
-
 import java.util.List;
 
 public record DragonContext(
@@ -13,6 +12,4 @@ public record DragonContext(
 		List<MoveContext> moves,
 		int currentHp,
 		int maxHp,
-		Status status
-) {
-}
+		Status status) {}

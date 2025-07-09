@@ -1,23 +1,21 @@
 package com.mealam.showdown.security;
 
-import org.springframework.stereotype.Service;
-
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CaptchaService {
+
 	private final Map<String, Connection> captchaStore = new ConcurrentHashMap<>();
 
-            
-	private record Connection(String question, int answer) {
-	}
+	private record Connection(String question, int answer) {}
 
 	public Map<String, String> generateCaptcha() {
 		int a = (int) (Math.random() * 10 + 1);
 		int b = (int) (Math.random() * 10 + 1);
-		String question = a + " + " + b + " = ?";
+		String question = a + " + " + b;
 		int answer = a + b;
 		String captchaId = UUID.randomUUID().toString();
 		captchaStore.put(captchaId, new Connection(question, answer));

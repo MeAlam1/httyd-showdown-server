@@ -6,6 +6,4 @@ import org.jetbrains.annotations.Nullable;
 public record MoveContext(
 		MovesCache baseData,
 		String userDragonId,
-		@Nullable String targetDragonId
-) {
-}
+		@Nullable String targetDragonId) {}
