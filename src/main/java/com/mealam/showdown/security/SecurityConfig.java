@@ -33,7 +33,8 @@ public class SecurityConfig {
 								"/actuator",
 								"/actuator/health",
 								"/actuator/health/**",
-								"/webjars/**"
+								"/webjars/**",
+								"/api/uuid/**"
 						).permitAll()
 						.anyRequest().authenticated()
 				)
