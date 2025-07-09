@@ -27,6 +27,7 @@ public class SecurityConfig {
 						.requestMatchers(
 								"/auth/login",
 								"/auth/register",
+								"/auth/captcha",
 								"/test-kt",
 								"/error",
 								"/actuator",
