@@ -44,6 +44,16 @@ dependencies {
     implementation(libs.commons.lang3)
     implementation(libs.dotenv.java)
     implementation(libs.jjwt.api)
+
+    testImplementation(libs.spring.boot.starter.test)
+    testImplementation(libs.spring.modulith.starter.test)
+    testImplementation(libs.junit.platform.launcher)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.junit.jupiter)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.testcontainers)
+    testImplementation(libs.testcontainers.mysql)
+    testImplementation(libs.awaitility)
     
     compileOnly(libs.lombok)
 
