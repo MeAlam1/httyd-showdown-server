@@ -1,5 +1,6 @@
 package com.mealam.showdown.user;
 
+import com.mealam.showdown.user.profile.UserProfileService;
 import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -8,10 +9,12 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
 	private final UserRepository userRepository;
+	private final UserProfileService userProfileService;
 	private final PasswordEncoder passwordEncoder;
 
-	public UserService(UserRepository pUserRepository, PasswordEncoder pPasswordEncoder) {
+	public UserService(UserRepository pUserRepository, UserProfileService pUserProfileService, PasswordEncoder pPasswordEncoder) {
 		this.userRepository = pUserRepository;
+		this.userProfileService = pUserProfileService;
 		this.passwordEncoder = pPasswordEncoder;
 	}
 
@@ -23,7 +26,9 @@ public class UserService {
 		User user = new User();
 		user.setUsername(pUsername);
 		user.setPassword(passwordEncoder.encode(pPassword));
-		return userRepository.save(user);
+		User savedUser = userRepository.save(user);
+		userProfileService.createUserProfile(savedUser);
+		return savedUser;
 	}
 
 	public boolean login(String pUsername, String pRawPassword) {

@@ -17,7 +17,8 @@ public class WebConfig {
 			public void addCorsMappings(@NotNull CorsRegistry pRegistry) {
 				pRegistry.addMapping("/**")
 						.allowedOrigins("http://localhost:5173")
-						.allowedMethods("GET", "POST");
+						.allowedMethods("*")
+						.allowCredentials(true);
 			}
 		};
 	}
