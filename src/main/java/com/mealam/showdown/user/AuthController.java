@@ -3,11 +3,10 @@ package com.mealam.showdown.user;
 import com.mealam.showdown.context.user.UserContextService;
 import com.mealam.showdown.security.CaptchaService;
 import com.mealam.showdown.security.JwtUtil;
-import java.util.Map;
-import java.util.Optional;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Map;
+import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
