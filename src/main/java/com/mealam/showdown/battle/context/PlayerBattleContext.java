@@ -1,4 +1,4 @@
-package com.mealam.showdown.context.battle;
+package com.mealam.showdown.battle.context;
 
 import com.mealam.showdown.context.PlayerContext;
 import java.util.List;

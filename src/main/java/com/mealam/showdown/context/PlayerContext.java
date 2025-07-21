@@ -1,6 +1,6 @@
 package com.mealam.showdown.context;
 
-import com.mealam.showdown.context.user.UserContext;
+import com.mealam.showdown.user.context.UserContext;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
 

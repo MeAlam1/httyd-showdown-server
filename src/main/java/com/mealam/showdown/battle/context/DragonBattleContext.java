@@ -1,4 +1,4 @@
-package com.mealam.showdown.context.battle;
+package com.mealam.showdown.battle.context;
 
 import com.mealam.showdown.move.enums.Status;
 import java.util.List;

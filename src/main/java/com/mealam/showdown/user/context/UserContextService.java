@@ -1,4 +1,4 @@
-package com.mealam.showdown.context.user;
+package com.mealam.showdown.user.context;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

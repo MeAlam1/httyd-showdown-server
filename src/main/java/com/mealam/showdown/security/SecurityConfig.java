@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -24,7 +23,8 @@ public class SecurityConfig {
 		pHttp
 				.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers(
+						.anyRequest().permitAll());
+						/*.requestMatchers(
 								"/auth/login",
 								"/auth/register",
 								"/auth/captcha",
@@ -37,7 +37,7 @@ public class SecurityConfig {
 								"/api/uuid/**")
 						.permitAll()
 						.anyRequest().authenticated())
-				.addFilterBefore(pJwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+				.addFilterBefore(pJwtAuthFilter, UsernamePasswordAuthenticationFilter.class);*/
 		return pHttp.build();
 	}
 }

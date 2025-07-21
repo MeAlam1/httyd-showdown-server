@@ -1,6 +1,6 @@
 package com.mealam.showdown.user;
 
-import com.mealam.showdown.context.user.UserContextService;
+import com.mealam.showdown.user.context.UserContextService;
 import com.mealam.showdown.security.CaptchaService;
 import com.mealam.showdown.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
