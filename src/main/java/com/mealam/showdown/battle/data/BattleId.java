@@ -20,7 +20,7 @@ public class BattleId extends BaseId {
 		return new BattleId(IdGenerator.generateId());
 	}
 
-	public static BattleId from(String pRaw) {
+	public static BattleId parse(String pRaw) {
 		return new BattleId(pRaw);
 	}
 }

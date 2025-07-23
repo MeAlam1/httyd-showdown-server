@@ -8,6 +8,9 @@
 package com.mealam.showdown.battle;
 
 import com.mealam.showdown.battle.context.PlayerBattleContext;
+import com.mealam.showdown.battle.data.BattleId;
+import com.mealam.showdown.move.data.MoveId;
+import com.mealam.showdown.user.data.UserId;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,13 +21,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class PlayerController {
 
 	@PostMapping("/join")
-	public PlayerBattleContext joinBattle(@RequestParam String pBattleId, @RequestParam String pPlayerId) {
+	public PlayerBattleContext joinBattle(@RequestParam String pBattleId, @RequestParam String pUserId) {
+		BattleId battleId = BattleId.parse(pBattleId);
+		UserId userId = UserId.parse(pUserId);
 		// Stub: Replace with actual service call
 		return null;
 	}
 
 	@PostMapping("/move")
-	public String makeMove(@RequestParam String pBattleId, @RequestParam String pPlayerId, @RequestParam String pMoveId) {
+	public String makeMove(@RequestParam String pBattleId, @RequestParam String pUserId, @RequestParam String pMoveId) {
+		BattleId battleId = BattleId.parse(pBattleId);
+		UserId userId = UserId.parse(pUserId);
+		MoveId moveId = MoveId.parse(pMoveId);
 		// Stub: Replace with actual service call
 		return "Move registered";
 	}

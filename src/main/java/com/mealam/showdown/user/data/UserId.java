@@ -20,7 +20,7 @@ public class UserId extends BaseId {
 		return new UserId(IdGenerator.generateId());
 	}
 
-	public static UserId from(String pRaw) {
+	public static UserId parse(String pRaw) {
 		return new UserId(pRaw);
 	}
 }
