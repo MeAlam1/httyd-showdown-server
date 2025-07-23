@@ -9,15 +9,18 @@ package com.mealam.showdown.battle.context;
 
 import com.mealam.showdown.battle.data.Phase;
 import com.mealam.showdown.battle.data.turns.Turn;
+import com.mealam.showdown.user.data.UserId;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Map;
-import org.jetbrains.annotations.Nullable;
 
 public record BattleContext(
 		String battleId,
 		List<String> playerIds,
 		Map<String, DragonBattleContext> dragons, // dragonId -> DragonBattleContext
-		Turn turn,
 		Map<String, String> activeMoves, // dragonId -> moveId
+		Turn turn,
 		Phase phase,
-		@Nullable String winnerPlayerId) {}
+		@Nullable UserId winnerPlayerId) {
+}

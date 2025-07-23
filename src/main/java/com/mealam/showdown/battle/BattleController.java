@@ -32,8 +32,8 @@ public class BattleController {
 				battleId,
 				List.of(pRequest.playerId()),
 				Map.of(),
-				new Turns().createBattle(),
 				Map.of(),
+				new Turns().createBattle(),
 				Phase.REGISTRY.defaultVersion(),
 				null);
 		battles.put(battleId, context);
