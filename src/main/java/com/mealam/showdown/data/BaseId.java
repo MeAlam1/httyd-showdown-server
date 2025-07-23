@@ -5,13 +5,22 @@
  * If a copy of the MIT License was not distributed with this file,
  * You can obtain one at https://opensource.org/licenses/MIT.
  */
-package com.mealam.showdown.loader.json;
+package com.mealam.showdown.data;
 
-public interface CacheFactory<T, S> {
+public abstract class BaseId {
 
-	T construct(S pSource);
+	protected final String value;
 
-	static <T, S> T constructWithFactory(CacheFactory<T, S> pFactory, S pSource) {
-		return pFactory.construct(pSource);
+	protected BaseId(String pValue) {
+		this.value = pValue;
+	}
+
+	public String value() {
+		return value;
+	}
+
+	@Override
+	public String toString() {
+		return value;
 	}
 }

@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.security;
 
 import org.springframework.context.annotation.Bean;
@@ -24,20 +31,20 @@ public class SecurityConfig {
 				.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth -> auth
 						.anyRequest().permitAll());
-						/*.requestMatchers(
-								"/auth/login",
-								"/auth/register",
-								"/auth/captcha",
-								"/test-kt",
-								"/error",
-								"/actuator",
-								"/actuator/health",
-								"/actuator/health/**",
-								"/webjars/**",
-								"/api/uuid/**")
-						.permitAll()
-						.anyRequest().authenticated())
-				.addFilterBefore(pJwtAuthFilter, UsernamePasswordAuthenticationFilter.class);*/
+		/*.requestMatchers(
+				"/auth/login",
+				"/auth/register",
+				"/auth/captcha",
+				"/test-kt",
+				"/error",
+				"/actuator",
+				"/actuator/health",
+				"/actuator/health/**",
+				"/webjars/**",
+				"/api/uuid/**")
+		.permitAll()
+		.anyRequest().authenticated())
+		.addFilterBefore(pJwtAuthFilter, UsernamePasswordAuthenticationFilter.class);*/
 		return pHttp.build();
 	}
 }

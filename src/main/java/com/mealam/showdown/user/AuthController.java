@@ -1,8 +1,15 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.user;
 
-import com.mealam.showdown.user.context.UserContextService;
 import com.mealam.showdown.security.CaptchaService;
 import com.mealam.showdown.security.JwtUtil;
+import com.mealam.showdown.user.context.UserContextService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;

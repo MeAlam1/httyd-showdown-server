@@ -1,15 +1,20 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.battle.data;
 
 import com.mealam.showdown.api.utils.ExtensibleEnum;
-import com.mealam.showdown.utils.logging.LogLevel;
-import com.mealam.showdown.utils.logging.Logger;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.util.Map;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-
 public class Phase extends ExtensibleEnum<Phase> {
+
 	protected Phase(@NotNull String pName) {
 		super(pName);
 	}
@@ -33,6 +38,7 @@ public class Phase extends ExtensibleEnum<Phase> {
 
 	@Getter
 	private enum PhaseEnum {
+
 		START("start"),
 		IN_PROGRESS("in_progress"),
 		FINISHED("finished");
@@ -42,8 +48,6 @@ public class Phase extends ExtensibleEnum<Phase> {
 		PhaseEnum(String pName) {
 			this.phase = new Phase(pName);
 			REGISTRY.register(phase);
-			Logger.log(LogLevel.INFO, "Phase " + this.phase + " registered");
 		}
-
 	}
 }

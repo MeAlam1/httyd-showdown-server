@@ -5,8 +5,7 @@
  * If a copy of the MIT License was not distributed with this file,
  * You can obtain one at https://opensource.org/licenses/MIT.
  */
-package com.mealam.showdown.user.context;
+package com.mealam.showdown.battle.dto.request;
 
-public record UserContext(
-		Long userId,
-		String username) {}
+public record CreateBattleRequest(
+		String playerId) {}
