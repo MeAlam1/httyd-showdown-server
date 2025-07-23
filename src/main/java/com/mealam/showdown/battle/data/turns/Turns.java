@@ -23,7 +23,7 @@ public class Turns {
 	public Turn createBattle() {
 		currentTurn = NOT_STARTED;
 		turns.clear();
-		return new Turn(NOT_STARTED, null, null);
+		return new Turn(NOT_STARTED, null);
 	}
 
 	public Turn startBattle() {
@@ -31,7 +31,7 @@ public class Turns {
 			throw new IllegalStateException("Battle already started or finished");
 		}
 		currentTurn = 1;
-		return new Turn(currentTurn, null, null);
+		return new Turn(currentTurn, null);
 	}
 
 	public Turn advance(Turn pTurnData) {
@@ -49,7 +49,7 @@ public class Turns {
 
 	public void finish() {
 		currentTurn = FINISHED;
-		currentTurnInstance = new Turn(FINISHED, null, null);
+		currentTurnInstance = new Turn(FINISHED, null);
 	}
 
 	public int getCurrentTurnNumber() {

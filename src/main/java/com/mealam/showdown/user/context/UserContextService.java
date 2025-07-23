@@ -7,6 +7,7 @@
  */
 package com.mealam.showdown.user.context;
 
+import com.mealam.showdown.user.data.UserId;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,9 @@ public class UserContextService {
 
 	private final Map<Long, UserContext> userContexts = new ConcurrentHashMap<>();
 
-	public UserContext createContext(Long pUserId, String pUsername) {
-		UserContext context = new UserContext(pUserId, pUsername);
-		userContexts.put(pUserId, context);
+	public UserContext createContext(Long pId, UserId pUserId, String pUsername) {
+		UserContext context = new UserContext(pId, pUserId, pUsername);
+		userContexts.put(pId, context);
 		return context;
 	}
 

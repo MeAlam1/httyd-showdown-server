@@ -44,11 +44,21 @@ public class UserService {
 				.orElse(false);
 	}
 
-	public Optional<Long> getUserIdByUsername(String pUsername) {
+	public User getUserByUsername(String pUsername) {
 		Optional<User> userOpt = userRepository.findByUsername(pUsername);
 		if (userOpt.isEmpty()) {
 			System.out.println("Warning: User not found for username: " + pUsername);
+			return null;
 		}
-		return userOpt.map(User::getId);
+		return userOpt.get();
+	}
+
+	public User findByUserId(String pUserId) {
+		Optional<User> userOpt = userRepository.findByUserId(pUserId);
+		if (userOpt.isEmpty()) {
+			System.out.println("Warning: User not found for userId: " + pUserId);
+			return null;
+		}
+		return userOpt.get();
 	}
 }

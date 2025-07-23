@@ -10,10 +10,10 @@ package com.mealam.showdown.user;
 import com.mealam.showdown.security.CaptchaService;
 import com.mealam.showdown.security.JwtUtil;
 import com.mealam.showdown.user.context.UserContextService;
+import com.mealam.showdown.user.data.UserId;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
-import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,7 +51,7 @@ public class AuthController {
 			if (user == null) {
 				return ResponseEntity.badRequest().body("User already exists.");
 			}
-			userContextService.createContext(user.getId(), pBody.get("username"));
+			userContextService.createContext(user.getId(), UserId.parse(user.getUserId()), pBody.get("username"));
 			String token = jwtUtil.generateToken(user.getId(), user.getUsername());
 
 			Cookie cookie = new Cookie("jwt", token);
@@ -75,13 +75,10 @@ public class AuthController {
 		}
 		boolean success = userService.login(pBody.get("username"), pBody.get("password"));
 		if (success) {
-			Optional<Long> userIdOpt = userService.getUserIdByUsername(pBody.get("username"));
-			if (userIdOpt.isEmpty()) {
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
-			}
-			Long userId = userIdOpt.get();
+			User user = userService.getUserByUsername(pBody.get("username"));
+			Long userId = user.getId();
 			if (userContextService.getContext(userId) == null) {
-				userContextService.createContext(userId, pBody.get("username"));
+				userContextService.createContext(userId, UserId.parse(user.getUserId()), pBody.get("username"));
 			}
 			String token = jwtUtil.generateToken(userId, pBody.get("username"));
 

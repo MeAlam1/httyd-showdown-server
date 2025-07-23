@@ -7,6 +7,9 @@
  */
 package com.mealam.showdown.user.context;
 
+import com.mealam.showdown.user.data.UserId;
+
 public record UserContext(
-		Long userId,
+		Long id,
+		UserId userId,
 		String username) {}

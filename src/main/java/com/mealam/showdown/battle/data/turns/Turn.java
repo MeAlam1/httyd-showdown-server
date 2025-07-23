@@ -7,11 +7,11 @@
  */
 package com.mealam.showdown.battle.data.turns;
 
+import com.mealam.showdown.user.data.UserId;
 import java.util.Map;
 import org.jetbrains.annotations.Nullable;
 
 public record Turn(
 		int number,
-		@Nullable Map<String, String> actions, // PlayerID -> action (e.g., "move Thunderbolt")
-		@Nullable String result // Optional: summary of turn (e.g., "Pikachu used Thunderbolt, it was super effective!")
+		@Nullable Map<UserId, String> actions // PlayerID -> action (e.g., "move Thunderbolt")
 ) {}
