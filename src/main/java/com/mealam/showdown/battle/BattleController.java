@@ -18,11 +18,14 @@ import com.mealam.showdown.battle.dto.response.CreateBattleResponse;
 import com.mealam.showdown.user.context.UserProfileContext;
 import com.mealam.showdown.user.context.UserProfileContextService;
 import com.mealam.showdown.user.data.UserId;
+import com.mealam.showdown.utils.logging.LogLevel;
+import com.mealam.showdown.utils.logging.Logger;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/battle")
@@ -48,6 +51,8 @@ public class BattleController {
 				null);
 		battles.put(battleId, context);
 
+		Logger.log(LogLevel.INFO, "Battle created, ID: " + battleId.value() + ", Creator: " + creatorId.value());
+
 		UserProfileContext userProfileContext = userProfileContextService.getByUserId(creatorId);
 
 		PlayerBattleContext playerContext = new PlayerBattleContext(
@@ -63,6 +68,8 @@ public class BattleController {
 	public BattleContext getBattle(
 			@PathVariable String pBattleId) {
 		BattleId battleId = BattleId.parse(pBattleId);
+
+		Logger.log(LogLevel.INFO, "Battle created, ID: " + battleId.value());
 
 		BattleContext context = battles.get(battleId);
 		if (context == null) {
@@ -83,6 +90,8 @@ public class BattleController {
 		if (context == null) {
 			throw new NoSuchElementException("Battle not found, all Battles: " + battles);
 		}
+
+		Logger.log(LogLevel.INFO, "Battle created, ID: " + battleId.value() + ", Creator: " + userId.value());
 
 		UserProfileContext userProfileContext = userProfileContextService.getByUserId(userId);
 
