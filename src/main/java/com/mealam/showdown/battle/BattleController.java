@@ -22,6 +22,7 @@ import com.mealam.showdown.utils.logging.LogLevel;
 import com.mealam.showdown.utils.logging.Logger;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -45,7 +46,7 @@ public class BattleController {
 		UserId creatorId = UserId.parse(pRequest.playerId());
 		BattleContext context = new BattleContext(
 				battleId,
-				List.of(creatorId),
+				new ArrayList<>(List.of(creatorId)),
 				new Turns().createBattle(),
 				Phase.REGISTRY.defaultVersion(),
 				null);
