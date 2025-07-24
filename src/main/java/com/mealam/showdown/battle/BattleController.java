@@ -91,6 +91,10 @@ public class BattleController {
 			throw new NoSuchElementException("Battle not found, all Battles: " + battles);
 		}
 
+		if (!context.playerIds().contains(userId)) {
+			context.playerIds().add(userId);
+		}
+
 		Logger.log(LogLevel.INFO, "Battle created, ID: " + battleId.value() + ", Creator: " + userId.value());
 
 		UserProfileContext userProfileContext = userProfileContextService.getByUserId(userId);
