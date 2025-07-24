@@ -7,6 +7,8 @@
  */
 package com.mealam.showdown.data;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public abstract class BaseId {
 
 	protected final String value;
@@ -15,6 +17,7 @@ public abstract class BaseId {
 		this.value = pValue;
 	}
 
+	@JsonValue
 	public String value() {
 		return value;
 	}
@@ -22,5 +25,17 @@ public abstract class BaseId {
 	@Override
 	public String toString() {
 		return value;
+	}
+
+	@Override
+	public boolean equals(Object pObject) {
+		if (this == pObject) return true;
+		if (!(pObject instanceof BaseId that)) return false;
+		return value.equals(that.value);
+	}
+
+	@Override
+	public int hashCode() {
+		return value.hashCode();
 	}
 }

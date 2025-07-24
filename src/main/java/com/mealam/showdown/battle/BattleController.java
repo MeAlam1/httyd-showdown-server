@@ -13,17 +13,16 @@ import com.mealam.showdown.battle.data.BattleId;
 import com.mealam.showdown.battle.data.Phase;
 import com.mealam.showdown.battle.data.turns.Turns;
 import com.mealam.showdown.battle.dto.request.CreateBattleRequest;
+import com.mealam.showdown.battle.dto.request.JoinBattleRequest;
 import com.mealam.showdown.battle.dto.response.CreateBattleResponse;
-import com.mealam.showdown.battle.dto.response.GetBattleResponse;
 import com.mealam.showdown.user.context.UserProfileContext;
 import com.mealam.showdown.user.context.UserProfileContextService;
 import com.mealam.showdown.user.data.UserId;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/battle")
@@ -61,31 +60,29 @@ public class BattleController {
 	}
 
 	@GetMapping("/{pBattleId}")
-	public GetBattleResponse getBattle(
-			@PathVariable String pBattleId,
-			@RequestParam String pUserId) {
+	public BattleContext getBattle(
+			@PathVariable String pBattleId) {
 		BattleId battleId = BattleId.parse(pBattleId);
-		UserId userId = UserId.parse(pUserId);
 
 		BattleContext context = battles.get(battleId);
 		if (context == null) {
-			throw new NoSuchElementException("Battle not found");
+			throw new NoSuchElementException("Battle not found, all Battles: " + battles);
 		}
 
-		PlayerBattleContext playerContext = battlePlayers
-				.getOrDefault(battleId, Map.of())
-				.get(userId);
-
-		return new GetBattleResponse(context, playerContext);
+		return context;
 	}
 
 	@PostMapping("/{pBattleId}/join")
-	public PlayerBattleContext joinBattle(@PathVariable String pBattleId, @RequestParam String pUserId) {
+	public PlayerBattleContext joinBattle(
+			@PathVariable String pBattleId,
+			@RequestBody JoinBattleRequest request) {
 		BattleId battleId = BattleId.parse(pBattleId);
-		UserId userId = UserId.parse(pUserId);
+		UserId userId = UserId.parse(request.userId());
 
 		BattleContext context = battles.get(battleId);
-		if (context == null) throw new NoSuchElementException("Battle not found");
+		if (context == null) {
+			throw new NoSuchElementException("Battle not found, all Battles: " + battles);
+		}
 
 		UserProfileContext userProfileContext = userProfileContextService.getByUserId(userId);
 
