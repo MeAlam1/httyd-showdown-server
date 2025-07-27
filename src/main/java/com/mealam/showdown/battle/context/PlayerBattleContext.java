@@ -11,6 +11,6 @@ import com.mealam.showdown.user.context.UserProfileContext;
 import java.util.List;
 
 public record PlayerBattleContext(
-		UserProfileContext player,
+		UserProfileContext user,
 		List<DragonBattleContext> party,
 		boolean isTurn) {}

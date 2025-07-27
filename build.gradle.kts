@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.commons.lang3)
     implementation(libs.dotenv.java)
     implementation(libs.jjwt.api)
+    implementation(libs.validation.api)
 
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.spring.modulith.starter.test)

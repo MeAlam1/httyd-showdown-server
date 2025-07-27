@@ -11,12 +11,21 @@ import com.mealam.showdown.battle.data.BattleId;
 import com.mealam.showdown.battle.data.Phase;
 import com.mealam.showdown.battle.data.turns.Turn;
 import com.mealam.showdown.user.data.UserId;
-import java.util.List;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collections;
+import java.util.List;
 
 public record BattleContext(
 		BattleId battleId,
 		List<UserId> playerIds,
+		List<UserId> spectatorIds,
 		Turn turn,
 		Phase phase,
-		@Nullable UserId winnerPlayerId) {}
+		@Nullable UserId winnerPlayerId) {
+
+	public BattleContext {
+		playerIds = Collections.unmodifiableList(playerIds);
+		spectatorIds = Collections.unmodifiableList(spectatorIds);
+	}
+}

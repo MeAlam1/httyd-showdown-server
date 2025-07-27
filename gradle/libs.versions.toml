@@ -21,6 +21,7 @@ spring-modulith = "1.4.1"
 spotless = "7.0.4"
 testcontainers = "1.19.7"
 testcontainers-mysql = "1.19.7"
+jakarta-validation-api = "3.1.1"
 
 [libraries]
 # Spring Boot Starters
@@ -65,6 +66,7 @@ awaitility = { module = "org.awaitility:awaitility", version.ref = "awaitility" 
 # Other
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
+validation-api = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakarta-validation-api" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
