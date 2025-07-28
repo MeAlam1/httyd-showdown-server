@@ -7,12 +7,16 @@
     "Tracker",
     "Tidal"
   ],
-  "attack": 20,
-  "speed": 16,
-  "armor": 14,
-  "firepower": 0,
-  "shot_limit": 0,
-  "venom": 0,
-  "jaw_strength": 30,
-  "stealth": 12
+  "stats": {
+    "attack": 20,
+    "speed": 16,
+    "armor": 14,
+    "firepower": 0,
+    "shot_limit": 0,
+    "venom": 0,
+    "jaw_strength": 30,
+    "stealth": 12
+  },
+  "learnset": [
+  ]
 }

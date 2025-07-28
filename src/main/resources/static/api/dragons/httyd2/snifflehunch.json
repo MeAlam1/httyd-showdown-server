@@ -1,17 +1,21 @@
 {
-    "id": "snifflehunch",
+  "id": "snifflehunch",
   "name": "Snifflehunch",
   "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/d/da/1481799170734.png",
   "origin": "How To Train Your Dragon 2",
   "classes": [
     "Tracker"
   ],
-  "attack": 0,
-  "speed": 0,
-  "armor": 0,
-  "firepower": 0,
-  "shot_limit": 0,
-  "venom": 0,
-  "jaw_strength": 0,
-  "stealth": 0
+  "stats": {
+    "attack": 0,
+    "speed": 0,
+    "armor": 0,
+    "firepower": 0,
+    "shot_limit": 0,
+    "venom": 0,
+    "jaw_strength": 0,
+    "stealth": 0
+  },
+  "learnset": [
+  ]
 }

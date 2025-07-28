@@ -6,12 +6,16 @@
   "classes": [
     "Sharp"
   ],
-  "attack": 10,
-  "speed": 30,
-  "armor": 10,
-  "firepower": 0,
-  "shot_limit": 0,
-  "venom": 15,
-  "jaw_strength": 5,
-  "stealth": 30
+  "stats": {
+    "attack": 10,
+    "speed": 30,
+    "armor": 10,
+    "firepower": 0,
+    "shot_limit": 0,
+    "venom": 15,
+    "jaw_strength": 5,
+    "stealth": 30
+  },
+  "learnset": [
+  ]
 }

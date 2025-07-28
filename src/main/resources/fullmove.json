@@ -16,7 +16,7 @@
       },
       {
         "status": "heal",
-        "type": "precentage",
+        "type": "percentage",
         "value": 10,
         "chance": 50
       },

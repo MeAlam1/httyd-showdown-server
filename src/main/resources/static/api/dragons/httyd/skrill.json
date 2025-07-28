@@ -1,17 +1,21 @@
 {
-    "id": "skrill",
+  "id": "skrill",
   "name": "Skrill",
   "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/b/b2/Sfsdfsf.png",
   "origin": "How To Train Your Dragon",
   "classes": [
     "Strike"
   ],
-  "attack": 14,
-  "speed": 19,
-  "armor": 10,
-  "firepower": 12,
-  "shot_limit": 4,
-  "venom": 0,
-  "jaw_strength": 5,
-  "stealth": 18
+  "stats": {
+    "attack": 14,
+    "speed": 19,
+    "armor": 10,
+    "firepower": 12,
+    "shot_limit": 4,
+    "venom": 0,
+    "jaw_strength": 5,
+    "stealth": 18
+  },
+  "learnset": [
+  ]
 }

@@ -6,12 +6,16 @@
   "classes": [
     "Strike"
   ],
-  "attack": 27,
-  "speed": 12,
-  "armor": 20,
-  "firepower": 12,
-  "shot_limit": 8,
-  "venom": 12,
-  "jaw_strength": 16,
-  "stealth": 6
+  "stats": {
+    "attack": 27,
+    "speed": 12,
+    "armor": 20,
+    "firepower": 12,
+    "shot_limit": 8,
+    "venom": 12,
+    "jaw_strength": 16,
+    "stealth": 6
+  },
+  "learnset": [
+  ]
 }

@@ -6,12 +6,16 @@
   "classes": [
     "Mystery"
   ],
-  "attack": 18,
-  "speed": 14,
-  "armor": 8,
-  "firepower": 20,
-  "shot_limit": 40,
-  "venom": 0,
-  "jaw_strength": 6,
-  "stealth": 8
+  "stats": {
+    "attack": 18,
+    "speed": 14,
+    "armor": 8,
+    "firepower": 20,
+    "shot_limit": 40,
+    "venom": 0,
+    "jaw_strength": 6,
+    "stealth": 8
+  },
+  "learnset": [
+  ]
 }

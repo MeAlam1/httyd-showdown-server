@@ -6,12 +6,16 @@
   "classes": [
     "Tracker"
   ],
-  "attack": 10,
-  "speed": 8,
-  "armor": 16,
-  "firepower": 18,
-  "shot_limit": 6,
-  "venom": 16,
-  "jaw_strength": 5,
-  "stealth": 10
+  "stats": {
+    "attack": 10,
+    "speed": 8,
+    "armor": 16,
+    "firepower": 18,
+    "shot_limit": 6,
+    "venom": 16,
+    "jaw_strength": 5,
+    "stealth": 10
+  },
+  "learnset": [
+  ]
 }

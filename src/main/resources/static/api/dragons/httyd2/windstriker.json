@@ -1,17 +1,21 @@
 {
-    "id": "windstriker",
+  "id": "windstriker",
   "name": "Windstriker",
   "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/0/0d/Windstriker_-_NBG.png",
   "origin": "How To Train Your Dragon 2",
   "classes": [
     "Sharp"
   ],
-  "attack": 0,
-  "speed": 0,
-  "armor": 0,
-  "firepower": 0,
-  "shot_limit": 0,
-  "venom": 0,
-  "jaw_strength": 0,
-  "stealth": 0
+  "stats": {
+    "attack": 0,
+    "speed": 0,
+    "armor": 0,
+    "firepower": 0,
+    "shot_limit": 0,
+    "venom": 0,
+    "jaw_strength": 0,
+    "stealth": 0
+  },
+  "learnset": [
+  ]
 }

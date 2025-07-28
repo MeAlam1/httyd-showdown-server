@@ -6,12 +6,16 @@
   "classes": [
     "Stoker"
   ],
-  "attack": 25,
-  "speed": 14,
-  "armor": 15,
-  "firepower": 18,
-  "shot_limit": 60,
-  "venom": 0,
-  "jaw_strength": 12,
-  "stealth": 4
+  "stats": {
+    "attack": 25,
+    "speed": 14,
+    "armor": 15,
+    "firepower": 18,
+    "shot_limit": 60,
+    "venom": 0,
+    "jaw_strength": 12,
+    "stealth": 4
+  },
+  "learnset": [
+  ]
 }

@@ -14,6 +14,7 @@ import com.mealam.showdown.loader.cache.dragons.DragonsCache;
 import com.mealam.showdown.loader.cache.moves.MovesCache;
 import com.mealam.showdown.loader.json.CacheFactory;
 import com.mealam.showdown.loader.json.deserialize.dragons.Dragons;
+import com.mealam.showdown.loader.json.deserialize.dragons.Stats;
 import com.mealam.showdown.loader.json.deserialize.moves.Effect;
 import com.mealam.showdown.loader.json.deserialize.moves.EffectTarget;
 import com.mealam.showdown.loader.json.deserialize.moves.Moves;
@@ -42,6 +43,7 @@ public class JsonLoader {
 
 	private static final Gson DRAGONS_GSON = GsonBuilderUtils.gsonBuilderWithBase64EncodedByteArrays().setPrettyPrinting().setLenient()
 			.registerTypeAdapter(Dragons.class, Dragons.deserializer())
+			.registerTypeAdapter(Stats.class, Stats.deserializer())
 			.create();
 
 	private static final Gson MOVES_GSON = GsonBuilderUtils.gsonBuilderWithBase64EncodedByteArrays().setPrettyPrinting().setLenient()

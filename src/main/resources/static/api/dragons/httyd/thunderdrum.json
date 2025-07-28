@@ -6,12 +6,16 @@
   "classes": [
     "Tidal"
   ],
-  "attack": 12,
-  "speed": 14,
-  "armor": 10,
-  "firepower": 16,
-  "shot_limit": 6,
-  "venom": 0,
-  "jaw_strength": 7,
-  "stealth": 8
+  "stats": {
+    "attack": 12,
+    "speed": 14,
+    "armor": 10,
+    "firepower": 16,
+    "shot_limit": 6,
+    "venom": 0,
+    "jaw_strength": 7,
+    "stealth": 8
+  },
+  "learnset": [
+  ]
 }

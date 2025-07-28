@@ -6,12 +6,16 @@
   "classes": [
     "Boulder"
   ],
-  "attack": 8,
-  "speed": 4,
-  "armor": 20,
-  "firepower": 12,
-  "shot_limit": 6,
-  "venom": 0,
-  "jaw_strength": 8,
-  "stealth": 5
+  "stats": {
+    "attack": 8,
+    "speed": 4,
+    "armor": 20,
+    "firepower": 12,
+    "shot_limit": 6,
+    "venom": 0,
+    "jaw_strength": 8,
+    "stealth": 5
+  },
+  "learnset": [
+  ]
 }

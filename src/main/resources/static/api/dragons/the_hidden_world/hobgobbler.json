@@ -7,12 +7,16 @@
     "Mystery",
     "Stoker"
   ],
-  "attack": 8,
-  "speed": 8,
-  "armor": 4,
-  "firepower": 6,
-  "shot_limit": 28,
-  "venom": 0,
-  "jaw_strength": 12,
-  "stealth": 18
+  "stats": {
+    "attack": 8,
+    "speed": 8,
+    "armor": 4,
+    "firepower": 6,
+    "shot_limit": 28,
+    "venom": 0,
+    "jaw_strength": 12,
+    "stealth": 18
+  },
+  "learnset": [
+  ]
 }

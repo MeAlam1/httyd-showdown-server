@@ -12,8 +12,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mealam.showdown.utils.json.JsonArrayExtensionsKt;
 import com.mealam.showdown.utils.json.JsonObjectExtensionsKt;
-import java.util.List;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public record Dragons(
 		String id,
@@ -21,14 +22,7 @@ public record Dragons(
 		@Nullable String img,
 		String origin,
 		List<String> classes,
-		@Nullable Float attack,
-		@Nullable Float speed,
-		@Nullable Float armor,
-		@Nullable Float firePower,
-		@Nullable Float shotLimit,
-		@Nullable Float venom,
-		@Nullable Float jawStrength,
-		@Nullable Float stealth) {
+		@Nullable Stats stats) {
 
 	public static JsonDeserializer<Dragons> deserializer() throws JsonParseException {
 		return (json, type, context) -> {
@@ -39,14 +33,7 @@ public record Dragons(
 			String img = JsonObjectExtensionsKt.getOptionalString(obj, "img");
 			String origin = JsonObjectExtensionsKt.getAsString(obj, "origin");
 			List<String> classes = JsonArrayExtensionsKt.toStringList(JsonObjectExtensionsKt.getAsJsonArrayKt(obj, "classes"));
-			Float attack = JsonObjectExtensionsKt.getOptionalFloat(obj, "attack");
-			Float speed = JsonObjectExtensionsKt.getOptionalFloat(obj, "speed");
-			Float armor = JsonObjectExtensionsKt.getOptionalFloat(obj, "armor");
-			Float firePower = JsonObjectExtensionsKt.getOptionalFloat(obj, "firepower");
-			Float shotLimit = JsonObjectExtensionsKt.getOptionalFloat(obj, "shot_limit");
-			Float venom = JsonObjectExtensionsKt.getOptionalFloat(obj, "venom");
-			Float jawStrength = JsonObjectExtensionsKt.getOptionalFloat(obj, "jaw_strength");
-			Float stealth = JsonObjectExtensionsKt.getOptionalFloat(obj, "stealth");
+			Stats stats = JsonObjectExtensionsKt.convertToObject(obj, "stats", context, Stats.class);
 
 			return new Dragons(
 					id,
@@ -54,14 +41,7 @@ public record Dragons(
 					img,
 					origin,
 					classes,
-					attack,
-					speed,
-					armor,
-					firePower,
-					shotLimit,
-					venom,
-					jawStrength,
-					stealth);
+					stats);
 		};
 	}
 }
