@@ -1,7 +1,7 @@
 {
   "id": "deathgripper",
   "name": "Deathgripper",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/d/d1/Deathgripper-Transparent.png",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/d/d1/Deathgripper-Transparent.png",
   "origin": "The Hidden World",
   "classes": [
     "Strike"
@@ -11,11 +11,11 @@
     "speed": 12,
     "armor": 20,
     "firepower": 12,
-    "shot_limit": 8,
+    "shotLimit": 8,
     "venom": 12,
-    "jaw_strength": 16,
+    "jawStrength": 16,
     "stealth": 6
   },
-  "learnset": [
+  "learnSet": [
   ]
 }

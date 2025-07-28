@@ -1,7 +1,7 @@
 {
   "id": "grim_gnasher",
   "name": "Grim Gnasher",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/f/fb/Grimgnasher_Transparent.png",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/f/fb/Grimagenasher_Transparent.png",
   "origin": "Dragons: Race to the Edge",
   "classes": [
     "Sharp"
@@ -11,11 +11,11 @@
     "speed": 12,
     "armor": 7,
     "firepower": 9,
-    "shot_limit": 5,
+    "shotLimit": 5,
     "venom": 0,
-    "jaw_strength": 12,
+    "jawStrength": 12,
     "stealth": 7
   },
-  "learnset": [
+  "learnSet": [
   ]
 }

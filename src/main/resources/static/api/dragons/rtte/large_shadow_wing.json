@@ -1,7 +1,7 @@
 {
   "id": "large_shadow_wing",
   "name": "Large Shadow Wing",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/5/5a/ShadowWing456.png",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/5/5a/ShadowWing456.png",
   "origin": "Dragons: Race to the Edge",
   "classes": [
     "Stoker"
@@ -11,11 +11,11 @@
     "speed": 14,
     "armor": 15,
     "firepower": 18,
-    "shot_limit": 60,
+    "shotLimit": 60,
     "venom": 0,
-    "jaw_strength": 12,
+    "jawStrength": 12,
     "stealth": 4
   },
-  "learnset": [
+  "learnSet": [
   ]
 }

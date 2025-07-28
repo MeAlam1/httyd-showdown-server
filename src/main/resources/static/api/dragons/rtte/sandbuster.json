@@ -1,7 +1,7 @@
 {
   "id": "sandbuster",
   "name": "Sandbuster",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/4/45/Sandbuster_Transparent.png",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/4/45/Sandbuster_Transparent.png",
   "origin": "Dragons: Race to the Edge",
   "classes": [
     "Mystery"
@@ -11,11 +11,11 @@
     "speed": 11,
     "armor": 8,
     "firepower": 10,
-    "shot_limit": 6,
+    "shotLimit": 6,
     "venom": 0,
-    "jaw_strength": 6,
+    "jawStrength": 6,
     "stealth": 17
   },
-  "learnset": [
+  "learnSet": [
   ]
 }

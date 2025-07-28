@@ -1,7 +1,7 @@
 {
   "id": "snaptrapper",
   "name": "Snaptrapper",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/e/ea/1482442286402.png",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/e/ea/1482442286402.png",
   "origin": "How To Train Your Dragon",
   "classes": [
     "Mystery"
@@ -11,11 +11,11 @@
     "speed": 4,
     "armor": 4,
     "firepower": 6,
-    "shot_limit": 4,
+    "shotLimit": 4,
     "venom": 18,
-    "jaw_strength": 7,
+    "jawStrength": 7,
     "stealth": 15
   },
-  "learnset": [
+  "learnSet": [
   ]
 }

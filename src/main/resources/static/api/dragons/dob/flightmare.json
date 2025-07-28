@@ -1,7 +1,7 @@
 {
   "id": "flightmare",
   "name": "Flightmare",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/3/31/Flightmare_infobox.png",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/3/31/Flightmare_infobox.png",
   "origin": "Dragons: Defenders of Berk",
   "classes": [
     "Mystery"
@@ -16,6 +16,6 @@
     "jawStrength": 4,
     "stealth": 7
   },
-  "learnset": [
+  "learnSet": [
   ]
 }

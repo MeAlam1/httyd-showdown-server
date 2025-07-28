@@ -1,7 +1,7 @@
 {
   "id": "gronckle",
   "name": "Gronckle",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/b/b8/HTTYD_Gronckle.png",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/b/b8/HTTYD_Gronckle.png",
   "origin": "How To Train Your Dragon",
   "classes": [
     "Boulder"
@@ -11,11 +11,11 @@
     "speed": 4,
     "armor": 20,
     "firepower": 14,
-    "shot_limit": 6,
+    "shotLimit": 6,
     "venom": 0,
-    "jaw_strength": 8,
+    "jawStrength": 8,
     "stealth": 5
   },
-  "learnset": [
+  "learnSet": [
   ]
 }

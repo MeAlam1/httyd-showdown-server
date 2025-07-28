@@ -1,7 +1,7 @@
 {
   "id": "snafflefang",
   "name": "Snafflefang",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/f/f8/1481596725144.png",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/f/f8/1481596725144.png",
   "origin": "How To Train Your Dragon 2",
   "classes": [
     "Boulder"
@@ -11,11 +11,11 @@
     "speed": 5,
     "armor": 17,
     "firepower": 13,
-    "shot_limit": 6,
+    "shotLimit": 6,
     "venom": 12,
-    "jaw_strength": 8,
+    "jawStrength": 8,
     "stealth": 8
   },
-  "learnset": [
+  "learnSet": [
   ]
 }

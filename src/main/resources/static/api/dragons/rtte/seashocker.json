@@ -1,7 +1,7 @@
 {
   "id": "seashocker",
   "name": "Seashocker",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/a/a5/Capture_17.PNG",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/a/a5/Capture_17.PNG",
   "origin": "Dragons: Race to the Edge",
   "classes": [
     "Tidal"
@@ -11,11 +11,11 @@
     "speed": 16,
     "armor": 20,
     "firepower": 7,
-    "shot_limit": 12,
+    "shotLimit": 12,
     "venom": 14,
-    "jaw_strength": 8,
+    "jawStrength": 8,
     "stealth": 10
   },
-  "learnset": [
+  "learnSet": [
   ]
 }

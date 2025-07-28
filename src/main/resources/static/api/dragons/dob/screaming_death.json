@@ -1,7 +1,7 @@
 {
   "id": "screaming_death",
   "name": "Screaming Death",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/2/27/Grito_Mortal.png",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/2/27/Grito_Mortal.png",
   "origin": "Dragons: Defenders of Berk",
   "classes": [
     "Boulder"
@@ -11,11 +11,11 @@
     "speed": 8,
     "armor": 20,
     "firepower": 10,
-    "shot_limit": 2,
+    "shotLimit": 2,
     "venom": 10,
-    "jaw_strength": 11,
+    "jawStrength": 11,
     "stealth": 14
   },
-  "learnset": [
+  "learnSet": [
   ]
 }

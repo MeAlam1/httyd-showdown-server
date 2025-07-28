@@ -19,10 +19,11 @@ import java.util.List;
 public record Dragons(
 		String id,
 		String name,
-		@Nullable String img,
+		@Nullable String image,
 		String origin,
 		List<String> classes,
-		@Nullable Stats stats) {
+		@Nullable Stats stats,
+		List<String> learnSet) {
 
 	public static JsonDeserializer<Dragons> deserializer() throws JsonParseException {
 		return (json, type, context) -> {
@@ -30,18 +31,20 @@ public record Dragons(
 
 			String id = JsonObjectExtensionsKt.getAsString(obj, "id");
 			String name = JsonObjectExtensionsKt.getAsString(obj, "name");
-			String img = JsonObjectExtensionsKt.getOptionalString(obj, "img");
+			String image = JsonObjectExtensionsKt.getOptionalString(obj, "image");
 			String origin = JsonObjectExtensionsKt.getAsString(obj, "origin");
 			List<String> classes = JsonArrayExtensionsKt.toStringList(JsonObjectExtensionsKt.getAsJsonArrayKt(obj, "classes"));
 			Stats stats = JsonObjectExtensionsKt.convertToObject(obj, "stats", context, Stats.class);
-
+			List<String> learnSet = JsonArrayExtensionsKt.toStringList(JsonObjectExtensionsKt.getAsJsonArrayKt(obj, "learnSet"));
+			
 			return new Dragons(
 					id,
 					name,
-					img,
+					image,
 					origin,
 					classes,
-					stats);
+					stats,
+					learnSet);
 		};
 	}
 }

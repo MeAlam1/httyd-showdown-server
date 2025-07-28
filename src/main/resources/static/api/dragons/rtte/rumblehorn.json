@@ -1,7 +1,7 @@
 {
   "id": "rumblehorn",
   "name": "Rumblehorn",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/d/df/1481798442360.png",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/d/df/1481798442360.png",
   "origin": "Dragons: Race to the Edge",
   "classes": [
     "Tracker"
@@ -11,11 +11,11 @@
     "speed": 7,
     "armor": 12,
     "firepower": 22,
-    "shot_limit": 4,
+    "shotLimit": 4,
     "venom": 0,
-    "jaw_strength": 5,
+    "jawStrength": 5,
     "stealth": 6
   },
-  "learnset": [
+  "learnSet": [
   ]
 }

@@ -1,7 +1,7 @@
 {
   "id": "hobgobbler",
   "name": "Hobgobbler",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/5/50/THW-Hobgobbler-Transparent.png",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/5/50/THW-Hobgobbler-Transparent.png",
   "origin": "The Hidden World",
   "classes": [
     "Mystery",
@@ -12,11 +12,11 @@
     "speed": 8,
     "armor": 4,
     "firepower": 6,
-    "shot_limit": 28,
+    "shotLimit": 28,
     "venom": 0,
-    "jaw_strength": 12,
+    "jawStrength": 12,
     "stealth": 18
   },
-  "learnset": [
+  "learnSet": [
   ]
 }

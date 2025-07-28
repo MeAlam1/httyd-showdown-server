@@ -12,8 +12,9 @@ import java.util.List;
 public record DragonsCache(
 		String id,
 		String name,
-		String img,
+		String image,
 		String origin,
 		List<String> classes,
-		StatsCache stats) {
+		StatsCache stats,
+		List<String> learnSet) {
 }

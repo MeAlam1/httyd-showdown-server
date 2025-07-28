@@ -1,7 +1,7 @@
 {
   "id": "singetail",
   "name": "Singetail",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/3/32/Imagen1gh.png",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/3/32/Imagen1gh.png",
   "origin": "Dragons: Race to the Edge",
   "classes": [
     "Stoker"
@@ -11,11 +11,11 @@
     "speed": 15,
     "armor": 15,
     "firepower": 20,
-    "shot_limit": 10,
+    "shotLimit": 10,
     "venom": 0,
-    "jaw_strength": 4,
+    "jawStrength": 4,
     "stealth": 10
   },
-  "learnset": [
+  "learnSet": [
   ]
 }

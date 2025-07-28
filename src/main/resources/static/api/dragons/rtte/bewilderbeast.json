@@ -1,7 +1,7 @@
 {
   "id": "bewilderbeast",
   "name": "Bewilderbeast",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/1/13/Bewilderbeast_-_NBG.png",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/1/13/Bewilderbeast_-_NBG.png",
   "origin": "How To Train Your Dragon 2",
   "classes": [
     "Tidal"
@@ -11,11 +11,11 @@
     "speed": 18,
     "armor": 38,
     "firepower": 60,
-    "shot_limit": 8,
+    "shotLimit": 8,
     "venom": 0,
-    "jaw_strength": 48,
+    "jawStrength": 48,
     "stealth": 2
   },
-  "learnset": [
+  "learnSet": [
   ]
 }

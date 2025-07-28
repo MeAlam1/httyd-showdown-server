@@ -31,9 +31,9 @@ public record Stats(
 			Float speed = JsonObjectExtensionsKt.getOptionalFloat(obj, "speed");
 			Float armor = JsonObjectExtensionsKt.getOptionalFloat(obj, "armor");
 			Float firePower = JsonObjectExtensionsKt.getOptionalFloat(obj, "firepower");
-			Float shotLimit = JsonObjectExtensionsKt.getOptionalFloat(obj, "shot_limit");
+			Float shotLimit = JsonObjectExtensionsKt.getOptionalFloat(obj, "shotLimit");
 			Float venom = JsonObjectExtensionsKt.getOptionalFloat(obj, "venom");
-			Float jawStrength = JsonObjectExtensionsKt.getOptionalFloat(obj, "jaw_strength");
+			Float jawStrength = JsonObjectExtensionsKt.getOptionalFloat(obj, "jawStrength");
 			Float stealth = JsonObjectExtensionsKt.getOptionalFloat(obj, "stealth");
 
 			return new Stats(

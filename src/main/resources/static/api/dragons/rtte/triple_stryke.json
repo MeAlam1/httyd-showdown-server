@@ -1,7 +1,7 @@
 {
   "id": "triple_stryke",
   "name": "Triple Stryke",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/2/2d/Triple_Ataque.png",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/2/2d/Triple_Ataque.png",
   "origin": "Dragons: Race to the Edge",
   "classes": [
     "Strike"
@@ -11,11 +11,11 @@
     "speed": 20,
     "armor": 18,
     "firepower": 14,
-    "shot_limit": 6,
+    "shotLimit": 6,
     "venom": 10,
-    "jaw_strength": 6,
+    "jawStrength": 6,
     "stealth": 18
   },
-  "learnset": [
+  "learnSet": [
   ]
 }

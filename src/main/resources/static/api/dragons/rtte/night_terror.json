@@ -1,7 +1,7 @@
 {
   "id": "night_terror",
   "name": "Night Terror",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/d/d6/Nightterror_infobox.png",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/d/d6/Nightterror_infobox.png",
   "origin": "Dragons: Race to the Edge",
   "classes": [
     "Stoker"
@@ -11,11 +11,11 @@
     "speed": 6,
     "armor": 4,
     "firepower": 10,
-    "shot_limit": 5,
+    "shotLimit": 5,
     "venom": 0,
-    "jaw_strength": 3,
+    "jawStrength": 3,
     "stealth": 14
   },
-  "learnset": [
+  "learnSet": [
   ]
 }

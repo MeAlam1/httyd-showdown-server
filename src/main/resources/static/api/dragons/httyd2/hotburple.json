@@ -1,7 +1,7 @@
 {
   "id": "hotburple",
   "name": "Hotburple",
-  "img": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/f/f1/1481624586025.png",
+  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/f/f1/1481624586025.png",
   "origin": "How To Train Your Dragon 2",
   "classes": [
     "Boulder"
@@ -11,11 +11,11 @@
     "speed": 4,
     "armor": 20,
     "firepower": 12,
-    "shot_limit": 6,
+    "shotLimit": 6,
     "venom": 0,
-    "jaw_strength": 8,
+    "jawStrength": 8,
     "stealth": 5
   },
-  "learnset": [
+  "learnSet": [
   ]
 }
