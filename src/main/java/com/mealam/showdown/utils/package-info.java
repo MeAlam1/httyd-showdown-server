@@ -5,9 +5,7 @@
  * If a copy of the MIT License was not distributed with this file,
  * You can obtain one at https://opensource.org/licenses/MIT.
  */
-package com.mealam.showdown.user.context;
+@ApplicationModule(type = ApplicationModule.Type.OPEN)
+package com.mealam.showdown.utils;
 
-import org.jetbrains.annotations.Nullable;
-
-public record UserProfileContext(
-		@Nullable UserContext user) {}
+import org.springframework.modulith.ApplicationModule;

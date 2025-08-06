@@ -16,5 +16,4 @@ public record DragonsCache(
 		String origin,
 		List<String> classes,
 		StatsCache stats,
-		List<String> learnSet) {
-}
+		List<String> learnSet) {}

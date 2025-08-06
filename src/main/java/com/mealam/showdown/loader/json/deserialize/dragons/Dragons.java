@@ -12,9 +12,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mealam.showdown.utils.json.JsonArrayExtensionsKt;
 import com.mealam.showdown.utils.json.JsonObjectExtensionsKt;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 public record Dragons(
 		String id,
@@ -36,7 +35,7 @@ public record Dragons(
 			List<String> classes = JsonArrayExtensionsKt.toStringList(JsonObjectExtensionsKt.getAsJsonArrayKt(obj, "classes"));
 			Stats stats = JsonObjectExtensionsKt.convertToObject(obj, "stats", context, Stats.class);
 			List<String> learnSet = JsonArrayExtensionsKt.toStringList(JsonObjectExtensionsKt.getAsJsonArrayKt(obj, "learnSet"));
-			
+
 			return new Dragons(
 					id,
 					name,

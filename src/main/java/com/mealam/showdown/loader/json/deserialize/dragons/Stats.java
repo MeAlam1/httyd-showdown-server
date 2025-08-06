@@ -26,7 +26,7 @@ public record Stats(
 	public static JsonDeserializer<Stats> deserializer() throws JsonParseException {
 		return (json, type, context) -> {
 			JsonObject obj = json.getAsJsonObject();
-			
+
 			Float attack = JsonObjectExtensionsKt.getOptionalFloat(obj, "attack");
 			Float speed = JsonObjectExtensionsKt.getOptionalFloat(obj, "speed");
 			Float armor = JsonObjectExtensionsKt.getOptionalFloat(obj, "armor");

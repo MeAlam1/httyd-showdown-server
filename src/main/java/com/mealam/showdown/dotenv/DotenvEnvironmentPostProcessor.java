@@ -18,10 +18,10 @@ import org.springframework.core.env.MapPropertySource;
 public class DotenvEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
 	@Override
-	public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+	public void postProcessEnvironment(ConfigurableEnvironment pEnvironment, SpringApplication pApplication) {
 		Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 		Map<String, Object> map = new HashMap<>();
 		dotenv.entries().forEach(entry -> map.put(entry.getKey(), entry.getValue()));
-		environment.getPropertySources().addFirst(new MapPropertySource("dotenv", map));
+		pEnvironment.getPropertySources().addFirst(new MapPropertySource("dotenv", map));
 	}
 }
