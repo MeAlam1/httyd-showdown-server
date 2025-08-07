@@ -7,19 +7,30 @@
  */
 package com.mealam.showdown.loader;
 
-import com.mealam.showdown.Constants;
 import com.mealam.showdown.loader.cache.ResourceCache;
 import com.mealam.showdown.utils.logging.LogLevel;
 import com.mealam.showdown.utils.logging.Logger;
 import jakarta.annotation.PostConstruct;
+import java.util.concurrent.Executor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LoadInitializer {
 
+	private final Executor backgroundExecutor;
+	private final Executor serverExecutor;
+
+	public LoadInitializer(
+			@Qualifier("backgroundTaskExecutor") Executor pBackgroundExecutor,
+			@Qualifier("serverTaskExecutor") Executor pServerExecutor) {
+		this.backgroundExecutor = pBackgroundExecutor;
+		this.serverExecutor = pServerExecutor;
+	}
+
 	@PostConstruct
 	public void init() {
-		ResourceCache.reload(Constants.BACKGROUND_EXECUTOR, Constants.SERVER_EXECUTOR)
+		ResourceCache.reload(backgroundExecutor, serverExecutor)
 				.thenRun(() -> Logger.log(LogLevel.INFO, "Resource cache loaded successfully."));
 	}
 }

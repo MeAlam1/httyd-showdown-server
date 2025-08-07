@@ -30,19 +30,15 @@ public class ResourceCache extends JsonLoader {
 		return MOVES;
 	}
 
-	public static CompletableFuture<Void> reload(
-			Executor pBackgroundExecutor,
-			Executor pServerExecutor) {
+	public static CompletableFuture<Void> reload(Executor pBackgroundExecutor, Executor pServerExecutor) {
 		clearCaches();
-
 		CompletableFuture<Map<String, DragonsCache>> dragons = loadStaticDragons(pBackgroundExecutor);
 		CompletableFuture<Map<String, MovesCache>> moves = loadStaticMoves(pBackgroundExecutor);
 
-		return CompletableFuture.allOf(dragons)
+		return CompletableFuture.allOf(dragons, moves)
 				.thenRunAsync(() -> {
 					ResourceCache.DRAGONS = dragons.join();
 					ResourceCache.MOVES = moves.join();
-
 					Logger.log(LogLevel.SUCCESS, "Dragons Cache: " + ResourceCache.DRAGONS);
 					Logger.log(LogLevel.SUCCESS, "Moves Cache: " + ResourceCache.MOVES);
 				}, pServerExecutor);
