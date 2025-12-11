@@ -10,7 +10,7 @@ package com.mealam.showdown.loader.json.deserialize.dragons;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.mealam.showdown.utils.json.JsonObjectExtensionsKt;
+import com.mealam.showdown.utils.json.JsonUtils;
 import org.jetbrains.annotations.Nullable;
 
 public record Stats(
@@ -27,14 +27,14 @@ public record Stats(
 		return (json, type, context) -> {
 			JsonObject obj = json.getAsJsonObject();
 
-			Float attack = JsonObjectExtensionsKt.getOptionalFloat(obj, "attack");
-			Float speed = JsonObjectExtensionsKt.getOptionalFloat(obj, "speed");
-			Float armor = JsonObjectExtensionsKt.getOptionalFloat(obj, "armor");
-			Float firePower = JsonObjectExtensionsKt.getOptionalFloat(obj, "firepower");
-			Float shotLimit = JsonObjectExtensionsKt.getOptionalFloat(obj, "shotLimit");
-			Float venom = JsonObjectExtensionsKt.getOptionalFloat(obj, "venom");
-			Float jawStrength = JsonObjectExtensionsKt.getOptionalFloat(obj, "jawStrength");
-			Float stealth = JsonObjectExtensionsKt.getOptionalFloat(obj, "stealth");
+			Float attack = JsonUtils.getOptionalFloat(obj, "attack");
+			Float speed = JsonUtils.getOptionalFloat(obj, "speed");
+			Float armor = JsonUtils.getOptionalFloat(obj, "armor");
+			Float firePower = JsonUtils.getOptionalFloat(obj, "firepower");
+			Float shotLimit = JsonUtils.getOptionalFloat(obj, "shotLimit");
+			Float venom = JsonUtils.getOptionalFloat(obj, "venom");
+			Float jawStrength = JsonUtils.getOptionalFloat(obj, "jawStrength");
+			Float stealth = JsonUtils.getOptionalFloat(obj, "stealth");
 
 			return new Stats(
 					attack,

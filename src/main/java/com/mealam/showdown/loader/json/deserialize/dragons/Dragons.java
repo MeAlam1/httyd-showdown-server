@@ -10,9 +10,10 @@ package com.mealam.showdown.loader.json.deserialize.dragons;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.mealam.showdown.utils.json.JsonArrayExtensionsKt;
-import com.mealam.showdown.utils.json.JsonObjectExtensionsKt;
 import java.util.List;
+
+import com.mealam.showdown.utils.json.GsonHelper;
+import com.mealam.showdown.utils.json.JsonUtils;
 import org.jetbrains.annotations.Nullable;
 
 public record Dragons(
@@ -28,13 +29,13 @@ public record Dragons(
 		return (json, type, context) -> {
 			JsonObject obj = json.getAsJsonObject();
 
-			String id = JsonObjectExtensionsKt.getAsString(obj, "id");
-			String name = JsonObjectExtensionsKt.getAsString(obj, "name");
-			String image = JsonObjectExtensionsKt.getOptionalString(obj, "image");
-			String origin = JsonObjectExtensionsKt.getAsString(obj, "origin");
-			List<String> classes = JsonArrayExtensionsKt.toStringList(JsonObjectExtensionsKt.getAsJsonArrayKt(obj, "classes"));
-			Stats stats = JsonObjectExtensionsKt.convertToObject(obj, "stats", context, Stats.class);
-			List<String> learnSet = JsonArrayExtensionsKt.toStringList(JsonObjectExtensionsKt.getAsJsonArrayKt(obj, "learnSet"));
+			String id = GsonHelper.getAsString(obj, "id");
+			String name = GsonHelper.getAsString(obj, "name");
+			String image = JsonUtils.getOptionalString(obj, "image");
+			String origin = GsonHelper.getAsString(obj, "origin");
+			List<String> classes = JsonUtils.jsonArrayToStringList(GsonHelper.getAsJsonArray(obj, "classes"));
+			Stats stats = GsonHelper.convertToObject(obj, "stats", context, Stats.class);
+			List<String> learnSet = JsonUtils.jsonArrayToStringList(GsonHelper.getAsJsonArray(obj, "learnSet"));
 
 			return new Dragons(
 					id,
