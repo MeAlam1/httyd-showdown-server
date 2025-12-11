@@ -5,7 +5,7 @@
  * If a copy of the MIT License was not distributed with this file,
  * You can obtain one at https://opensource.org/licenses/MIT.
  */
-package com.mealam.showdown.api.utils;
+package com.mealam.showdown.utils;
 
 import java.util.Collections;
 import java.util.Map;

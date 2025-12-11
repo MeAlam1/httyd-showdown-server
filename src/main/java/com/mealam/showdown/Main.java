@@ -7,10 +7,6 @@
  */
 package com.mealam.showdown;
 
-
-import com.mealam.showdown.loader.LoadInitializer;
-import com.mealam.showdown.utils.logging.LogLevel;
-import com.mealam.showdown.utils.logging.Logger;
 import io.javalin.Javalin;
 
 import java.io.InputStream;
@@ -20,7 +16,6 @@ public class Main {
 	public static Javalin Main;
 
 	public static void main(String[] pArgs) {
-		LoadInitializer.init();
 
 		Main = Javalin.create(/*config*/)
 				.get("/", ctx -> ctx.result("Hello World"))

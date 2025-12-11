@@ -7,8 +7,8 @@
  */
 package com.mealam.showdown.battle.data;
 
-import com.mealam.showdown.api.utils.IdGenerator;
 import com.mealam.showdown.data.BaseId;
+import com.mealam.showdown.utils.IdGenerator;
 
 public class BattleId extends BaseId {
 

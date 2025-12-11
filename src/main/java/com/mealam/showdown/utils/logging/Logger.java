@@ -17,7 +17,7 @@ public class Logger {
 	private Logger() {}
 
 	static {
-		LoggerExtensionsKt.configure(Constants.LOGGER, new DefaultLogColorProvider());
+		LoggerConfig.configure(Constants.LOGGER, new DefaultLogColorProvider());
 	}
 
 	public static void log(Level pLogLevel, Supplier<String> pMessageSupplier, Throwable... pThrowable) {
