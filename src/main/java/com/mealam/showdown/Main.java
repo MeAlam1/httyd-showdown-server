@@ -1,10 +1,8 @@
 package com.mealam.showdown;
 
-import com.mealam.showdown.config.Routes;
+import com.mealam.showdown.router.Routes;
 import io.javalin.Javalin;
 import io.javalin.http.HttpStatus;
-
-import java.io.InputStream;
 
 public class Main {
 

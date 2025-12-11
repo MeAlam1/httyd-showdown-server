@@ -27,19 +27,30 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
-    implementation(kotlin("reflect"))
-    
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlin.reflect)
+
     implementation(libs.javalin)
-    implementation("org.slf4j:slf4j-simple:2.0.16")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
+    implementation(libs.slf4j.simple)
+    implementation(libs.jackson)
 
     implementation(libs.gson)
     implementation(libs.fastutil)
     implementation(libs.annotations)
     implementation(libs.commons.lang3)
     implementation(libs.dotenv.java)
+
+    implementation(libs.mysql)
+
+    testImplementation(libs.junit.api)
+    testImplementation(libs.junit.params)
+    testRuntimeOnly(libs.junit.engine)
+
+    testImplementation(libs.javalin.testtools)
+
+    testImplementation(libs.mockito.core)
 }
+
 
 spotless {
     java {

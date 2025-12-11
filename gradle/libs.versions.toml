@@ -1,31 +1,61 @@
 [versions]
+# Core
+kotlin = "1.9.23"
+javalin = "6.7.0"
+slf4j = "2.0.16"
+jackson = "2.17.2"
+
+# Utils
+gson = "2.10.1"
+fastutil = "8.5.13"
 annotations = "24.0.0"
 commons-lang3 = "3.18.0"
 dotenv-java = "3.0.0"
-fastutil = "8.5.13"
-gson = "2.10.1"
-graalvm-buildtools-native = "0.10.6"
-kotlin = "1.9.23"
-license = "0.16.1"
+
+# DB
 mysql = "8.4.0"
+
+# Plugins
 spotless = "7.0.4"
-javalin = "6.7.0"
+license = "0.16.1"
+graalvm-buildtools-native = "0.10.6"
+
+# Testing
+junit = "5.10.2"
+javalin-testtools = "6.7.0"
 
 [libraries]
+# Kotlin
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+
 # Javalin
 javalin = { module = "io.javalin:javalin", version.ref = "javalin" }
+javalin-testtools = { module = "io.javalin:javalin-testtools", version.ref = "javalin-testtools" }
 
-# Persistence & DB
-mysql = { module = "com.mysql:mysql-connector-j", version.ref = "mysql" }
+# Logging
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 
-# Serialization & Utilities
+# JSON & Serialization
+jackson = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+
+# Utils
 fastutil = { module = "it.unimi.dsi:fastutil", version.ref = "fastutil" }
 commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang3" }
 dotenv-java = { module = "io.github.cdimascio:dotenv-java", version.ref = "dotenv-java" }
-
-# Other
 annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
+
+# DB
+mysql = { module = "com.mysql:mysql-connector-j", version.ref = "mysql" }
+
+# Testing (JUnit Jupiter suite)
+junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+junit-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
+
+# You may want this for mocking
+mockito-core = { module = "org.mockito:mockito-core", version = "5.12.0" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
@@ -33,3 +63,4 @@ kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotl
 graalvm-buildtools-native = { id = "org.graalvm.buildtools.native", version.ref = "graalvm-buildtools-native" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 license = { id = "com.github.hierynomus.license", version.ref = "license" }
+ 

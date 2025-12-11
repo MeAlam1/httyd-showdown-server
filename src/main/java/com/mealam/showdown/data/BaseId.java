@@ -1,21 +1,21 @@
-/*
- * Copyright (C) 2024 BlueLib Contributors
- *
- * This Source Code Form is subject to the terms of the MIT License.
- * If a copy of the MIT License was not distributed with this file,
- * You can obtain one at https://opensource.org/licenses/MIT.
- */
 package com.mealam.showdown.data;
 
-public abstract class BaseId {
+import com.fasterxml.jackson.annotation.JsonValue;
 
-	protected final String value;
+import java.util.Objects;
+
+public abstract class BaseId {
+	private final String value;
 
 	protected BaseId(String pValue) {
+		if (pValue == null || pValue.isBlank()) {
+			throw new IllegalArgumentException("id cannot be null or blank");
+		}
 		this.value = pValue;
 	}
 
-	public String value() {
+	@JsonValue
+	public String asString() {
 		return value;
 	}
 
@@ -27,12 +27,12 @@ public abstract class BaseId {
 	@Override
 	public boolean equals(Object pObject) {
 		if (this == pObject) return true;
-		if (!(pObject instanceof BaseId that)) return false;
-		return value.equals(that.value);
+		if (!(pObject instanceof BaseId baseId)) return false;
+		return value.equals(baseId.value);
 	}
 
 	@Override
 	public int hashCode() {
-		return value.hashCode();
+		return Objects.hash(value);
 	}
 }

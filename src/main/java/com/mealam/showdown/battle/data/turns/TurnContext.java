@@ -11,7 +11,7 @@ import com.mealam.showdown.user.data.UserId;
 import java.util.Map;
 import org.jetbrains.annotations.Nullable;
 
-public record Turn(
+public record TurnContext(
 		int number,
 		@Nullable Map<UserId, String> actions // PlayerID -> action (e.g., "move Thunderbolt")
 ) {}

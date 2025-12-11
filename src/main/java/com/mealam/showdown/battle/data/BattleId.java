@@ -1,18 +1,13 @@
-/*
- * Copyright (C) 2024 BlueLib Contributors
- *
- * This Source Code Form is subject to the terms of the MIT License.
- * If a copy of the MIT License was not distributed with this file,
- * You can obtain one at https://opensource.org/licenses/MIT.
- */
 package com.mealam.showdown.battle.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.mealam.showdown.data.BaseId;
 import com.mealam.showdown.utils.IdGenerator;
 
 public class BattleId extends BaseId {
 
-	private BattleId(String pValue) {
+	@JsonCreator
+	public BattleId(String pValue) {
 		super(pValue);
 	}
 

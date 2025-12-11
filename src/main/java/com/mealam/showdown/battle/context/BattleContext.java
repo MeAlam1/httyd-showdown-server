@@ -9,22 +9,25 @@ package com.mealam.showdown.battle.context;
 
 import com.mealam.showdown.battle.data.BattleId;
 import com.mealam.showdown.battle.data.Phase;
-import com.mealam.showdown.battle.data.turns.Turn;
+import com.mealam.showdown.battle.data.turns.TurnContext;
 import com.mealam.showdown.user.data.UserId;
+
 import java.util.Collections;
 import java.util.List;
+
+import com.mealam.showdown.utils.types.ListUtils;
 import org.jetbrains.annotations.Nullable;
 
 public record BattleContext(
 		BattleId battleId,
 		List<UserId> playerIds,
 		List<UserId> spectatorIds,
-		Turn turn,
+		TurnContext turnContext,
 		Phase phase,
 		@Nullable UserId winnerPlayerId) {
 
 	public BattleContext {
-		playerIds = Collections.unmodifiableList(playerIds);
-		spectatorIds = Collections.unmodifiableList(spectatorIds);
+		playerIds = ListUtils.safeUnmodifiableList(playerIds);
+		spectatorIds = ListUtils.safeUnmodifiableList(spectatorIds);
 	}
 }

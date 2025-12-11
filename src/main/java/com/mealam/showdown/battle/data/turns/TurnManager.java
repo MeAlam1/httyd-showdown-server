@@ -11,48 +11,48 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Turns {
+public class TurnManager {
 
 	public static final int NOT_STARTED = 0;
 	public static final int FINISHED = -1;
 
-	private final List<Turn> turns = Collections.synchronizedList(new ArrayList<>());
+	private final List<TurnContext> turnContexts = Collections.synchronizedList(new ArrayList<>());
 	private volatile int currentTurn;
-	private volatile Turn currentTurnInstance;
+	private volatile TurnContext currentTurnContextInstance;
 
-	public synchronized Turn createBattle() {
+	public synchronized TurnContext createBattle() {
 		currentTurn = NOT_STARTED;
-		turns.clear();
-		return new Turn(NOT_STARTED, null);
+		turnContexts.clear();
+		return new TurnContext(NOT_STARTED, null);
 	}
 
-	public synchronized Turn startBattle() {
+	public synchronized TurnContext startBattle() {
 		if (currentTurn != NOT_STARTED) {
 			throw new IllegalStateException("Battle already started or finished");
 		}
 		currentTurn = 1;
-		return new Turn(currentTurn, null);
+		return new TurnContext(currentTurn, null);
 	}
 
-	public synchronized Turn advance(Turn pTurnData) {
+	public synchronized TurnContext advance(TurnContext pTurnContextData) {
 		if (currentTurn == FINISHED) {
 			throw new IllegalStateException("Battle is over");
 		}
 		if (currentTurn == NOT_STARTED) {
 			throw new IllegalStateException("Battle hasn't started");
 		}
-		turns.add(pTurnData);
+		turnContexts.add(pTurnContextData);
 		currentTurn++;
-		currentTurnInstance = pTurnData;
-		return currentTurnInstance;
+		currentTurnContextInstance = pTurnContextData;
+		return currentTurnContextInstance;
 	}
 
 	public synchronized void finish() {
 		currentTurn = FINISHED;
-		currentTurnInstance = new Turn(FINISHED, null);
+		currentTurnContextInstance = new TurnContext(FINISHED, null);
 	}
 
-	public synchronized List<Turn> allTurns() {
-		return List.copyOf(turns);
+	public synchronized List<TurnContext> allTurns() {
+		return List.copyOf(turnContexts);
 	}
 }
