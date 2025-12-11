@@ -11,12 +11,10 @@ import com.mealam.showdown.battle.data.BattleId;
 import com.mealam.showdown.battle.data.Phase;
 import com.mealam.showdown.battle.data.turns.TurnContext;
 import com.mealam.showdown.user.data.UserId;
-
-import java.util.Collections;
-import java.util.List;
-
 import com.mealam.showdown.utils.types.ListUtils;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public record BattleContext(
 		BattleId battleId,

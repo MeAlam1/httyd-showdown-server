@@ -10,9 +10,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.WebSocket;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CountDownLatch;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,11 +39,14 @@ class BattleRouterTest {
 	}
 
 	@Test
-	void completeBattleFlow() throws Exception {
+	void createBattle() throws Exception {
 		HttpClient client = HttpClient.newHttpClient();
 
-		HttpRequest createRequest = HttpRequest.newBuilder().uri(new URI("http://localhost:" + port + "/battle/start")).header("Content-Type", "application/json")
-				.POST(HttpRequest.BodyPublishers.ofString("{\"playerId\":\"alpha\"}")).build();
+		HttpRequest createRequest = HttpRequest.newBuilder()
+				.uri(new URI("http://localhost:" + port + "/battle/create"))
+				.header("Content-Type", "application/json")
+				.POST(HttpRequest.BodyPublishers.ofString("{\"playerIds\":[\"alpha\"]}"))
+				.build();
 
 		HttpResponse<String> createResponse = client.send(createRequest, HttpResponse.BodyHandlers.ofString());
 		assertEquals(200, createResponse.statusCode());
@@ -52,27 +55,69 @@ class BattleRouterTest {
 		assertNotNull(body);
 		assertTrue(body.contains("id"));
 
-		String battleId = body.replaceAll("[^0-9A-Za-z_-]", "");
+		String battleId = extractBattleIdFromBody(body);
 		assertFalse(battleId.isEmpty());
 
 		CountDownLatch latch = new CountDownLatch(1);
 		TestWebSocketListener listener = new TestWebSocketListener(latch);
 
-		WebSocket ws = client.newWebSocketBuilder().buildAsync(URI.create("ws://localhost:" + port + "/ws/battle/" + battleId), listener).join();
+		WebSocket ws = client.newWebSocketBuilder()
+				.buildAsync(URI.create("ws://localhost:" + port + "/ws/battle/" + battleId), listener)
+				.join();
 
 		assertNotNull(ws);
 		latch.await();
-	
-	  /*
-	  CompletableFuture<Void> joinSent = ws.sendText("{\"action\":\"join\",\"name\":\"Player1\"}", true);
-	  joinSent.join();
-	  Thread.sleep(100);
-	
-	  CompletableFuture<Void> leaveSent = ws.sendText("{\"action\":\"leave\"}", true);
-	  leaveSent.join();
-	  Thread.sleep(100);*/
 
 		ws.sendClose(WebSocket.NORMAL_CLOSURE, "done").join();
+	}
+
+	@Test
+	void joinBattle() throws Exception {
+		createBattle();
+
+		HttpClient client = HttpClient.newHttpClient();
+
+		String battleId = createBattleAndGetId(client);
+		assertFalse(battleId.isEmpty());
+
+		HttpRequest joinRequest = HttpRequest.newBuilder()
+				.uri(new URI("http://localhost:" + port + "/battle/" + battleId + "/join"))
+				.header("Content-Type", "application/json")
+				.POST(HttpRequest.BodyPublishers.ofString("{\"userId\":\"beta\"}"))
+				.build();
+
+		HttpResponse<String> joinResponse = client.send(joinRequest, HttpResponse.BodyHandlers.ofString());
+		assertEquals(200, joinResponse.statusCode());
+		assertNotNull(joinResponse.body());
+		assertTrue(joinResponse.body().contains("id"));
+
+		HttpRequest getRequest = HttpRequest.newBuilder()
+				.uri(new URI("http://localhost:" + port + "/battle/" + battleId))
+				.GET()
+				.build();
+
+		HttpResponse<String> getResponse = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
+		assertEquals(200, getResponse.statusCode());
+		assertTrue(getResponse.body().contains("beta"));
+	}
+
+	private String createBattleAndGetId(HttpClient client) throws Exception {
+		HttpRequest createRequest = HttpRequest.newBuilder()
+				.uri(new URI("http://localhost:" + port + "/battle/create"))
+				.header("Content-Type", "application/json")
+				.POST(HttpRequest.BodyPublishers.ofString("{\"playerIds\":[\"alpha\"]}"))
+				.build();
+
+		HttpResponse<String> createResponse = client.send(createRequest, HttpResponse.BodyHandlers.ofString());
+		String body = createResponse.body();
+		return extractBattleIdFromBody(body);
+	}
+
+	private static String extractBattleIdFromBody(String body) {
+		Pattern p = Pattern.compile("\"id\"\\s*:\\s*\"([A-Za-z0-9_-]+)\"");
+		Matcher m = p.matcher(body);
+		if (m.find()) return m.group(1);
+		throw new IllegalStateException("Could not extract id from response: " + body);
 	}
 
 	private record TestWebSocketListener(CountDownLatch openLatch) implements WebSocket.Listener {

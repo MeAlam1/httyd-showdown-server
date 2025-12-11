@@ -7,4 +7,14 @@
  */
 package com.mealam.showdown.battle.dto.request;
 
-public record JoinBattleRequest(String userId) {}
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record JoinBattleRequest(String userId) {
+
+	@JsonCreator
+	public JoinBattleRequest(
+			@JsonProperty("userId") String userId) {
+		this.userId = userId;
+	}
+}
