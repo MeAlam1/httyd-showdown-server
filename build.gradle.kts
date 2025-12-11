@@ -1,7 +1,5 @@
 plugins {
     java
-    alias(libs.plugins.spring.boot)
-    alias(libs.plugins.spring.dependency.management)
     alias(libs.plugins.graalvm.buildtools.native)
     alias(libs.plugins.spotless)
     alias(libs.plugins.license)
@@ -31,41 +29,15 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
+    
+    implementation(libs.javalin)
+    implementation("org.slf4j:slf4j-simple:2.0.16")
 
-    implementation(platform(libs.spring.modulith.bom))
-    implementation(libs.spring.modulith.starter.core)
-    implementation(libs.spring.boot.starter.web)
-    implementation(libs.spring.boot.starter.actuator)
-    implementation(libs.spring.boot.starter.data.jpa)
-    implementation(libs.spring.boot.starter.security)
     implementation(libs.gson)
     implementation(libs.fastutil)
     implementation(libs.annotations)
     implementation(libs.commons.lang3)
     implementation(libs.dotenv.java)
-    implementation(libs.jjwt.api)
-    implementation(libs.validation.api)
-
-    testImplementation(libs.spring.boot.starter.test)
-    testImplementation(libs.spring.modulith.starter.test)
-    testImplementation(libs.junit.platform.launcher)
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.junit.jupiter)
-    testImplementation(libs.assertj.core)
-    testImplementation(libs.testcontainers)
-    testImplementation(libs.testcontainers.mysql)
-    testImplementation(libs.awaitility)
-    
-    compileOnly(libs.lombok)
-
-    runtimeOnly(libs.mysql)
-    runtimeOnly(libs.jjwt.impl)
-    runtimeOnly(libs.jjwt.jackson)
-    
-    developmentOnly(libs.spring.boot.devtools)
-
-    annotationProcessor(libs.spring.boot.configuration.processor)
-    annotationProcessor(libs.lombok)
 }
 
 spotless {

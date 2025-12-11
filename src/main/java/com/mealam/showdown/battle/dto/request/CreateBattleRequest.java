@@ -7,7 +7,5 @@
  */
 package com.mealam.showdown.battle.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
-
 public record CreateBattleRequest(
-		@NotBlank String playerId) {}
+		String playerId) {}

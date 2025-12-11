@@ -8,6 +8,7 @@
 package com.mealam.showdown.loader;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.mealam.showdown.Constants;
 import com.mealam.showdown.loader.cache.dragons.DragonsCache;
@@ -24,6 +25,7 @@ import com.mealam.showdown.utils.logging.LogLevel;
 import com.mealam.showdown.utils.logging.Logger;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
@@ -34,19 +36,18 @@ import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.eclipse.jetty.util.resource.Resource;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.http.converter.json.GsonBuilderUtils;
 
 public class JsonLoader {
 
-	private static final Gson DRAGONS_GSON = GsonBuilderUtils.gsonBuilderWithBase64EncodedByteArrays().setPrettyPrinting().setLenient()
+	private static final Gson DRAGONS_GSON = new GsonBuilder().setPrettyPrinting().setLenient()
 			.registerTypeAdapter(Dragons.class, Dragons.deserializer())
 			.registerTypeAdapter(Stats.class, Stats.deserializer())
 			.create();
 
-	private static final Gson MOVES_GSON = GsonBuilderUtils.gsonBuilderWithBase64EncodedByteArrays().setPrettyPrinting().setLenient()
+	private static final Gson MOVES_GSON = new GsonBuilder().setPrettyPrinting().setLenient()
 			.registerTypeAdapter(Moves.class, Moves.deserializer())
 			.registerTypeAdapter(Effect.class, Effect.deserializer())
 			.registerTypeAdapter(EffectTarget.class, EffectTarget.deserializer())
@@ -78,12 +79,12 @@ public class JsonLoader {
 					Logger.log(LogLevel.ERROR, "Exception while baking " + pPath + ": " + ex.getMessage());
 					return null;
 				}).whenComplete((result, ex) -> {
-					if (ex != null) {
-						Logger.log(LogLevel.ERROR, "Failed to load static " + pPath + ": " + ex.getMessage());
-					} else {
-						Logger.log(LogLevel.INFO, "Successfully loaded static " + pPath + ". Count: " + (result != null ? result.size() : 0));
-					}
-				});
+			if (ex != null) {
+				Logger.log(LogLevel.ERROR, "Failed to load static " + pPath + ": " + ex.getMessage());
+			} else {
+				Logger.log(LogLevel.INFO, "Successfully loaded static " + pPath + ". Count: " + (result != null ? result.size() : 0));
+			}
+		});
 	}
 
 	protected static <BAKED> CompletableFuture<Map<String, BAKED>> bakeJsonResources(
@@ -121,22 +122,9 @@ public class JsonLoader {
 			String pFileType) {
 		Logger.log(LogLevel.INFO, "Loading resources from: " + pAssetPath + " with file type: " + pFileType);
 		return CompletableFuture.supplyAsync(() -> {
-			try {
-				PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-				String pattern = "classpath*:" + pAssetPath + "/**/*." + pFileType;
-				Resource[] resources = resolver.getResources(pattern);
-
-				List<Pair<String, Resource>> files = new ObjectArrayList<>();
-				for (Resource resource : resources) {
-					if (resource.exists() && resource.isReadable()) {
-						String filename = resource.getFilename();
-						files.add(Pair.of(filename, resource));
-					}
-				}
-				return files;
-			} catch (IOException pIoException) {
-				throw new RuntimeException("Failed to list resources in " + pAssetPath, pIoException);
-			}
+			//TODO: Fix
+			List<Pair<String, Resource>> files = new ObjectArrayList<>();
+			return files;
 		}, pBackgroundExecutor).thenCompose(files -> {
 			List<CompletableFuture<Pair<String, JsonObject>>> tasks = new ObjectArrayList<>(files.size());
 			files.forEach(pair -> tasks.add(

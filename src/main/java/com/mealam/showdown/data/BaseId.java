@@ -7,8 +7,6 @@
  */
 package com.mealam.showdown.data;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-
 public abstract class BaseId {
 
 	protected final String value;
@@ -17,7 +15,6 @@ public abstract class BaseId {
 		this.value = pValue;
 	}
 
-	@JsonValue
 	public String value() {
 		return value;
 	}

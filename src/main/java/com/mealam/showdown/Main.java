@@ -7,24 +7,19 @@
  */
 package com.mealam.showdown;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@SpringBootApplication
+import com.mealam.showdown.loader.LoadInitializer;
+import io.javalin.Javalin;
+
 public class Main {
 
+	public static Javalin Main;
+	
 	public static void main(String[] pArgs) {
-		SpringApplication.run(Main.class, pArgs);
-	}
+		LoadInitializer.init();
 
-	@RestController
-	static class TestKotlin {
-
-		@GetMapping("/test-kt")
-		public String test() {
-			return Test.greet("Kotlin");
-		}
+		Main = Javalin.create(/*config*/)
+				.get("/", ctx -> ctx.result("Hello World"))
+				.start(7070);
 	}
 }
