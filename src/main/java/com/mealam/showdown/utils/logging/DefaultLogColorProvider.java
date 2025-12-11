@@ -14,13 +14,13 @@ public class DefaultLogColorProvider implements ILogColorProvider {
 
 	@Override
 	public int getColor(Level pLevel) {
-		if (pLevel == LogLevel.ERROR) {
+		if (pLevel == BaseLogLevel.ERROR) {
 			return 0xFF0000; // Red
-		} else if (pLevel == LogLevel.WARNING) {
+		} else if (pLevel == BaseLogLevel.WARNING) {
 			return 0xFFA500; // Orange
-		} else if (pLevel == LogLevel.INFO) {
+		} else if (pLevel == BaseLogLevel.INFO) {
 			return 0x5DADE2; // Light Blue
-		} else if (pLevel == LogLevel.SUCCESS) {
+		} else if (pLevel == BaseLogLevel.SUCCESS) {
 			return 0x00FF00; // Green
 		} else {
 			return 0xFFFFFF; // Default to white

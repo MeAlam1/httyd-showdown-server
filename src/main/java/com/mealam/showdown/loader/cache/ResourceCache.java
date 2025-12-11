@@ -10,8 +10,8 @@ package com.mealam.showdown.loader.cache;
 import com.mealam.showdown.loader.JsonLoader;
 import com.mealam.showdown.loader.cache.dragons.DragonsCache;
 import com.mealam.showdown.loader.cache.moves.MovesCache;
-import com.mealam.showdown.utils.logging.LogLevel;
-import com.mealam.showdown.utils.logging.Logger;
+import com.mealam.showdown.utils.logging.BaseLogLevel;
+import com.mealam.showdown.utils.logging.BaseLogger;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -39,8 +39,8 @@ public class ResourceCache extends JsonLoader {
 				.thenRunAsync(() -> {
 					ResourceCache.DRAGONS = dragons.join();
 					ResourceCache.MOVES = moves.join();
-					Logger.log(LogLevel.SUCCESS, "Dragons Cache: " + ResourceCache.DRAGONS);
-					Logger.log(LogLevel.SUCCESS, "Moves Cache: " + ResourceCache.MOVES);
+					BaseLogger.log(BaseLogLevel.SUCCESS, "Dragons Cache: " + ResourceCache.DRAGONS);
+					BaseLogger.log(BaseLogLevel.SUCCESS, "Moves Cache: " + ResourceCache.MOVES);
 				}, pServerExecutor);
 	}
 

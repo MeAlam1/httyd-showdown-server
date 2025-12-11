@@ -21,8 +21,8 @@ import com.mealam.showdown.loader.json.deserialize.moves.EffectTarget;
 import com.mealam.showdown.loader.json.deserialize.moves.Moves;
 import com.mealam.showdown.loader.json.moves.MovesCacheFactory;
 import com.mealam.showdown.utils.json.GsonHelper;
-import com.mealam.showdown.utils.logging.LogLevel;
-import com.mealam.showdown.utils.logging.Logger;
+import com.mealam.showdown.utils.logging.BaseLogLevel;
+import com.mealam.showdown.utils.logging.BaseLogger;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
@@ -76,13 +76,13 @@ public class JsonLoader {
 				pPath,
 				pFactory,
 				ex -> {
-					Logger.log(LogLevel.ERROR, "Exception while baking " + pPath + ": " + ex.getMessage());
+					BaseLogger.log(BaseLogLevel.ERROR, "Exception while baking " + pPath + ": " + ex.getMessage());
 					return null;
 				}).whenComplete((result, ex) -> {
 			if (ex != null) {
-				Logger.log(LogLevel.ERROR, "Failed to load static " + pPath + ": " + ex.getMessage());
+				BaseLogger.log(BaseLogLevel.ERROR, "Failed to load static " + pPath + ": " + ex.getMessage());
 			} else {
-				Logger.log(LogLevel.INFO, "Successfully loaded static " + pPath + ". Count: " + (result != null ? result.size() : 0));
+				BaseLogger.log(BaseLogLevel.INFO, "Successfully loaded static " + pPath + ". Count: " + (result != null ? result.size() : 0));
 			}
 		});
 	}
@@ -92,10 +92,10 @@ public class JsonLoader {
 			String pAssetPath,
 			BiFunction<String, JsonObject, BAKED> pElementFactory,
 			Function<Throwable, BAKED> pExceptionalFactory) {
-		Logger.log(LogLevel.INFO, "Baking JSON resources from: " + pAssetPath);
+		BaseLogger.log(BaseLogLevel.INFO, "Baking JSON resources from: " + pAssetPath);
 		return loadResources(pBackgroundExecutor, pAssetPath, "json")
 				.thenCompose(resources -> {
-					Logger.log(LogLevel.INFO, "Found " + resources.size() + " JSON resources in: " + pAssetPath);
+					BaseLogger.log(BaseLogLevel.INFO, "Found " + resources.size() + " JSON resources in: " + pAssetPath);
 					List<CompletableFuture<Pair<String, BAKED>>> tasks = new ObjectArrayList<>(resources.size());
 					resources.forEach(pair -> tasks.add(
 							CompletableFuture.supplyAsync(() -> {
@@ -103,11 +103,11 @@ public class JsonLoader {
 									String key = cleanFileName(pair.left());
 									return Pair.of(key, pElementFactory.apply(pair.left(), pair.right()));
 								} catch (Exception ex) {
-									Logger.log(LogLevel.ERROR, "Error processing resource " + pair.left() + ": " + ex.getMessage());
+									BaseLogger.log(BaseLogLevel.ERROR, "Error processing resource " + pair.left() + ": " + ex.getMessage());
 									throw ex;
 								}
 							}, pBackgroundExecutor).exceptionally(ex -> {
-								Logger.log(LogLevel.ERROR, "Exceptionally handled resource: " + pair.left() + " - " + ex.getMessage());
+								BaseLogger.log(BaseLogLevel.ERROR, "Exceptionally handled resource: " + pair.left() + " - " + ex.getMessage());
 								return Pair.of(pair.left(), pExceptionalFactory.apply(ex));
 							})));
 					return CompletableFuture.allOf(tasks.toArray(new CompletableFuture[0]))
@@ -120,7 +120,7 @@ public class JsonLoader {
 			Executor pBackgroundExecutor,
 			String pAssetPath,
 			String pFileType) {
-		Logger.log(LogLevel.INFO, "Loading resources from: " + pAssetPath + " with file type: " + pFileType);
+		BaseLogger.log(BaseLogLevel.INFO, "Loading resources from: " + pAssetPath + " with file type: " + pFileType);
 		return CompletableFuture.supplyAsync(() -> {
 			//TODO: Fix
 			List<Pair<String, Resource>> files = new ObjectArrayList<>();

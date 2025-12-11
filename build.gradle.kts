@@ -32,6 +32,7 @@ dependencies {
     
     implementation(libs.javalin)
     implementation("org.slf4j:slf4j-simple:2.0.16")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
 
     implementation(libs.gson)
     implementation(libs.fastutil)

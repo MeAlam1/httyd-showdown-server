@@ -1,41 +1,30 @@
 package com.mealam.showdown;
 
+import com.mealam.showdown.config.Routes;
 import io.javalin.Javalin;
+import io.javalin.http.HttpStatus;
 
 import java.io.InputStream;
 
 public class Main {
 
-	public static Javalin Main;
+	public static Javalin app;
 
 	public static void main(String[] pArgs) {
-		Main = Javalin.create()
-				.get("/", ctx -> ctx.result("Hello World"))
-				.get("/static/api/{path...}", ctx -> {
-					String path = ctx.pathParam("path");
-
-					// basic sanitization
-					if (path.contains("..") || path.startsWith("/")) {
-						ctx.status(400).result("Invalid path");
-						return;
-					}
-
-					// allow requests with or without the .json extension
-					String resourcePath = "/static/api/" + (path.endsWith(".json") ? path : path + ".json");
-
-					try (InputStream in = Main.class.getResourceAsStream(resourcePath)) {
-						if (in == null) {
-							ctx.status(404).result("Not Found");
-							return;
-						}
-
-						String json = new String(in.readAllBytes());
-						ctx.contentType("application/json");
-						ctx.result(json);
-					}
+		app = Javalin.create(config -> {
+					config.bundledPlugins.enableCors(cors -> {
+						cors.addRule(rule -> rule.allowHost("http://localhost:7070"));
+					});
 				})
+				.get("/", ctx -> ctx.result("Hello World"));
 
-				.start(7070);
+		Routes.register(app);
 
+		app.exception(Exception.class, (e, ctx) -> {
+			ctx.status(HttpStatus.INTERNAL_SERVER_ERROR).json(e.getMessage());
+		});
+
+
+		app.start(7070);
 	}
 }

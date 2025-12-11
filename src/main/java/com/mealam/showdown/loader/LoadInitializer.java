@@ -8,8 +8,8 @@
 package com.mealam.showdown.loader;
 
 import com.mealam.showdown.loader.cache.ResourceCache;
-import com.mealam.showdown.utils.logging.LogLevel;
-import com.mealam.showdown.utils.logging.Logger;
+import com.mealam.showdown.utils.logging.BaseLogLevel;
+import com.mealam.showdown.utils.logging.BaseLogger;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -21,6 +21,6 @@ public class LoadInitializer {
 	
 	public static void init() {
 		ResourceCache.reload(backgroundExecutor, serverExecutor)
-				.thenRun(() -> Logger.log(LogLevel.INFO, "Resource cache loaded successfully."));
+				.thenRun(() -> BaseLogger.log(BaseLogLevel.INFO, "Resource cache loaded successfully."));
 	}
 }
