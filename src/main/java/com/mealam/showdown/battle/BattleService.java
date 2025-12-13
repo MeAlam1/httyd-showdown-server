@@ -5,6 +5,7 @@ import com.mealam.showdown.battle.data.BattleId;
 import com.mealam.showdown.battle.data.Phase;
 import com.mealam.showdown.battle.dto.request.CreateBattleRequest;
 import com.mealam.showdown.battle.dto.request.JoinBattleRequest;
+import com.mealam.showdown.battle.dto.request.LeaveBattleRequest;
 import com.mealam.showdown.user.data.UserId;
 
 import java.util.ArrayList;
@@ -75,6 +76,34 @@ public class BattleService {
 			players.remove(user);
 		}
 
+
+		var updated = new BattleContext(
+				battle.battleId(),
+				players,
+				spectators,
+				battle.turnContext(),
+				battle.phase(),
+				battle.winnerPlayerId()
+		);
+
+		repo.update(updated);
+		return updated;
+	}
+
+	public BattleContext leaveBattle(BattleId pId, LeaveBattleRequest pRequest) {
+		var battle = repo.get(pId);
+		if (battle == null) return null;
+
+		UserId user = UserId.parse(pRequest.userId());
+
+		// build mutable copies
+		List<UserId> players = new ArrayList<>(battle.playerIds() != null ? battle.playerIds() : List.of());
+		List<UserId> spectators = new ArrayList<>(battle.spectatorIds() != null ? battle.spectatorIds() : List.of());
+
+		boolean removed = players.remove(user) | spectators.remove(user);
+
+		// if nothing removed, return current battle (no-op)
+		if (!removed) return battle;
 
 		var updated = new BattleContext(
 				battle.battleId(),

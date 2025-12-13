@@ -9,8 +9,9 @@ package com.mealam.showdown.battle.data;
 
 import com.mealam.showdown.utils.ExtensibleEnum;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import java.util.Map;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
 
 public class Phase extends ExtensibleEnum<Phase> {
 
@@ -31,13 +32,13 @@ public class Phase extends ExtensibleEnum<Phase> {
 
 		@Override
 		public @NotNull Phase defaultVersion() {
-			return PhaseEnum.START.getPhase();
+			return PhaseEnum.LOBBY.getPhase();
 		}
 	};
 
 	private enum PhaseEnum {
 
-		START("start"),
+		LOBBY("lobby"),
 		IN_PROGRESS("in_progress"),
 		FINISHED("finished");
 
