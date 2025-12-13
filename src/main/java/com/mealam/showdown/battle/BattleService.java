@@ -1,6 +1,7 @@
 package com.mealam.showdown.battle;
 
 import com.mealam.showdown.battle.context.BattleContext;
+import com.mealam.showdown.battle.context.DragonBattleContext;
 import com.mealam.showdown.battle.context.PlayerBattleContext;
 import com.mealam.showdown.battle.context.SpectatorBattleContext;
 import com.mealam.showdown.battle.data.BattleId;
@@ -9,6 +10,7 @@ import com.mealam.showdown.battle.dto.request.CreateBattleRequest;
 import com.mealam.showdown.battle.dto.request.JoinBattleRequest;
 import com.mealam.showdown.battle.dto.request.LeaveBattleRequest;
 import com.mealam.showdown.battle.dto.response.JoinBattleResponse;
+import com.mealam.showdown.battle.party.PartyService;
 import com.mealam.showdown.user.context.UserContext;
 import com.mealam.showdown.user.context.UserProfileContext;
 import com.mealam.showdown.user.data.UserId;
@@ -22,6 +24,7 @@ public class BattleService {
 	private static final int MAX_PLAYERS = 2;
 
 	private final BattleRepository repo = new BattleRepository();
+	private final PartyService partyService = new PartyService();
 
 	public BattleContext createBattle(CreateBattleRequest pRequest) {
 		List<UserId> playerIds = null;
@@ -67,7 +70,9 @@ public class BattleService {
 
 		UserProfileContext profileContext = new UserProfileContext(new UserContext(user, user.toString() /* placeholder */)); // TODO: Make a system to fetch user profiles from the ID
 		if (players.contains(user)) {
-			var playerCtx = new PlayerBattleContext(profileContext, List.of(), false);
+			List<DragonBattleContext> party = partyService.getUserParty(user);
+			party = partyService.preparePartyForBattle(party);
+			var playerCtx = new PlayerBattleContext(profileContext, party, false);
 			return new JoinBattleResponse.Player(playerCtx);
 		}
 
@@ -91,7 +96,9 @@ public class BattleService {
 		repo.update(updated);
 
 		if (players.contains(user)) {
-			var playerCtx = new PlayerBattleContext(profileContext, List.of(), false);
+			List<DragonBattleContext> party = partyService.getUserParty(user);
+			party = partyService.preparePartyForBattle(party);
+			var playerCtx = new PlayerBattleContext(profileContext, party, false);
 			return new JoinBattleResponse.Player(playerCtx);
 		} else {
 			var spectatorCtx = new SpectatorBattleContext(profileContext);

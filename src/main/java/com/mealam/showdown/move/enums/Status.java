@@ -9,6 +9,7 @@ package com.mealam.showdown.move.enums;
 
 public enum Status {
 
+	NONE,
 	FEAR,
 	BURN,
 	POISON,
