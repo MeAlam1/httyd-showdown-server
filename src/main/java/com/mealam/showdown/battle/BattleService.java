@@ -1,11 +1,16 @@
 package com.mealam.showdown.battle;
 
 import com.mealam.showdown.battle.context.BattleContext;
+import com.mealam.showdown.battle.context.PlayerBattleContext;
+import com.mealam.showdown.battle.context.SpectatorBattleContext;
 import com.mealam.showdown.battle.data.BattleId;
 import com.mealam.showdown.battle.data.Phase;
 import com.mealam.showdown.battle.dto.request.CreateBattleRequest;
 import com.mealam.showdown.battle.dto.request.JoinBattleRequest;
 import com.mealam.showdown.battle.dto.request.LeaveBattleRequest;
+import com.mealam.showdown.battle.dto.response.JoinBattleResponse;
+import com.mealam.showdown.user.context.UserContext;
+import com.mealam.showdown.user.context.UserProfileContext;
 import com.mealam.showdown.user.data.UserId;
 
 import java.util.ArrayList;
@@ -51,11 +56,7 @@ public class BattleService {
 		return repo.get(pId);
 	}
 
-	public void applyStateChange(BattleContext pBattle) {
-		repo.update(pBattle);
-	}
-
-	public BattleContext joinBattle(BattleId pId, JoinBattleRequest pRequest) {
+	public JoinBattleResponse joinBattle(BattleId pId, JoinBattleRequest pRequest) {
 		var battle = repo.get(pId);
 		if (battle == null) return null;
 
@@ -64,8 +65,10 @@ public class BattleService {
 		List<UserId> players = new ArrayList<>(battle.playerIds() != null ? battle.playerIds() : List.of());
 		List<UserId> spectators = new ArrayList<>(battle.spectatorIds() != null ? battle.spectatorIds() : List.of());
 
+		UserProfileContext profileContext = new UserProfileContext(new UserContext(user, user.toString() /* placeholder */)); // TODO: Make a system to fetch user profiles from the ID
 		if (players.contains(user)) {
-			return battle;
+			var playerCtx = new PlayerBattleContext(profileContext, List.of(), false);
+			return new JoinBattleResponse.Player(playerCtx);
 		}
 
 		if (players.size() < MAX_PLAYERS) {
@@ -75,7 +78,6 @@ public class BattleService {
 			if (!spectators.contains(user)) spectators.add(user);
 			players.remove(user);
 		}
-
 
 		var updated = new BattleContext(
 				battle.battleId(),
@@ -87,7 +89,14 @@ public class BattleService {
 		);
 
 		repo.update(updated);
-		return updated;
+
+		if (players.contains(user)) {
+			var playerCtx = new PlayerBattleContext(profileContext, List.of(), false);
+			return new JoinBattleResponse.Player(playerCtx);
+		} else {
+			var spectatorCtx = new SpectatorBattleContext(profileContext);
+			return new JoinBattleResponse.Spectator(spectatorCtx);
+		}
 	}
 
 	public BattleContext leaveBattle(BattleId pId, LeaveBattleRequest pRequest) {
@@ -96,13 +105,11 @@ public class BattleService {
 
 		UserId user = UserId.parse(pRequest.userId());
 
-		// build mutable copies
 		List<UserId> players = new ArrayList<>(battle.playerIds() != null ? battle.playerIds() : List.of());
 		List<UserId> spectators = new ArrayList<>(battle.spectatorIds() != null ? battle.spectatorIds() : List.of());
 
 		boolean removed = players.remove(user) | spectators.remove(user);
 
-		// if nothing removed, return current battle (no-op)
 		if (!removed) return battle;
 
 		var updated = new BattleContext(
