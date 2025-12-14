@@ -6,13 +6,12 @@ import com.mealam.showdown.battle.dto.request.JoinBattleRequest;
 import com.mealam.showdown.battle.dto.request.LeaveBattleRequest;
 import com.mealam.showdown.battle.dto.response.JoinBattleResponse;
 import com.mealam.showdown.utils.json.JSONFormatUtils;
+import com.mealam.showdown.utils.logging.BaseLogLevel;
+import com.mealam.showdown.utils.logging.BaseLogger;
 import io.javalin.http.Context;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class BattleController {
 
-	private static final Logger logger = LoggerFactory.getLogger(BattleController.class);
 	private final BattleService service = new BattleService();
 
 	public void createBattle(Context pContext) {
@@ -20,8 +19,8 @@ public class BattleController {
 			var request = pContext.bodyAsClass(CreateBattleRequest.class);
 			var battle = service.createBattle(request);
 			pContext.status(201).result(JSONFormatUtils.createJsonMessage("id", battle.battleId().toString()));
-		} catch (Exception e) {
-			logger.error("Error creating battle", e);
+		} catch (Exception pException) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error creating battle", pException);
 			pContext.status(500).result(JSONFormatUtils.createJsonMessage("error", "Failed to create battle"));
 		}
 	}
@@ -37,10 +36,10 @@ public class BattleController {
 			}
 
 			pContext.json(battle);
-		} catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException pIllegalArgumentException) {
 			pContext.status(400).result(JSONFormatUtils.createJsonMessage("error", "Invalid battle ID"));
-		} catch (Exception e) {
-			logger.error("Error retrieving battle", e);
+		} catch (Exception pException) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error retrieving battle", pException);
 			pContext.status(500).result(JSONFormatUtils.createJsonMessage("error", "Internal server error"));
 		}
 	}
@@ -59,8 +58,8 @@ public class BattleController {
 			pContext.json(resp);
 		} catch (IllegalArgumentException e) {
 			pContext.status(400).result(JSONFormatUtils.createJsonMessage("error", "Invalid request"));
-		} catch (Exception e) {
-			logger.error("Error joining battle", e);
+		} catch (Exception pException) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error joining battle", pException);
 			pContext.status(500).result(JSONFormatUtils.createJsonMessage("error", "Internal server error"));
 		}
 	}
@@ -77,10 +76,10 @@ public class BattleController {
 			}
 
 			pContext.result(JSONFormatUtils.createJsonMessage("id", battle.battleId().toString()));
-		} catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException pIllegalArgumentException) {
 			pContext.status(400).result(JSONFormatUtils.createJsonMessage("error", "Invalid request"));
-		} catch (Exception e) {
-			logger.error("Error leaving battle", e);
+		} catch (Exception pException) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error leaving battle", pException);
 			pContext.status(500).result(JSONFormatUtils.createJsonMessage("error", "Internal server error"));
 		}
 	}
