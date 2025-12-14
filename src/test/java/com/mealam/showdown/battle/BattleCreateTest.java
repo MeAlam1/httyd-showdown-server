@@ -28,7 +28,7 @@ class BattleCreateTest extends BattleBaseTest {
 
 		String body = createResponse.body();
 		assertNotNull(body);
-		assertTrue(body.contains("id"));
+		assertTrue(body.contains("battleId"));
 
 		String battleId = extractBattleIdFromBody(body);
 		assertFalse(battleId.isEmpty());

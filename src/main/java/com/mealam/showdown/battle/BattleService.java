@@ -170,12 +170,12 @@ public class BattleService {
 		List<UserId> players = new ArrayList<>(battle.playerIds() != null ? battle.playerIds() : List.of());
 		List<UserId> spectators = new ArrayList<>(battle.spectatorIds() != null ? battle.spectatorIds() : List.of());
 
-		UserProfileContext profileContext = new UserProfileContext(new UserContext(user, user.toString() /* placeholder */)); // TODO: Make a system to fetch user profiles from the ID
+		UserProfileContext profileContext = new UserProfileContext(new UserContext(user, user.toString()));
 		if (players.contains(user)) {
 			List<DragonBattleContext> party = partyService.getUserParty(user);
 			party = partyService.preparePartyForBattle(party);
 			var playerCtx = new PlayerBattleContext(profileContext, party, false);
-			return new JoinBattleResponse.Player(playerCtx);
+			return new JoinBattleResponse.Player(pId, playerCtx);
 		}
 
 		if (players.size() < MAX_PLAYERS) {
@@ -201,10 +201,10 @@ public class BattleService {
 			List<DragonBattleContext> party = partyService.getUserParty(user);
 			party = partyService.preparePartyForBattle(party);
 			var playerCtx = new PlayerBattleContext(profileContext, party, false);
-			return new JoinBattleResponse.Player(playerCtx);
+			return new JoinBattleResponse.Player(pId, playerCtx);
 		} else {
 			var spectatorCtx = new SpectatorBattleContext(profileContext);
-			return new JoinBattleResponse.Spectator(spectatorCtx);
+			return new JoinBattleResponse.Spectator(pId, spectatorCtx);
 		}
 	}
 

@@ -6,9 +6,9 @@ import com.mealam.showdown.battle.data.turns.TurnManager;
 import com.mealam.showdown.battle.dto.request.CreateBattleRequest;
 import com.mealam.showdown.battle.dto.request.JoinBattleRequest;
 import com.mealam.showdown.battle.dto.request.LeaveBattleRequest;
-import com.mealam.showdown.battle.dto.response.JoinBattleResponse;
+import com.mealam.showdown.battle.dto.response.*;
 import com.mealam.showdown.user.data.UserId;
-import com.mealam.showdown.utils.json.JSONFormatUtils;
+import com.mealam.showdown.utils.http.ResponseUtils;
 import com.mealam.showdown.utils.logging.BaseLogLevel;
 import com.mealam.showdown.utils.logging.BaseLogger;
 import io.javalin.http.Context;
@@ -17,154 +17,144 @@ public class BattleController {
 
 	private final BattleService service = new BattleService();
 
-	public void createBattle(Context pContext) {
+	public void createBattle(Context ctx) {
 		try {
-			var request = pContext.bodyAsClass(CreateBattleRequest.class);
-			var battle = service.createBattle(request);
-			pContext.status(201).result(JSONFormatUtils.createJsonMessage("id", battle.battleId().toString()));
-		} catch (Exception pException) {
-			BaseLogger.log(BaseLogLevel.ERROR, "Error creating battle", pException);
-			pContext.status(500).result(JSONFormatUtils.createJsonMessage("error", "Failed to create battle"));
+			var req = ctx.bodyAsClass(CreateBattleRequest.class);
+			var battle = service.createBattle(req);
+			ResponseUtils.created(ctx, BattleSummaryResponse.from(battle));
+		} catch (Exception e) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error creating battle", e);
+			ResponseUtils.serverError(ctx, "Failed to create battle", "battle_create_failed");
 		}
 	}
 
-	public void getBattle(Context pContext) {
+	public void getBattle(Context ctx) {
 		try {
-			var id = BattleId.parse(pContext.pathParam("id"));
+			var id = BattleId.parse(ctx.pathParam("id"));
 			var battle = service.getBattle(id);
-
 			if (battle == null) {
-				pContext.status(404).result(JSONFormatUtils.createJsonMessage("error", "Battle not found"));
+				ResponseUtils.notFound(ctx, "Battle not found", "battle_not_found");
 				return;
 			}
-
-			pContext.json(battle);
-		} catch (IllegalArgumentException pIllegalArgumentException) {
-			pContext.status(400).result(JSONFormatUtils.createJsonMessage("error", "Invalid battle ID"));
-		} catch (Exception pException) {
-			BaseLogger.log(BaseLogLevel.ERROR, "Error retrieving battle", pException);
-			pContext.status(500).result(JSONFormatUtils.createJsonMessage("error", "Internal server error"));
+			ResponseUtils.ok(ctx, BattleSummaryResponse.from(battle));
+		} catch (IllegalArgumentException e) {
+			ResponseUtils.badRequest(ctx, "Invalid battle ID", "invalid_battle_id");
+		} catch (Exception e) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error retrieving battle", e);
+			ResponseUtils.serverError(ctx, "Internal server error", "battle_get_error");
 		}
 	}
 
-	public void startBattle(Context pContext) {
+	public void startBattle(Context ctx) {
 		try {
-			var id = BattleId.parse(pContext.pathParam("id"));
+			var id = BattleId.parse(ctx.pathParam("id"));
 			var battle = service.startBattle(id);
-
 			if (battle == null) {
-				pContext.status(404).result(JSONFormatUtils.createJsonMessage("error", "Battle not found"));
+				ResponseUtils.notFound(ctx, "Battle not found", "battle_not_found");
 				return;
 			}
-
-			pContext.json(battle);
+			ResponseUtils.ok(ctx, BattleSummaryResponse.from(battle));
 		} catch (IllegalStateException e) {
-			pContext.status(400).result(JSONFormatUtils.createJsonMessage("error", e.getMessage()));
-		} catch (Exception pException) {
-			BaseLogger.log(BaseLogLevel.ERROR, "Error starting battle", pException);
-			pContext.status(500).result(JSONFormatUtils.createJsonMessage("error", "Internal server error"));
+			ResponseUtils.badRequest(ctx, e.getMessage(), "battle_start_invalid_state");
+		} catch (Exception e) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error starting battle", e);
+			ResponseUtils.serverError(ctx, "Internal server error", "battle_start_error");
 		}
 	}
 
-	// java
-	public void advanceTurn(Context pContext) {
+	public void advanceTurn(Context ctx) {
 		try {
-			var id = BattleId.parse(pContext.pathParam("id"));
-
+			var id = BattleId.parse(ctx.pathParam("id"));
 			var existing = service.getBattle(id);
 			if (existing == null) {
-				pContext.status(404).result(JSONFormatUtils.createJsonMessage("error", "Battle not found"));
+				ResponseUtils.notFound(ctx, "Battle not found", "battle_not_found");
 				return;
 			}
 			if (existing.turnContext() == null || existing.turnContext().turnNumber() == TurnManager.NOT_STARTED) {
-				pContext.status(400).result(JSONFormatUtils.createJsonMessage("error", "Battle not started"));
+				ResponseUtils.badRequest(ctx, "Battle not started", "battle_not_started");
 				return;
 			}
 			if (existing.turnContext().turnNumber() == TurnManager.FINISHED) {
-				pContext.status(400).result(JSONFormatUtils.createJsonMessage("error", "Battle already finished"));
+				ResponseUtils.badRequest(ctx, "Battle already finished", "battle_already_finished");
 				return;
 			}
 
 			TurnContext turnData = null;
 			try {
-				turnData = pContext.bodyAsClass(TurnContext.class);
+				turnData = ctx.bodyAsClass(TurnContext.class);
 			} catch (Exception ignored) {
+				// optional body
 			}
 
 			var battle = service.advanceTurn(id, turnData);
-
 			if (battle == null) {
-				pContext.status(404).result(JSONFormatUtils.createJsonMessage("error", "Battle not found"));
+				ResponseUtils.notFound(ctx, "Battle not found", "battle_not_found");
 				return;
 			}
-
-			pContext.json(battle);
+			ResponseUtils.ok(ctx, TurnAdvanceResponse.from(battle));
 		} catch (IllegalStateException | IllegalArgumentException e) {
 			BaseLogger.log(BaseLogLevel.WARNING, "Invalid state: " + e.getMessage());
-			pContext.status(400).result(JSONFormatUtils.createJsonMessage("error", e.getMessage()));
-		} catch (Exception pException) {
-			BaseLogger.log(BaseLogLevel.ERROR, "Error advancing turn", pException);
-			pContext.status(500).result(JSONFormatUtils.createJsonMessage("error", "Internal server error"));
+			ResponseUtils.badRequest(ctx, e.getMessage(), "turn_advance_invalid");
+		} catch (Exception e) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error advancing turn", e);
+			ResponseUtils.serverError(ctx, "Internal server error", "turn_advance_error");
 		}
 	}
 
-	public void finishBattle(Context pContext) {
+	public void finishBattle(Context ctx) {
 		try {
-			var id = BattleId.parse(pContext.pathParam("id"));
-			String winnerIdStr = pContext.queryParam("winnerId");
+			var id = BattleId.parse(ctx.pathParam("id"));
+			String winnerIdStr = ctx.queryParam("winnerId");
 			UserId winnerId = winnerIdStr != null ? UserId.parse(winnerIdStr) : null;
 
 			var battle = service.finishBattle(id, winnerId);
-
 			if (battle == null) {
-				pContext.status(404).result(JSONFormatUtils.createJsonMessage("error", "Battle not found"));
+				ResponseUtils.notFound(ctx, "Battle not found", "battle_not_found");
 				return;
 			}
-
-			pContext.json(battle);
-		} catch (Exception pException) {
-			BaseLogger.log(BaseLogLevel.ERROR, "Error finishing battle", pException);
-			pContext.status(500).result(JSONFormatUtils.createJsonMessage("error", "Internal server error"));
+			ResponseUtils.ok(ctx, BattleSummaryResponse.from(battle));
+		} catch (Exception e) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error finishing battle", e);
+			ResponseUtils.serverError(ctx, "Internal server error", "battle_finish_error");
 		}
 	}
 
-	public void joinBattle(Context pContext) {
+	public void joinBattle(Context ctx) {
 		try {
-			var id = BattleId.parse(pContext.pathParam("id"));
-			var req = pContext.bodyAsClass(JoinBattleRequest.class);
+			var id = BattleId.parse(ctx.pathParam("id"));
+			var req = ctx.bodyAsClass(JoinBattleRequest.class);
 
-			JoinBattleResponse resp = service.joinBattle(id, req);
+			var resp = service.joinBattle(id, req);
 			if (resp == null) {
-				pContext.status(404).result(JSONFormatUtils.createJsonMessage("error", "Battle not found"));
+				ResponseUtils.notFound(ctx, "Battle not found", "battle_not_found");
 				return;
 			}
 
-			pContext.status(200).result(JSONFormatUtils.createJsonMessage("id", id.toString()));
+			ResponseUtils.ok(ctx, resp);
 		} catch (IllegalArgumentException e) {
-			pContext.status(400).result(JSONFormatUtils.createJsonMessage("error", "Invalid request"));
-		} catch (Exception pException) {
-			BaseLogger.log(BaseLogLevel.ERROR, "Error joining battle", pException);
-			pContext.status(500).result(JSONFormatUtils.createJsonMessage("error", "Internal server error"));
+			ResponseUtils.badRequest(ctx, "Invalid request", "join_invalid_request");
+		} catch (Exception e) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error joining battle", e);
+			ResponseUtils.serverError(ctx, "Internal server error", "join_error");
 		}
 	}
 
-	public void leaveBattle(Context pContext) {
+	public void leaveBattle(Context ctx) {
 		try {
-			var id = BattleId.parse(pContext.pathParam("id"));
-			var req = pContext.bodyAsClass(LeaveBattleRequest.class);
+			var id = BattleId.parse(ctx.pathParam("id"));
+			var req = ctx.bodyAsClass(LeaveBattleRequest.class);
 
 			var battle = service.leaveBattle(id, req);
 			if (battle == null) {
-				pContext.status(404).result(JSONFormatUtils.createJsonMessage("error", "Battle not found"));
+				ResponseUtils.notFound(ctx, "Battle not found", "battle_not_found");
 				return;
 			}
-
-			pContext.result(JSONFormatUtils.createJsonMessage("id", battle.battleId().toString()));
-		} catch (IllegalArgumentException pIllegalArgumentException) {
-			pContext.status(400).result(JSONFormatUtils.createJsonMessage("error", "Invalid request"));
-		} catch (Exception pException) {
-			BaseLogger.log(BaseLogLevel.ERROR, "Error leaving battle", pException);
-			pContext.status(500).result(JSONFormatUtils.createJsonMessage("error", "Internal server error"));
+			ResponseUtils.ok(ctx, BattleSummaryResponse.from(battle));
+		} catch (IllegalArgumentException e) {
+			ResponseUtils.badRequest(ctx, "Invalid request", "leave_invalid_request");
+		} catch (Exception e) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error leaving battle", e);
+			ResponseUtils.serverError(ctx, "Internal server error", "leave_error");
 		}
 	}
 }

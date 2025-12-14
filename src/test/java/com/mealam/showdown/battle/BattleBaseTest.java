@@ -46,7 +46,7 @@ public abstract class BattleBaseTest {
 	}
 
 	protected static String extractBattleIdFromBody(String body) {
-		Pattern p = Pattern.compile("\"id\"\\s*:\\s*\"([A-Za-z0-9_-]+)\"");
+		Pattern p = Pattern.compile("\"battleId\"\\s*:\\s*\"([A-Za-z0-9_-]+)\"");
 		Matcher m = p.matcher(body);
 		if (m.find()) return m.group(1);
 		throw new IllegalStateException("Could not extract id from response: " + body);

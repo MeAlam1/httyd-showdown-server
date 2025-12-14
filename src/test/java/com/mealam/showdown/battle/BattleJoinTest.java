@@ -27,7 +27,7 @@ class BattleJoinTest extends BattleBaseTest {
 		HttpResponse<String> joinResponse = client.send(joinRequest, HttpResponse.BodyHandlers.ofString());
 		assertEquals(200, joinResponse.statusCode());
 		assertNotNull(joinResponse.body());
-		assertTrue(joinResponse.body().contains("id"));
+		assertTrue(joinResponse.body().contains("battleId"));
 
 		HttpRequest getRequest = HttpRequest.newBuilder()
 				.uri(new URI("http://localhost:" + port + "/battle/" + battleId))
