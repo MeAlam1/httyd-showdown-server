@@ -28,8 +28,8 @@ public class BattleController {
 			var req = pContext.bodyAsClass(CreateBattleRequest.class);
 			var battle = service.createBattle(req);
 			ResponseUtils.created(pContext, BattleSummaryResponse.from(battle));
-		} catch (Exception e) {
-			BaseLogger.log(BaseLogLevel.ERROR, "Error creating battle", e);
+		} catch (Exception pException) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error creating battle", pException);
 			ResponseUtils.serverError(pContext, "Failed to create battle", "battle_create_failed");
 		}
 	}
@@ -43,10 +43,10 @@ public class BattleController {
 				return;
 			}
 			ResponseUtils.ok(pContext, BattleSummaryResponse.from(battle));
-		} catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException pIllegalArgumentException) {
 			ResponseUtils.badRequest(pContext, "Invalid battle ID", "invalid_battle_id");
-		} catch (Exception e) {
-			BaseLogger.log(BaseLogLevel.ERROR, "Error retrieving battle", e);
+		} catch (Exception pException) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error retrieving battle", pException);
 			ResponseUtils.serverError(pContext, "Internal server error", "battle_get_error");
 		}
 	}
@@ -60,10 +60,10 @@ public class BattleController {
 				return;
 			}
 			ResponseUtils.ok(pContext, BattleSummaryResponse.from(battle));
-		} catch (IllegalStateException e) {
-			ResponseUtils.badRequest(pContext, e.getMessage(), "battle_start_invalid_state");
-		} catch (Exception e) {
-			BaseLogger.log(BaseLogLevel.ERROR, "Error starting battle", e);
+		} catch (IllegalStateException pIllegalStateException) {
+			ResponseUtils.badRequest(pContext, pIllegalStateException.getMessage(), "battle_start_invalid_state");
+		} catch (Exception pException) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error starting battle", pException);
 			ResponseUtils.serverError(pContext, "Internal server error", "battle_start_error");
 		}
 	}
@@ -88,8 +88,10 @@ public class BattleController {
 			TurnContext turnData = null;
 			try {
 				turnData = pContext.bodyAsClass(TurnContext.class);
-			} catch (Exception ignored) {
-				// TODO: add logging,  No turn data provided
+			} catch (Exception pException) {
+				// TODO: Remove the Comment below once the TurnContext validation is implemented
+				//ResponseUtils.badRequest(pContext, "Invalid turn data", "invalid_turn_data");
+				return;
 			}
 
 			var battle = service.advanceTurn(id, turnData);
@@ -98,11 +100,11 @@ public class BattleController {
 				return;
 			}
 			ResponseUtils.ok(pContext, TurnAdvanceResponse.from(battle));
-		} catch (IllegalStateException | IllegalArgumentException e) {
-			BaseLogger.log(BaseLogLevel.WARNING, "Invalid state: " + e.getMessage());
-			ResponseUtils.badRequest(pContext, e.getMessage(), "turn_advance_invalid");
-		} catch (Exception e) {
-			BaseLogger.log(BaseLogLevel.ERROR, "Error advancing turn", e);
+		} catch (IllegalStateException | IllegalArgumentException pIllegalException) {
+			BaseLogger.log(BaseLogLevel.WARNING, "Invalid state: " + pIllegalException.getMessage());
+			ResponseUtils.badRequest(pContext, pIllegalException.getMessage(), "turn_advance_invalid");
+		} catch (Exception pException) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error advancing turn", pException);
 			ResponseUtils.serverError(pContext, "Internal server error", "turn_advance_error");
 		}
 	}
@@ -119,8 +121,8 @@ public class BattleController {
 				return;
 			}
 			ResponseUtils.ok(pContext, BattleSummaryResponse.from(battle));
-		} catch (Exception e) {
-			BaseLogger.log(BaseLogLevel.ERROR, "Error finishing battle", e);
+		} catch (Exception pException) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error finishing battle", pException);
 			ResponseUtils.serverError(pContext, "Internal server error", "battle_finish_error");
 		}
 	}
@@ -136,10 +138,10 @@ public class BattleController {
 				return;
 			}
 			ResponseUtils.ok(pContext, resp);
-		} catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException pIllegalArgumentException) {
 			ResponseUtils.badRequest(pContext, "Invalid request", "join_invalid_request");
-		} catch (Exception e) {
-			BaseLogger.log(BaseLogLevel.ERROR, "Error joining battle", e);
+		} catch (Exception pException) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error joining battle", pException);
 			ResponseUtils.serverError(pContext, "Internal server error", "join_error");
 		}
 	}
@@ -155,10 +157,10 @@ public class BattleController {
 				return;
 			}
 			ResponseUtils.ok(pContext, BattleSummaryResponse.from(battle));
-		} catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException pIllegalArgumentException) {
 			ResponseUtils.badRequest(pContext, "Invalid request", "leave_invalid_request");
-		} catch (Exception e) {
-			BaseLogger.log(BaseLogLevel.ERROR, "Error leaving battle", e);
+		} catch (Exception pException) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error leaving battle", pException);
 			ResponseUtils.serverError(pContext, "Internal server error", "leave_error");
 		}
 	}

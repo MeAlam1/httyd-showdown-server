@@ -148,41 +148,31 @@ public class DefaultBattleService implements BattleService {
 
 	@Override
 	public JoinBattleResponse joinBattle(BattleId pBattleId, JoinBattleRequest pRequest) {
-		var battle = repo.get(pBattleId);
-		if (battle == null) return null;
+		var ctx = resolveBattleUserLists(pBattleId, pRequest.userId());
+		if (ctx == null) return null;
 
-		UserId user = UserId.parse(pRequest.userId());
-		List<UserId> players = new ArrayList<>(battle.playerIds() != null ? battle.playerIds() : List.of());
-		List<UserId> spectators = new ArrayList<>(battle.spectatorIds() != null ? battle.spectatorIds() : List.of());
-
-		UserProfileContext profileContext = new UserProfileContext(new UserContext(user, user.toString()));
-		if (players.contains(user)) {
-			List<DragonBattleContext> party = partyService.getUserParty(user);
-			party = partyService.preparePartyForBattle(party);
-			var playerCtx = new PlayerBattleContext(profileContext, party, false);
-			return new JoinBattleResponse.Player(pBattleId, playerCtx);
+		UserProfileContext profileContext = new UserProfileContext(new UserContext(ctx.userId(), ctx.userId().toString()));
+		if (ctx.players().contains(ctx.userId())) {
+			return buildPlayerJoinResponse(pBattleId, profileContext, ctx.userId());
 		}
 
-		if (players.size() < MAX_PLAYERS) {
-			players.add(user);
-			spectators.remove(user);
+		if (ctx.players().size() < MAX_PLAYERS) {
+			ctx.players().add(ctx.userId());
+			ctx.spectators().remove(ctx.userId());
 		} else {
-			if (!spectators.contains(user)) spectators.add(user);
-			players.remove(user);
+			if (!ctx.spectators().contains(ctx.userId())) ctx.spectators().add(ctx.userId());
+			ctx.players().remove(ctx.userId());
 		}
 
 		var updated = new BattleContext(
-				battle.battleId(), players, spectators,
-				battle.turnContext(), battle.phase(), battle.winnerPlayerId()
+				ctx.battle().battleId(), ctx.players(), ctx.spectators(),
+				ctx.battle().turnContext(), ctx.battle().phase(), ctx.battle().winnerPlayerId()
 		);
 
 		repo.update(updated);
 
-		if (players.contains(user)) {
-			List<DragonBattleContext> party = partyService.getUserParty(user);
-			party = partyService.preparePartyForBattle(party);
-			var playerCtx = new PlayerBattleContext(profileContext, party, false);
-			return new JoinBattleResponse.Player(pBattleId, playerCtx);
+		if (ctx.players().contains(ctx.userId())) {
+			return buildPlayerJoinResponse(pBattleId, profileContext, ctx.userId());
 		} else {
 			var spectatorCtx = new SpectatorBattleContext(profileContext);
 			return new JoinBattleResponse.Spectator(pBattleId, spectatorCtx);
@@ -191,22 +181,41 @@ public class DefaultBattleService implements BattleService {
 
 	@Override
 	public BattleContext leaveBattle(BattleId pBattleId, LeaveBattleRequest pRequest) {
-		var battle = repo.get(pBattleId);
-		if (battle == null) return null;
+		var ctx = resolveBattleUserLists(pBattleId, pRequest.userId());
+		if (ctx == null) return null;
 
-		UserId user = UserId.parse(pRequest.userId());
-		List<UserId> players = new ArrayList<>(battle.playerIds() != null ? battle.playerIds() : List.of());
-		List<UserId> spectators = new ArrayList<>(battle.spectatorIds() != null ? battle.spectatorIds() : List.of());
-
-		boolean removed = players.remove(user) | spectators.remove(user);
-		if (!removed) return battle;
+		boolean removed = ctx.players().remove(ctx.userId()) | ctx.spectators().remove(ctx.userId());
+		if (!removed) return ctx.battle();
 
 		var updated = new BattleContext(
-				battle.battleId(), players, spectators,
-				battle.turnContext(), battle.phase(), battle.winnerPlayerId()
+				ctx.battle().battleId(), ctx.players(), ctx.spectators(),
+				ctx.battle().turnContext(), ctx.battle().phase(), ctx.battle().winnerPlayerId()
 		);
 
 		repo.update(updated);
 		return updated;
+	}
+
+	private JoinBattleResponse.Player buildPlayerJoinResponse(BattleId pBattleId, UserProfileContext pContext, UserId pUserId) {
+		List<DragonBattleContext> party = partyService.getUserParty(pUserId);
+		party = partyService.preparePartyForBattle(party);
+		var playerCtx = new PlayerBattleContext(pContext, party, false);
+		return new JoinBattleResponse.Player(pBattleId, playerCtx);
+	}
+
+	// TODO: Look into Refactoring this logic to a separate class if it gets more widely used
+
+	private BattleUserLists resolveBattleUserLists(BattleId pBattleId, String rawUserId) {
+		var battle = repo.get(pBattleId);
+		if (battle == null) return null;
+
+		UserId user = UserId.parse(rawUserId);
+		List<UserId> players = new ArrayList<>(battle.playerIds() != null ? battle.playerIds() : List.of());
+		List<UserId> spectators = new ArrayList<>(battle.spectatorIds() != null ? battle.spectatorIds() : List.of());
+
+		return new BattleUserLists(battle, user, players, spectators);
+	}
+
+	private record BattleUserLists(BattleContext battle, UserId userId, List<UserId> players, List<UserId> spectators) {
 	}
 }
