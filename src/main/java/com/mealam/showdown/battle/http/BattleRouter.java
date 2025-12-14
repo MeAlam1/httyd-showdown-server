@@ -25,13 +25,13 @@ public class BattleRouter {
 		pApp.ws("/ws/battle/{id}", new BattleWebSocket(service)::configure);
 	}
 
-	public void register(Javalin app) {
-		app.post("/battle/create", battleController::createBattle);
-		app.post("/battle/{id}/start", battleController::startBattle);
-		app.post("/battle/{id}/turn", battleController::advanceTurn);
-		app.post("/battle/{id}/finish", battleController::finishBattle);
-		app.post("/battle/{id}/join", battleController::joinBattle);
-		app.post("/battle/{id}/leave", battleController::leaveBattle);
-		app.get("/battle/{id}", battleController::getBattle);
+	public void register(Javalin pApp) {
+		pApp.post("/battle/create", battleController::createBattle);
+		pApp.post("/battle/{id}/start", battleController::startBattle);
+		pApp.post("/battle/{id}/turn", battleController::advanceTurn);
+		pApp.post("/battle/{id}/finish", battleController::finishBattle);
+		pApp.post("/battle/{id}/join", battleController::joinBattle);
+		pApp.post("/battle/{id}/leave", battleController::leaveBattle);
+		pApp.get("/battle/{id}", battleController::getBattle);
 	}
 }
