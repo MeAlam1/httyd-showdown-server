@@ -1,0 +1,165 @@
+package com.mealam.showdown.battle.http;
+
+import com.mealam.showdown.battle.api.BattleService;
+import com.mealam.showdown.battle.data.BattleId;
+import com.mealam.showdown.battle.data.turns.TurnContext;
+import com.mealam.showdown.battle.data.turns.TurnManager;
+import com.mealam.showdown.battle.dto.request.CreateBattleRequest;
+import com.mealam.showdown.battle.dto.request.JoinBattleRequest;
+import com.mealam.showdown.battle.dto.request.LeaveBattleRequest;
+import com.mealam.showdown.battle.dto.response.BattleSummaryResponse;
+import com.mealam.showdown.battle.dto.response.TurnAdvanceResponse;
+import com.mealam.showdown.user.data.UserId;
+import com.mealam.showdown.utils.http.ResponseUtils;
+import com.mealam.showdown.utils.logging.BaseLogLevel;
+import com.mealam.showdown.utils.logging.BaseLogger;
+import io.javalin.http.Context;
+
+public class BattleController {
+
+	private final BattleService service;
+
+	public BattleController(BattleService pService) {
+		this.service = pService;
+	}
+
+	public void createBattle(Context pContext) {
+		try {
+			var req = pContext.bodyAsClass(CreateBattleRequest.class);
+			var battle = service.createBattle(req);
+			ResponseUtils.created(pContext, BattleSummaryResponse.from(battle));
+		} catch (Exception e) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error creating battle", e);
+			ResponseUtils.serverError(pContext, "Failed to create battle", "battle_create_failed");
+		}
+	}
+
+	public void getBattle(Context pContext) {
+		try {
+			var id = BattleId.parse(pContext.pathParam("id"));
+			var battle = service.getBattle(id);
+			if (battle == null) {
+				ResponseUtils.notFound(pContext, "Battle not found", "battle_not_found");
+				return;
+			}
+			ResponseUtils.ok(pContext, BattleSummaryResponse.from(battle));
+		} catch (IllegalArgumentException e) {
+			ResponseUtils.badRequest(pContext, "Invalid battle ID", "invalid_battle_id");
+		} catch (Exception e) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error retrieving battle", e);
+			ResponseUtils.serverError(pContext, "Internal server error", "battle_get_error");
+		}
+	}
+
+	public void startBattle(Context pContext) {
+		try {
+			var id = BattleId.parse(pContext.pathParam("id"));
+			var battle = service.startBattle(id);
+			if (battle == null) {
+				ResponseUtils.notFound(pContext, "Battle not found", "battle_not_found");
+				return;
+			}
+			ResponseUtils.ok(pContext, BattleSummaryResponse.from(battle));
+		} catch (IllegalStateException e) {
+			ResponseUtils.badRequest(pContext, e.getMessage(), "battle_start_invalid_state");
+		} catch (Exception e) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error starting battle", e);
+			ResponseUtils.serverError(pContext, "Internal server error", "battle_start_error");
+		}
+	}
+
+	public void advanceTurn(Context pContext) {
+		try {
+			var id = BattleId.parse(pContext.pathParam("id"));
+			var existing = service.getBattle(id);
+			if (existing == null) {
+				ResponseUtils.notFound(pContext, "Battle not found", "battle_not_found");
+				return;
+			}
+			if (existing.turnContext() == null || existing.turnContext().turnNumber() == TurnManager.NOT_STARTED) {
+				ResponseUtils.badRequest(pContext, "Battle not started", "battle_not_started");
+				return;
+			}
+			if (existing.turnContext().turnNumber() == TurnManager.FINISHED) {
+				ResponseUtils.badRequest(pContext, "Battle already finished", "battle_already_finished");
+				return;
+			}
+
+			TurnContext turnData = null;
+			try {
+				turnData = pContext.bodyAsClass(TurnContext.class);
+			} catch (Exception ignored) {
+				// TODO: add logging,  No turn data provided
+			}
+
+			var battle = service.advanceTurn(id, turnData);
+			if (battle == null) {
+				ResponseUtils.notFound(pContext, "Battle not found", "battle_not_found");
+				return;
+			}
+			ResponseUtils.ok(pContext, TurnAdvanceResponse.from(battle));
+		} catch (IllegalStateException | IllegalArgumentException e) {
+			BaseLogger.log(BaseLogLevel.WARNING, "Invalid state: " + e.getMessage());
+			ResponseUtils.badRequest(pContext, e.getMessage(), "turn_advance_invalid");
+		} catch (Exception e) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error advancing turn", e);
+			ResponseUtils.serverError(pContext, "Internal server error", "turn_advance_error");
+		}
+	}
+
+	public void finishBattle(Context pContext) {
+		try {
+			var id = BattleId.parse(pContext.pathParam("id"));
+			String winnerIdStr = pContext.queryParam("winnerId");
+			var winnerId = winnerIdStr != null ? UserId.parse(winnerIdStr) : null;
+
+			var battle = service.finishBattle(id, winnerId);
+			if (battle == null) {
+				ResponseUtils.notFound(pContext, "Battle not found", "battle_not_found");
+				return;
+			}
+			ResponseUtils.ok(pContext, BattleSummaryResponse.from(battle));
+		} catch (Exception e) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error finishing battle", e);
+			ResponseUtils.serverError(pContext, "Internal server error", "battle_finish_error");
+		}
+	}
+
+	public void joinBattle(Context pContext) {
+		try {
+			var id = BattleId.parse(pContext.pathParam("id"));
+			var req = pContext.bodyAsClass(JoinBattleRequest.class);
+
+			var resp = service.joinBattle(id, req);
+			if (resp == null) {
+				ResponseUtils.notFound(pContext, "Battle not found", "battle_not_found");
+				return;
+			}
+			ResponseUtils.ok(pContext, resp);
+		} catch (IllegalArgumentException e) {
+			ResponseUtils.badRequest(pContext, "Invalid request", "join_invalid_request");
+		} catch (Exception e) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error joining battle", e);
+			ResponseUtils.serverError(pContext, "Internal server error", "join_error");
+		}
+	}
+
+	public void leaveBattle(Context pContext) {
+		try {
+			var id = BattleId.parse(pContext.pathParam("id"));
+			var req = pContext.bodyAsClass(LeaveBattleRequest.class);
+
+			var battle = service.leaveBattle(id, req);
+			if (battle == null) {
+				ResponseUtils.notFound(pContext, "Battle not found", "battle_not_found");
+				return;
+			}
+			ResponseUtils.ok(pContext, BattleSummaryResponse.from(battle));
+		} catch (IllegalArgumentException e) {
+			ResponseUtils.badRequest(pContext, "Invalid request", "leave_invalid_request");
+		} catch (Exception e) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error leaving battle", e);
+			ResponseUtils.serverError(pContext, "Internal server error", "leave_error");
+		}
+	}
+}

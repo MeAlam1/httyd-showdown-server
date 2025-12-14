@@ -1,5 +1,6 @@
-package com.mealam.showdown.battle;
+package com.mealam.showdown.battle.infra.ws;
 
+import com.mealam.showdown.battle.api.BattleService;
 import com.mealam.showdown.battle.context.BattleContext;
 import com.mealam.showdown.battle.data.BattleId;
 import com.mealam.showdown.utils.logging.BaseLogLevel;
@@ -15,30 +16,34 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class BattleWebSocket {
 
-	private static final Map<BattleId, Set<WsContext>> sessions = new ConcurrentHashMap<>();
-	private static final BattleService service = new BattleService();
+	private final Map<BattleId, Set<WsContext>> sessions = new ConcurrentHashMap<>();
+	private final BattleService service;
 
-	public static void configure(WsConfig pConfig) {
-		pConfig.onConnect(ctx -> {
+	public BattleWebSocket(BattleService pService) {
+		this.service = pService;
+	}
+
+	public void configure(WsConfig pConfig) {
+		pConfig.onConnect(pContext -> {
 			try {
-				BattleId battleId = extractBattleId(ctx);
-				sessions.computeIfAbsent(battleId, k -> ConcurrentHashMap.newKeySet()).add(ctx);
-				WebSocketUtils.send(ctx, WebSocketMessage.of("connected", null));
+				BattleId battleId = extractBattleId(pContext);
+				sessions.computeIfAbsent(battleId, k -> ConcurrentHashMap.newKeySet()).add(pContext);
+				WebSocketUtils.send(pContext, WebSocketMessage.of("connected", null));
 				BaseLogger.log(BaseLogLevel.INFO, "Client connected to battle: " + battleId);
 			} catch (Exception e) {
 				BaseLogger.log(BaseLogLevel.ERROR, "Error during connection", e);
-				safeError(ctx, "connection_error");
+				safeError(pContext, "connection_error");
 			}
 		});
 
-		pConfig.onMessage(ctx -> {
+		pConfig.onMessage(pContext -> {
 			try {
-				BattleId battleId = extractBattleId(ctx);
-				String message = ctx.message();
+				BattleId battleId = extractBattleId(pContext);
+				String message = pContext.message();
 
 				BattleContext battle = service.getBattle(battleId);
 				if (battle == null) {
-					safeError(ctx, "battle_not_found");
+					safeError(pContext, "battle_not_found");
 					return;
 				}
 
@@ -46,14 +51,14 @@ public class BattleWebSocket {
 				broadcast(battleId, msg);
 			} catch (Exception e) {
 				BaseLogger.log(BaseLogLevel.ERROR, "Error processing message", e);
-				safeError(ctx, "message_processing_error");
+				safeError(pContext, "message_processing_error");
 			}
 		});
 
-		pConfig.onClose(ctx -> {
+		pConfig.onClose(pContext -> {
 			try {
-				BattleId battleId = extractBattleId(ctx);
-				removeSession(battleId, ctx);
+				BattleId battleId = extractBattleId(pContext);
+				removeSession(battleId, pContext);
 				BaseLogger.log(BaseLogLevel.INFO, "Client disconnected from battle: " + battleId);
 			} catch (Exception e) {
 				BaseLogger.log(BaseLogLevel.ERROR, "Error during disconnection", e);
@@ -61,11 +66,11 @@ public class BattleWebSocket {
 		});
 	}
 
-	private static BattleId extractBattleId(WsContext pContext) {
+	private BattleId extractBattleId(WsContext pContext) {
 		return BattleId.parse(pContext.pathParam("id"));
 	}
 
-	private static void broadcast(BattleId pBattleId, WebSocketMessage pMessage) {
+	private void broadcast(BattleId pBattleId, WebSocketMessage pMessage) {
 		Set<WsContext> sessionSet = sessions.get(pBattleId);
 		if (sessionSet == null || sessionSet.isEmpty()) return;
 
@@ -79,7 +84,7 @@ public class BattleWebSocket {
 		}
 	}
 
-	private static void removeSession(BattleId pBattleId, WsContext pContext) {
+	private void removeSession(BattleId pBattleId, WsContext pContext) {
 		Set<WsContext> sessionSet = sessions.get(pBattleId);
 		if (sessionSet != null) {
 			sessionSet.remove(pContext);
@@ -89,9 +94,9 @@ public class BattleWebSocket {
 		}
 	}
 
-	private static void safeError(WsContext ctx, String code) {
+	private void safeError(WsContext pContext, String pCode) {
 		try {
-			WebSocketUtils.send(ctx, WebSocketMessage.of("error", code));
+			WebSocketUtils.send(pContext, WebSocketMessage.of("error", pCode));
 		} catch (Exception e) {
 			BaseLogger.log(BaseLogLevel.ERROR, "Failed to send error message", e);
 		}
