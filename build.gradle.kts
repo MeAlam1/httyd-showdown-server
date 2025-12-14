@@ -78,6 +78,16 @@ license {
     skipExistingHeaders = false
 }
 
-tasks.withType<Test> {
+tasks.withType<Test>().configureEach {
     useJUnitPlatform()
+
+    maxParallelForks = Runtime.getRuntime().availableProcessors()
+
+    forkEvery = 50
+
+    systemProperty("junit.jupiter.execution.parallel.enabled", "true")
+    systemProperty("junit.jupiter.execution.parallel.mode.default", "concurrent")
+
+    systemProperty("junit.jupiter.execution.parallel.config.strategy", "fixed")
+    systemProperty("junit.jupiter.execution.parallel.config.fixed.parallelism", "4")
 }

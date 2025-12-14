@@ -1,10 +1,13 @@
 package com.mealam.showdown.battle;
 
 import com.mealam.showdown.battle.data.BattleId;
+import com.mealam.showdown.battle.data.turns.TurnContext;
+import com.mealam.showdown.battle.data.turns.TurnManager;
 import com.mealam.showdown.battle.dto.request.CreateBattleRequest;
 import com.mealam.showdown.battle.dto.request.JoinBattleRequest;
 import com.mealam.showdown.battle.dto.request.LeaveBattleRequest;
 import com.mealam.showdown.battle.dto.response.JoinBattleResponse;
+import com.mealam.showdown.user.data.UserId;
 import com.mealam.showdown.utils.json.JSONFormatUtils;
 import com.mealam.showdown.utils.logging.BaseLogLevel;
 import com.mealam.showdown.utils.logging.BaseLogger;
@@ -44,6 +47,87 @@ public class BattleController {
 		}
 	}
 
+	public void startBattle(Context pContext) {
+		try {
+			var id = BattleId.parse(pContext.pathParam("id"));
+			var battle = service.startBattle(id);
+
+			if (battle == null) {
+				pContext.status(404).result(JSONFormatUtils.createJsonMessage("error", "Battle not found"));
+				return;
+			}
+
+			pContext.json(battle);
+		} catch (IllegalStateException e) {
+			pContext.status(400).result(JSONFormatUtils.createJsonMessage("error", e.getMessage()));
+		} catch (Exception pException) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error starting battle", pException);
+			pContext.status(500).result(JSONFormatUtils.createJsonMessage("error", "Internal server error"));
+		}
+	}
+
+	// java
+	public void advanceTurn(Context pContext) {
+		try {
+			var id = BattleId.parse(pContext.pathParam("id"));
+
+			var existing = service.getBattle(id);
+			if (existing == null) {
+				pContext.status(404).result(JSONFormatUtils.createJsonMessage("error", "Battle not found"));
+				return;
+			}
+			if (existing.turnContext() == null || existing.turnContext().turnNumber() == TurnManager.NOT_STARTED) {
+				pContext.status(400).result(JSONFormatUtils.createJsonMessage("error", "Battle not started"));
+				return;
+			}
+			if (existing.turnContext().turnNumber() == TurnManager.FINISHED) {
+				pContext.status(400).result(JSONFormatUtils.createJsonMessage("error", "Battle already finished"));
+				return;
+			}
+
+			TurnContext turnData = null;
+			try {
+				turnData = pContext.bodyAsClass(TurnContext.class);
+			} catch (Exception ignored) {
+			}
+
+			var battle = service.advanceTurn(id, turnData);
+
+			if (battle == null) {
+				pContext.status(404).result(JSONFormatUtils.createJsonMessage("error", "Battle not found"));
+				return;
+			}
+
+			pContext.json(battle);
+		} catch (IllegalStateException | IllegalArgumentException e) {
+			BaseLogger.log(BaseLogLevel.WARNING, "Invalid state: " + e.getMessage());
+			pContext.status(400).result(JSONFormatUtils.createJsonMessage("error", e.getMessage()));
+		} catch (Exception pException) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error advancing turn", pException);
+			pContext.status(500).result(JSONFormatUtils.createJsonMessage("error", "Internal server error"));
+		}
+	}
+
+	public void finishBattle(Context pContext) {
+		try {
+			var id = BattleId.parse(pContext.pathParam("id"));
+			String winnerIdStr = pContext.queryParam("winnerId");
+			UserId winnerId = winnerIdStr != null ? UserId.parse(winnerIdStr) : null;
+
+			var battle = service.finishBattle(id, winnerId);
+
+			if (battle == null) {
+				pContext.status(404).result(JSONFormatUtils.createJsonMessage("error", "Battle not found"));
+				return;
+			}
+
+			pContext.json(battle);
+		} catch (Exception pException) {
+			BaseLogger.log(BaseLogLevel.ERROR, "Error finishing battle", pException);
+			pContext.status(500).result(JSONFormatUtils.createJsonMessage("error", "Internal server error"));
+		}
+	}
+
 	public void joinBattle(Context pContext) {
 		try {
 			var id = BattleId.parse(pContext.pathParam("id"));
@@ -55,7 +139,7 @@ public class BattleController {
 				return;
 			}
 
-			pContext.json(resp);
+			pContext.status(200).result(JSONFormatUtils.createJsonMessage("id", id.toString()));
 		} catch (IllegalArgumentException e) {
 			pContext.status(400).result(JSONFormatUtils.createJsonMessage("error", "Invalid request"));
 		} catch (Exception pException) {

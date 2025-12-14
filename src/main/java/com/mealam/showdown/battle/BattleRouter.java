@@ -8,6 +8,9 @@ public class BattleRouter {
 
 	public static void register(Javalin pApp) {
 		pApp.post("/battle/create", battle::createBattle);
+		pApp.post("/battle/{id}/start", battle::startBattle);
+		pApp.post("/battle/{id}/turn", battle::advanceTurn);
+		pApp.post("/battle/{id}/finish", battle::finishBattle);
 		pApp.post("/battle/{id}/join", battle::joinBattle);
 		pApp.post("/battle/{id}/leave", battle::leaveBattle);
 		pApp.get("/battle/{id}", battle::getBattle);

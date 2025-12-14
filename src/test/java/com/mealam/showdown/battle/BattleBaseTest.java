@@ -1,5 +1,6 @@
 package com.mealam.showdown.battle;
 
+import com.mealam.showdown.Main;
 import io.javalin.Javalin;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,12 +23,7 @@ public abstract class BattleBaseTest {
 
 	@BeforeEach
 	void setup() {
-		app = Javalin.create();
-		app.exception(Exception.class, (e, ctx) -> {
-			e.printStackTrace();
-			ctx.status(500).result(e.getMessage());
-		});
-		BattleRouter.register(app);
+		app = Main.createApp();
 		app.start(7071);
 		port = app.port();
 	}
@@ -41,7 +37,7 @@ public abstract class BattleBaseTest {
 		HttpRequest createRequest = HttpRequest.newBuilder()
 				.uri(new URI("http://localhost:" + port + "/battle/create"))
 				.header("Content-Type", "application/json")
-				.POST(HttpRequest.BodyPublishers.ofString("{\"playerIds\":[\"alpha\"]}"))
+				.POST(HttpRequest.BodyPublishers.ofString("{}"))
 				.build();
 
 		HttpResponse<String> createResponse = client.send(createRequest, HttpResponse.BodyHandlers.ofString());

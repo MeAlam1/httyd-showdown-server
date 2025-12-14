@@ -24,7 +24,7 @@ class BattleCreateTest extends BattleBaseTest {
 				.build();
 
 		HttpResponse<String> createResponse = client.send(createRequest, HttpResponse.BodyHandlers.ofString());
-		assertEquals(200, createResponse.statusCode());
+		assertEquals(201, createResponse.statusCode());
 
 		String body = createResponse.body();
 		assertNotNull(body);
