@@ -33,7 +33,7 @@ public class BattleApiClient {
 
 	public HttpResponse<String> createBattle(String pJsonBody) throws Exception {
 		HttpRequest req = HttpRequest.newBuilder()
-				.uri(URI.create(baseUrl() + "/battle/create"))
+				.uri(URI.create(baseUrl() + "/api/battle/create"))
 				.header("Content-Type", "application/json")
 				.POST(HttpRequest.BodyPublishers.ofString(pJsonBody == null ? "{}" : pJsonBody))
 				.build();
@@ -48,7 +48,7 @@ public class BattleApiClient {
 
 	public HttpResponse<String> join(String pBattleId, String pUserId) throws Exception {
 		HttpRequest req = HttpRequest.newBuilder()
-				.uri(URI.create(baseUrl() + "/battle/" + pBattleId + "/join"))
+				.uri(URI.create(baseUrl() + "/api/battle/" + pBattleId + "/join"))
 				.header("Content-Type", "application/json")
 				.POST(HttpRequest.BodyPublishers.ofString("{\"userId\":\"" + pUserId + "\"}"))
 				.build();
@@ -57,7 +57,7 @@ public class BattleApiClient {
 
 	public HttpResponse<String> leave(String pBattleId, String pUserId) throws Exception {
 		HttpRequest req = HttpRequest.newBuilder()
-				.uri(URI.create(baseUrl() + "/battle/" + pBattleId + "/leave"))
+				.uri(URI.create(baseUrl() + "/api/battle/" + pBattleId + "/leave"))
 				.header("Content-Type", "application/json")
 				.POST(HttpRequest.BodyPublishers.ofString("{\"userId\":\"" + pUserId + "\"}"))
 				.build();
@@ -66,7 +66,7 @@ public class BattleApiClient {
 
 	public HttpResponse<String> start(String pBattleId) throws Exception {
 		HttpRequest req = HttpRequest.newBuilder()
-				.uri(URI.create(baseUrl() + "/battle/" + pBattleId + "/start"))
+				.uri(URI.create(baseUrl() + "/api/battle/" + pBattleId + "/start"))
 				.header("Content-Type", "application/json")
 				.POST(HttpRequest.BodyPublishers.noBody())
 				.build();
@@ -75,7 +75,7 @@ public class BattleApiClient {
 
 	public HttpResponse<String> turn(String pBattleId, String pTurnData) throws Exception {
 		HttpRequest req = HttpRequest.newBuilder()
-				.uri(URI.create(baseUrl() + "/battle/" + pBattleId + "/turn"))
+				.uri(URI.create(baseUrl() + "/api/battle/" + pBattleId + "/turn"))
 				.header("Content-Type", "application/json")
 				.POST(HttpRequest.BodyPublishers.ofString(pTurnData))
 				.build();
@@ -83,7 +83,7 @@ public class BattleApiClient {
 	}
 
 	public HttpResponse<String> finish(String pBattleId, String pWinnerId) throws Exception {
-		String url = baseUrl() + "/battle/" + pBattleId + "/finish";
+		String url = baseUrl() + "/api/battle/" + pBattleId + "/finish";
 		if (pWinnerId != null && !pWinnerId.isEmpty()) {
 			url += "?winnerId=" + URLEncoder.encode(pWinnerId, StandardCharsets.UTF_8);
 		}
@@ -97,7 +97,7 @@ public class BattleApiClient {
 
 	public HttpResponse<String> get(String pBattleId) throws Exception {
 		HttpRequest req = HttpRequest.newBuilder()
-				.uri(URI.create(baseUrl() + "/battle/" + pBattleId))
+				.uri(URI.create(baseUrl() + "/api/battle/" + pBattleId))
 				.GET()
 				.build();
 		return client.send(req, HttpResponse.BodyHandlers.ofString());

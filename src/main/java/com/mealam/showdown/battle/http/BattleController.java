@@ -2,11 +2,11 @@ package com.mealam.showdown.battle.http;
 
 import com.mealam.showdown.battle.api.BattleService;
 import com.mealam.showdown.battle.data.BattleId;
-import com.mealam.showdown.battle.data.turns.TurnContext;
 import com.mealam.showdown.battle.data.turns.TurnManager;
 import com.mealam.showdown.battle.dto.request.CreateBattleRequest;
 import com.mealam.showdown.battle.dto.request.JoinBattleRequest;
 import com.mealam.showdown.battle.dto.request.LeaveBattleRequest;
+import com.mealam.showdown.battle.dto.request.TurnBattleRequest;
 import com.mealam.showdown.battle.dto.response.CreateBattleResponse;
 import com.mealam.showdown.user.data.UserId;
 import com.mealam.showdown.utils.http.ResponseUtils;
@@ -84,14 +84,15 @@ public class BattleController {
 				return;
 			}
 
-			TurnContext turnData = null;
+			TurnBattleRequest turnReq = null;
 			try {
-				turnData = pContext.bodyAsClass(TurnContext.class);
+				turnReq = pContext.bodyAsClass(TurnBattleRequest.class);
 			} catch (Exception pException) {
+				ResponseUtils.badRequest(pContext, "Invalid turn payload", "turn_payload_invalid");
 				return;
 			}
 
-			var battle = service.advanceTurn(id, turnData);
+			var battle = service.advanceTurn(id, turnReq);
 			if (battle == null) {
 				ResponseUtils.notFound(pContext, "Battle not found", "battle_not_found");
 				return;

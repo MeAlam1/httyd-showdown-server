@@ -36,12 +36,12 @@ public class BattleRouter {
 	}
 
 	public void register(Javalin pApp) {
-		pApp.post("/battle/create", battleController::createBattle);
-		pApp.post("/battle/{id}/start", battleController::startBattle);
-		pApp.post("/battle/{id}/turn", battleController::advanceTurn);
-		pApp.post("/battle/{id}/finish", battleController::finishBattle);
-		pApp.post("/battle/{id}/join", battleController::joinBattle);
-		pApp.post("/battle/{id}/leave", battleController::leaveBattle);
-		pApp.get("/battle/{id}", battleController::getBattle);
+		pApp.post("/api/battle/create", battleController::createBattle);
+		pApp.post("/api/battle/{id}/start", battleController::startBattle);
+		pApp.post("/api/battle/{id}/turn", battleController::advanceTurn);
+		pApp.post("/api/battle/{id}/finish", battleController::finishBattle);
+		pApp.post("/api/battle/{id}/join", battleController::joinBattle);
+		pApp.post("/api/battle/{id}/leave", battleController::leaveBattle);
+		pApp.get("/api/battle/{id}", battleController::getBattle);
 	}
 }

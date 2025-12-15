@@ -17,7 +17,7 @@ class BattleProgressTest extends BattleBaseTest {
 		api.join(battleId, "player2");
 		api.start(battleId);
 
-		String turnData = "{\"turnNumber\":1,\"actions\":[]}";
+		String turnData = "{\"turnNumber\":1,\"actions\":{}}";
 		HttpResponse<String> turnResponse = api.turn(battleId, turnData);
 		assertEquals(200, turnResponse.statusCode());
 
@@ -31,7 +31,7 @@ class BattleProgressTest extends BattleBaseTest {
 		api.join(battleId, "player1");
 		api.join(battleId, "player2");
 
-		String turnData = "{\"turnNumber\":1,\"actions\":[]}";
+		String turnData = "{\"turnNumber\":1,\"actions\":{}}";
 		HttpResponse<String> turnResponse = api.turn(battleId, turnData);
 		assertEquals(400, turnResponse.statusCode());
 		assertTrue(turnResponse.body().contains("Battle not started"));
@@ -45,7 +45,7 @@ class BattleProgressTest extends BattleBaseTest {
 		api.start(battleId);
 
 		for (int i = 1; i <= 3; i++) {
-			String turnData = "{\"turnNumber\":" + i + ",\"actions\":[]}";
+			String turnData = "{\"turnNumber\":" + i + ",\"actions\":{}}";
 			HttpResponse<String> turnResponse = api.turn(battleId, turnData);
 			assertEquals(200, turnResponse.statusCode());
 		}
@@ -62,7 +62,7 @@ class BattleProgressTest extends BattleBaseTest {
 		api.start(battleId);
 		api.finish(battleId, "player1");
 
-		String turnData = "{\"turnNumber\":1,\"actions\":[]}";
+		String turnData = "{\"turnNumber\":1,\"actions\":{}}";
 		HttpResponse<String> turnResponse = api.turn(battleId, turnData);
 		assertEquals(400, turnResponse.statusCode());
 		assertTrue(turnResponse.body().contains("Battle already finished"));
@@ -70,7 +70,7 @@ class BattleProgressTest extends BattleBaseTest {
 
 	@Test
 	void advanceTurnInNonExistentBattle() throws Exception {
-		String turnData = "{\"turnNumber\":1,\"actions\":[]}";
+		String turnData = "{\"turnNumber\":1,\"actions\":{}}";
 		HttpResponse<String> turnResponse = api.turn("nonexistent-id", turnData);
 		assertEquals(404, turnResponse.statusCode());
 		assertTrue(turnResponse.body().contains("Battle not found"));

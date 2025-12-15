@@ -10,12 +10,13 @@ import com.mealam.showdown.battle.data.turns.TurnManager;
 import com.mealam.showdown.battle.dto.request.CreateBattleRequest;
 import com.mealam.showdown.battle.dto.request.JoinBattleRequest;
 import com.mealam.showdown.battle.dto.request.LeaveBattleRequest;
+import com.mealam.showdown.battle.dto.request.TurnBattleRequest;
 import com.mealam.showdown.battle.dto.response.JoinBattleResponse;
 import com.mealam.showdown.battle.party.PartyService;
 import com.mealam.showdown.user.context.UserContext;
 import com.mealam.showdown.user.context.UserProfileContext;
 import com.mealam.showdown.user.data.UserId;
-
+		
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -92,7 +93,7 @@ public class DefaultBattleService implements BattleService {
 	}
 
 	@Override
-	public BattleContext advanceTurn(BattleId pBattleId, TurnContext pTurnData) {
+	public BattleContext advanceTurn(BattleId pBattleId, TurnBattleRequest pTurnData) {
 		var battle = repo.get(pBattleId);
 		if (battle == null) return null;
 
@@ -108,10 +109,20 @@ public class DefaultBattleService implements BattleService {
 			throw new IllegalStateException("Battle already finished");
 		}
 
-		TurnContext input = (pTurnData != null)
-				? pTurnData
-				: new TurnContext(battle.turnContext().turnNumber() + 1, null);
+		final int nextTurnNumber = (pTurnData != null && pTurnData.turnNumber() != null)
+				? pTurnData.turnNumber()
+				: battle.turnContext().turnNumber() + 1;
 
+		Map<UserId, String> actions = null;
+		if (pTurnData != null && pTurnData.actions() != null) {
+			actions = new LinkedHashMap<>();
+			for (var entry : pTurnData.actions().entrySet()) {
+				if (entry.getKey() == null || entry.getKey().isBlank()) continue;
+				actions.put(UserId.parse(entry.getKey()), entry.getValue());
+			}
+		}
+
+		TurnContext input = new TurnContext(nextTurnNumber, actions);
 		TurnContext newTurn = turnManager.advance(input);
 
 		var updated = new BattleContext(
@@ -202,8 +213,6 @@ public class DefaultBattleService implements BattleService {
 		var playerCtx = new PlayerBattleContext(pContext, party, false);
 		return new JoinBattleResponse.Player(pBattleId, playerCtx);
 	}
-
-	// TODO: Look into Refactoring this logic to a separate class if it gets more widely used
 
 	private BattleUserLists resolveBattleUserLists(BattleId pBattleId, String rawUserId) {
 		var battle = repo.get(pBattleId);
