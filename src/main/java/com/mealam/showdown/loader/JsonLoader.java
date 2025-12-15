@@ -25,9 +25,16 @@ import com.mealam.showdown.utils.logging.BaseLogLevel;
 import com.mealam.showdown.utils.logging.BaseLogger;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import org.eclipse.jetty.util.resource.Resource;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -35,10 +42,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.jar.JarFile;
 import java.util.stream.Collectors;
-
-import org.eclipse.jetty.util.resource.Resource;
-import org.jetbrains.annotations.NotNull;
+import java.util.stream.Stream;
 
 public class JsonLoader {
 
@@ -108,10 +114,13 @@ public class JsonLoader {
 								}
 							}, pBackgroundExecutor).exceptionally(ex -> {
 								BaseLogger.log(BaseLogLevel.ERROR, "Exceptionally handled resource: " + pair.left() + " - " + ex.getMessage());
-								return Pair.of(pair.left(), pExceptionalFactory.apply(ex));
+								BAKED fallback = pExceptionalFactory.apply(ex);
+								return (fallback != null) ? Pair.of(pair.left(), fallback) : null;
 							})));
 					return CompletableFuture.allOf(tasks.toArray(new CompletableFuture[0]))
-							.thenApply(ignored -> tasks.stream().map(CompletableFuture::join).filter(Objects::nonNull)
+							.thenApply(ignored -> tasks.stream()
+									.map(CompletableFuture::join)
+									.filter(Objects::nonNull)
 									.collect(Collectors.toMap(Pair::left, Pair::right)));
 				});
 	}
@@ -122,8 +131,63 @@ public class JsonLoader {
 			String pFileType) {
 		BaseLogger.log(BaseLogLevel.INFO, "Loading resources from: " + pAssetPath + " with file type: " + pFileType);
 		return CompletableFuture.supplyAsync(() -> {
-			//TODO: Fix
 			List<Pair<String, Resource>> files = new ObjectArrayList<>();
+			String base = pAssetPath.endsWith("/") ? pAssetPath : pAssetPath + "/";
+			ClassLoader cl = Thread.currentThread().getContextClassLoader();
+			try {
+				URL baseUrl = cl.getResource(base);
+				if (baseUrl == null) {
+					BaseLogger.log(BaseLogLevel.WARNING, "Resource base not found on classpath: " + base);
+					return files;
+				}
+				String protocol = baseUrl.getProtocol();
+				if ("file".equals(protocol)) {
+					Path baseDir = Paths.get(baseUrl.toURI());
+					try (Stream<Path> stream = Files.walk(baseDir)) {
+						stream.filter(Files::isRegularFile)
+								.filter(p -> p.getFileName().toString().endsWith("." + pFileType))
+								.forEach(p -> {
+									Path rel = baseDir.relativize(p);
+									String relUnix = rel.toString().replace('\\', '/');
+									try {
+										Resource res = Resource.newResource(p.toUri());
+										files.add(Pair.of(relUnix, res));
+									} catch (Exception e) {
+										throw new RuntimeException("Failed to create Resource for: " + p, e);
+									}
+								});
+					}
+				} else if ("jar".equals(protocol)) {
+					JarURLConnection conn = (JarURLConnection) baseUrl.openConnection();
+					try (JarFile jar = conn.getJarFile()) {
+						jar.stream()
+								.filter(e -> !e.isDirectory())
+								.filter(e -> e.getName().startsWith(base))
+								.filter(e -> e.getName().endsWith("." + pFileType))
+								.forEach(e -> {
+									String rel = e.getName().substring(base.length());
+									URL entryUrl = cl.getResource(e.getName());
+									if (entryUrl != null) {
+										try {
+											Resource res = Resource.newResource(entryUrl);
+											files.add(Pair.of(rel, res));
+										} catch (Exception ex) {
+											throw new RuntimeException("Failed to create Resource for JAR entry: " + e.getName(), ex);
+										}
+									}
+								});
+					}
+				} else {
+					Resource baseRes = Resource.newClassPathResource(base);
+					if (baseRes != null && baseRes.exists()) {
+						addResourcesRecursively(baseRes, "", pFileType, files);
+					} else {
+						BaseLogger.log(BaseLogLevel.WARNING, "Unsupported protocol " + protocol + " for: " + base);
+					}
+				}
+			} catch (Exception e) {
+				throw new RuntimeException("Failed scanning resources under: " + base, e);
+			}
 			return files;
 		}, pBackgroundExecutor).thenCompose(files -> {
 			List<CompletableFuture<Pair<String, JsonObject>>> tasks = new ObjectArrayList<>(files.size());
@@ -140,6 +204,23 @@ public class JsonLoader {
 		});
 	}
 
+	private static void addResourcesRecursively(Resource base, String relPrefix, String fileType, List<Pair<String, Resource>> out) {
+		try {
+			for (String child : base.list()) {
+				Resource childRes = base.addPath(child);
+				String rel = relPrefix.isEmpty() ? child : relPrefix + child;
+				if (childRes.isDirectory()) {
+					String newPrefix = rel.endsWith("/") ? rel : rel + "/";
+					addResourcesRecursively(childRes, newPrefix, fileType, out);
+				} else if (rel.endsWith("." + fileType)) {
+					out.add(Pair.of(rel, childRes));
+				}
+			}
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to traverse resources at: " + base, e);
+		}
+	}
+
 	private static String cleanFileName(String pFileName) {
 		String noPrefix = Constants.Loader.PREFIX_STRIPPER.matcher(pFileName).replaceFirst("");
 		return Constants.Loader.SUFFIX_STRIPPER.matcher(noPrefix).replaceFirst("");
@@ -153,7 +234,6 @@ public class JsonLoader {
 	@NotNull
 	protected static MovesCache bakeMoves(String pResourceName, JsonObject pJsonObject) {
 		Moves moves = MOVES_GSON.fromJson(pJsonObject, Moves.class);
-
 		return CacheFactory.constructWithFactory(MovesCacheFactory.INSTANCE, moves);
 	}
 }
