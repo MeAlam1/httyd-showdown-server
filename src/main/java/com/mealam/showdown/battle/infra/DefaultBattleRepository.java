@@ -55,7 +55,8 @@ public class DefaultBattleRepository implements BattleRepository {
 
 	private void conditionallyPersist(BattleContext pBattle) {
 		boolean finished = pBattle.turnContext() != null && pBattle.turnContext().turnNumber() == TurnManager.FINISHED;
-		boolean noPlayers = pBattle.playerIds() == null || pBattle.playerIds().isEmpty();
+		pBattle.getAllPlayerIds();
+		boolean noPlayers = pBattle.getAllPlayerIds().isEmpty();
 
 		if (finished || noPlayers) {
 			BaseLogger.log(BaseLogLevel.INFO, "Hybrid.persist -> writing to file for battleId=" + pBattle.battleId()

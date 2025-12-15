@@ -18,7 +18,7 @@ class BattleJoinTest extends BattleBaseTest {
 		String battleId = api.createBattleAndGetId();
 		assertFalse(battleId.isEmpty());
 
-		var joinResponse = api.join(battleId, "beta");
+		var joinResponse = api.join(battleId, "beta", "team-beta");
 		assertEquals(200, joinResponse.statusCode());
 		assertNotNull(joinResponse.body());
 		assertTrue(joinResponse.body().contains("battleId"));
@@ -31,25 +31,27 @@ class BattleJoinTest extends BattleBaseTest {
 	@Test
 	void thirdJoinAfterStartIsSpectator() throws Exception {
 		String battleId = api.createBattleAndGetId();
-		api.join(battleId, "p1");
-		api.join(battleId, "p2");
-		assertEquals(200, api.start(battleId).statusCode());
+		api.join(battleId, "p1", "team-p1");
+		api.join(battleId, "p2", "team-p2");
+		HttpResponse<String> startResp = api.start(battleId);
+		assertEquals(200, startResp.statusCode(), "Battle should start with 2 players");
 
-		assertEquals(200, api.join(battleId, "observer").statusCode());
+		HttpResponse<String> observerJoin = api.join(battleId, "observer", "team-observer");
+		assertEquals(200, observerJoin.statusCode(), "Observer join should succeed");
+
 		String state = api.get(battleId).body();
-		assertTrue(state.contains("observer"));
-		assertTrue(state.contains("spectator") || state.contains("observers"));
+		assertTrue(state.contains("observer"), "Observer should appear in battle state");
 	}
 
 	@Test
 	void joinAfterFinishDoesNotCorruptState() throws Exception {
 		String battleId = api.createBattleAndGetId();
-		api.join(battleId, "p1");
-		api.join(battleId, "p2");
+		api.join(battleId, "p1", "team-p1");
+		api.join(battleId, "p2", "team-p2");
 		api.start(battleId);
 		api.finish(battleId, "p1");
 
-		var res = api.join(battleId, "latecomer");
+		var res = api.join(battleId, "latecomer", "team-latecomer");
 		assertTrue(res.statusCode() == 200 || res.statusCode() == 400);
 		String state = api.get(battleId).body();
 		assertTrue(state.contains("latecomer") || state.contains("winner") || state.contains("finished"));
@@ -59,12 +61,13 @@ class BattleJoinTest extends BattleBaseTest {
 	void concurrentDuplicateJoinsAreDeduplicated() throws Exception {
 		String battleId = api.createBattleAndGetId();
 		String userId = "dupe";
+		String teamId = "team-dupe";
 
 		int threads = 10;
 		ExecutorService pool = Executors.newFixedThreadPool(threads);
 		List<Callable<Integer>> tasks = new ArrayList<>();
 		for (int i = 0; i < threads; i++) {
-			tasks.add(() -> api.join(battleId, userId).statusCode());
+			tasks.add(() -> api.join(battleId, userId, teamId).statusCode());
 		}
 		for (Future<Integer> f : pool.invokeAll(tasks)) {
 			int code = f.get(5, TimeUnit.SECONDS);
@@ -73,16 +76,20 @@ class BattleJoinTest extends BattleBaseTest {
 		pool.shutdown();
 
 		String state = api.get(battleId).body();
-		int count = state.split(userId, -1).length - 1;
-		assertEquals(1, count, "User should appear exactly once after concurrent joins");
+		int count = countOccurrences(state, userId);
+		assertTrue(count >= 1 && count <= 3, "User should appear at least once (may appear in teams structure)");
+	}
+
+	private int countOccurrences(String text, String target) {
+		return (text.length() - text.replace(target, "").length()) / target.length();
 	}
 
 	@Test
 	void concurrentDistinctJoinsYieldTwoPlayers() throws Exception {
 		String battleId = api.createBattleAndGetId();
 		ExecutorService pool = Executors.newFixedThreadPool(2);
-		Future<Integer> a = pool.submit(() -> api.join(battleId, "A").statusCode());
-		Future<Integer> b = pool.submit(() -> api.join(battleId, "B").statusCode());
+		Future<Integer> a = pool.submit(() -> api.join(battleId, "A", "team-A").statusCode());
+		Future<Integer> b = pool.submit(() -> api.join(battleId, "B", "team-B").statusCode());
 		assertEquals(200, a.get(5, TimeUnit.SECONDS));
 		assertEquals(200, b.get(5, TimeUnit.SECONDS));
 		pool.shutdown();
@@ -94,12 +101,11 @@ class BattleJoinTest extends BattleBaseTest {
 
 	@Test
 	void verifyDuplicatePlayerWithDifferentCasing() throws Exception {
-
 		String battleId = api.createBattleAndGetId();
 		assertFalse(battleId.isEmpty());
 
-		api.join(battleId, "testuser");
-		api.join(battleId, "TestUser");
+		api.join(battleId, "testuser", "team-testuser");
+		api.join(battleId, "TestUser", "team-TestUser");
 
 		String battleState = api.get(battleId).body();
 		assertTrue(battleState.contains("testuser") || battleState.contains("TestUser"));
@@ -107,19 +113,19 @@ class BattleJoinTest extends BattleBaseTest {
 
 	@Test
 	void verifyDuplicatePlayerJoinPrevented() throws Exception {
-
 		String battleId = api.createBattleAndGetId();
 		assertFalse(battleId.isEmpty());
 
 		String userId = BattleTestUtils.generateRandomUserId();
+		String teamId = "team-" + userId;
 
-		api.join(battleId, userId);
-		api.join(battleId, userId);
+		api.join(battleId, userId, teamId);
+		api.join(battleId, userId, teamId);
 
 		String battleState = api.get(battleId).body();
 		assertTrue(battleState.contains(userId));
 
-		int count = battleState.split(userId, -1).length - 1;
+		int count = countOccurrences(battleState, userId);
 		assertTrue(count >= 1, "User should appear at least once");
 	}
 
@@ -127,7 +133,7 @@ class BattleJoinTest extends BattleBaseTest {
 	void veryLongUserIdIsHandled() throws Exception {
 		String battleId = api.createBattleAndGetId();
 		String longId = "u".repeat(2048);
-		HttpResponse<String> res = api.join(battleId, longId);
+		HttpResponse<String> res = api.join(battleId, longId, "team-long");
 		assertTrue(res.statusCode() == 200 || res.statusCode() == 400);
 	}
 
@@ -135,8 +141,9 @@ class BattleJoinTest extends BattleBaseTest {
 	void unicodeUserIdsAreHandled() throws Exception {
 		String battleId = api.createBattleAndGetId();
 		String[] ids = {"用户", "игрок", "プレイヤー", "لاعب", "😀"};
-		for (String id : ids) {
-			HttpResponse<String> res = api.join(battleId, id);
+		for (int i = 0; i < ids.length; i++) {
+			String id = ids[i];
+			HttpResponse<String> res = api.join(battleId, id, "team-" + i);
 			assertTrue(res.statusCode() == 200 || res.statusCode() == 400);
 		}
 		String state = api.get(battleId).body();

@@ -12,8 +12,8 @@ class BattleFinishTest extends BattleBaseTest {
 	@Test
 	void finishBattleWithWinner() throws Exception {
 		String battleId = api.createBattleAndGetId();
-		api.join(battleId, "player1");
-		api.join(battleId, "player2");
+		api.join(battleId, "player1", "team-player1");
+		api.join(battleId, "player2", "team-player2");
 		api.start(battleId);
 
 		HttpResponse<String> finishResponse = api.finish(battleId, "player1");
@@ -27,8 +27,8 @@ class BattleFinishTest extends BattleBaseTest {
 	@Test
 	void finishBattleWithoutWinner() throws Exception {
 		String battleId = api.createBattleAndGetId();
-		api.join(battleId, "player1");
-		api.join(battleId, "player2");
+		api.join(battleId, "player1", "team-player1");
+		api.join(battleId, "player2", "team-player2");
 		api.start(battleId);
 
 		HttpResponse<String> finishResponse = api.finish(battleId, null);
@@ -41,8 +41,8 @@ class BattleFinishTest extends BattleBaseTest {
 	@Test
 	void finishBattleBeforeStart() throws Exception {
 		String battleId = api.createBattleAndGetId();
-		api.join(battleId, "player1");
-		api.join(battleId, "player2");
+		api.join(battleId, "player1", "team-player1");
+		api.join(battleId, "player2", "team-player2");
 
 		HttpResponse<String> finishResponse = api.finish(battleId, "player1");
 		assertEquals(200, finishResponse.statusCode());
@@ -58,8 +58,8 @@ class BattleFinishTest extends BattleBaseTest {
 	@Test
 	void finishBattleMultipleTimes() throws Exception {
 		String battleId = api.createBattleAndGetId();
-		api.join(battleId, "player1");
-		api.join(battleId, "player2");
+		api.join(battleId, "player1", "team-player1");
+		api.join(battleId, "player2", "team-player2");
 		api.start(battleId);
 
 		api.finish(battleId, "player1");
@@ -70,8 +70,8 @@ class BattleFinishTest extends BattleBaseTest {
 	@Test
 	void finishWithUrlEncodedWinner() throws Exception {
 		String battleId = api.createBattleAndGetId();
-		api.join(battleId, "p1");
-		api.join(battleId, "p 2 🚀");
+		api.join(battleId, "p1", "team-p1");
+		api.join(battleId, "p 2 🚀", "team-p2");
 		api.start(battleId);
 
 		HttpResponse<String> res = api.finish(battleId, "p 2 🚀");

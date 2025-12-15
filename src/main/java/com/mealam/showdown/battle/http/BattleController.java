@@ -79,7 +79,7 @@ public class BattleController {
 				return;
 			}
 			var ctx = existing.turnContext();
-			if (ctx == null || (ctx.turnNumber() == TurnManager.NOT_STARTED && ctx.activePlayerId() == null)) {
+			if (ctx == null || (ctx.turnNumber() == TurnManager.NOT_STARTED && ctx.activeTeamId() == null)) {
 				ResponseUtils.badRequest(pContext, "Battle not started", "battle_not_started");
 				return;
 			}

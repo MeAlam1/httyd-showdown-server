@@ -15,7 +15,7 @@ class BattleLeaveTest extends BattleBaseTest {
 		String battleId = api.createBattleAndGetId();
 		assertFalse(battleId.isEmpty());
 
-		HttpResponse<String> joinResponse = api.join(battleId, "beta");
+		HttpResponse<String> joinResponse = api.join(battleId, "beta", "team-beta");
 		assertEquals(200, joinResponse.statusCode());
 
 		HttpResponse<String> leaveResponse = api.leave(battleId, "beta");

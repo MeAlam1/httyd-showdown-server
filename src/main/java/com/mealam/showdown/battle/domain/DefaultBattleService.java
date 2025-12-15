@@ -2,9 +2,14 @@ package com.mealam.showdown.battle.domain;
 
 import com.mealam.showdown.battle.api.BattleRepository;
 import com.mealam.showdown.battle.api.BattleService;
-import com.mealam.showdown.battle.context.*;
+import com.mealam.showdown.battle.context.BattleContext;
+import com.mealam.showdown.battle.context.DragonBattleContext;
+import com.mealam.showdown.battle.context.PlayerBattleContext;
+import com.mealam.showdown.battle.context.TurnContext;
+import com.mealam.showdown.battle.context.TurnHistoryContext;
 import com.mealam.showdown.battle.data.BattleId;
 import com.mealam.showdown.battle.data.Phase;
+import com.mealam.showdown.battle.data.TeamId;
 import com.mealam.showdown.battle.data.TurnManager;
 import com.mealam.showdown.battle.dto.request.CreateBattleRequest;
 import com.mealam.showdown.battle.dto.request.JoinBattleRequest;
@@ -18,41 +23,52 @@ import com.mealam.showdown.user.data.UserId;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 public class DefaultBattleService implements BattleService {
 
-	private static final int MAX_PLAYERS = 2;
+	private static final int MIN_TEAMS = 2;
 
 	private final BattleRepository repo;
 	private final PartyService partyService;
 	private final Map<BattleId, TurnManager> turnManagers = new ConcurrentHashMap<>();
+	private final Map<BattleId, Object> battleLocks = new ConcurrentHashMap<>();
 
 	public DefaultBattleService(BattleRepository pRepository, PartyService pPartyService) {
 		this.repo = Objects.requireNonNull(pRepository);
 		this.partyService = Objects.requireNonNull(pPartyService);
 	}
 
+	private Object getBattleLock(BattleId pBattleId) {
+		return battleLocks.computeIfAbsent(pBattleId, id -> new Object());
+	}
+
 	@Override
 	public BattleContext createBattle(CreateBattleRequest pRequest) {
-		List<UserId> playerIds = null;
-		List<UserId> spectatorIds = null;
-
-		if (pRequest != null && pRequest.playerIds() != null) {
-			playerIds = pRequest.playerIds().stream().map(UserId::parse).collect(Collectors.toList());
-		}
-		if (pRequest != null && pRequest.spectatorIds() != null) {
-			spectatorIds = pRequest.spectatorIds().stream().map(UserId::parse).collect(Collectors.toList());
-		}
-
 		BattleId battleId = BattleId.generate();
 		TurnManager turnManager = new TurnManager();
 		TurnContext initialTurn = turnManager.createBattle();
 
 		turnManagers.put(battleId, turnManager);
 
+		Map<TeamId, List<UserId>> teams = new LinkedHashMap<>();
+		List<UserId> spectatorIds = new ArrayList<>();
+
+		if (pRequest != null && pRequest.playerIds() != null && !pRequest.playerIds().isEmpty()) {
+			TeamId defaultTeam = TeamId.generate();
+			List<UserId> players = pRequest.playerIds().stream()
+					.map(UserId::parse)
+					.toList();
+			teams.put(defaultTeam, players);
+		}
+
+		if (pRequest != null && pRequest.spectatorIds() != null) {
+			spectatorIds.addAll(pRequest.spectatorIds().stream()
+					.map(UserId::parse)
+					.toList());
+		}
+
 		var battle = new BattleContext(
-				battleId, playerIds, spectatorIds,
+				battleId, teams, spectatorIds,
 				initialTurn, Phase.REGISTRY.defaultVersion(), null,
 				new ArrayList<>()
 		);
@@ -74,22 +90,22 @@ public class DefaultBattleService implements BattleService {
 		if (battle.turnContext() != null && battle.turnContext().turnNumber() != TurnManager.NOT_STARTED) {
 			throw new IllegalStateException("Battle already started");
 		}
-		if (battle.playerIds() == null || battle.playerIds().isEmpty()) {
-			throw new IllegalStateException("Cannot start battle: no players have joined");
+		if (battle.teams() == null || battle.teams().isEmpty()) {
+			throw new IllegalStateException("Cannot start battle: no teams exist");
 		}
-		if (battle.playerIds().size() < MAX_PLAYERS) {
-			throw new IllegalStateException("Cannot start battle: need 2 players, but only " + battle.playerIds().size() + " joined");
+		if (battle.teams().size() < MIN_TEAMS) {
+			throw new IllegalStateException("Cannot start battle: need at least " + MIN_TEAMS + " teams");
 		}
 
-		UserId startingPlayer = battle.playerIds().getFirst();
-		TurnContext startContext = turnManager.startBattle(startingPlayer);
+		TeamId startingTeam = battle.teams().keySet().iterator().next();
+		TurnContext startContext = turnManager.startBattle(startingTeam);
 
 		var inProgress = Phase.REGISTRY.versions().get("in_progress");
 		List<TurnHistoryContext> history = new ArrayList<>(battle.turnHistory());
 
 		var updated = new BattleContext(
-				battle.battleId(), battle.playerIds(), battle.spectatorIds(),
-				startContext, inProgress, battle.winnerPlayerId(),
+				battle.battleId(), battle.teams(), battle.spectatorIds(),
+				startContext, inProgress, battle.winnerTeamId(),
 				history
 		);
 
@@ -111,59 +127,72 @@ public class DefaultBattleService implements BattleService {
 		if (pActingUserId == null) {
 			throw new IllegalArgumentException("Acting user is required");
 		}
-		if (battle.playerIds() == null || !battle.playerIds().contains(pActingUserId)) {
+
+		TeamId playerTeam = battle.getTeamForPlayer(pActingUserId);
+		if (playerTeam == null) {
 			throw new IllegalArgumentException("Acting user is not a player in this battle");
 		}
 
-		UserId active = battle.turnContext().activePlayerId();
-		if (active == null || !active.equals(pActingUserId)) {
-			throw new IllegalArgumentException("Only the active player can act");
+		TeamId activeTeam = battle.turnContext().activeTeamId();
+		if (activeTeam == null || !activeTeam.equals(playerTeam)) {
+			throw new IllegalArgumentException("Only players from the active team can act");
 		}
 
-		TurnManager turnManager = turnManagers.get(pBattleId);
-		if (turnManager == null) {
-			throw new IllegalStateException("Battle already finished");
+		Set<UserId> playersWhoActed = new HashSet<>(
+				battle.turnContext().playersWhoActed() != null
+						? battle.turnContext().playersWhoActed()
+						: Set.of()
+		);
+
+		if (playersWhoActed.contains(pActingUserId)) {
+			throw new IllegalArgumentException("Player has already acted this turn");
 		}
 
 		Map<UserId, String> merged = new LinkedHashMap<>();
-		if (battle.turnContext().actions() != null) merged.putAll(battle.turnContext().actions());
+		if (battle.turnContext().actions() != null) {
+			merged.putAll(battle.turnContext().actions());
+		}
 		if (pTurnData != null && pTurnData.action() != null && !pTurnData.action().isBlank()) {
 			merged.put(pActingUserId, pTurnData.action());
 		}
+		playersWhoActed.add(pActingUserId);
 
-		boolean bothActed = hasAllPlayersActed(battle.playerIds(), merged);
-
-		UserId currentActive = battle.turnContext().activePlayerId();
-		UserId nextActive;
-		if (bothActed) {
-			nextActive = deriveNextActivePlayer(battle.playerIds(), currentActive);
-		} else {
-			nextActive = playerWhoHasNotActed(battle.playerIds(), merged, currentActive);
-		}
+		List<UserId> currentTeamPlayers = battle.teams().get(activeTeam);
+		boolean allTeamMembersActed = currentTeamPlayers.stream()
+				.allMatch(playersWhoActed::contains);
 
 		List<TurnHistoryContext> history = new ArrayList<>(battle.turnHistory());
 		BattleContext updated;
 
-		if (bothActed) {
-			TurnHistoryContext resolvedPrevTurn = new TurnHistoryContext(
+		if (allTeamMembersActed) {
+			TurnHistoryContext resolvedTurn = new TurnHistoryContext(
 					battle.turnContext().turnNumber(),
 					merged
 			);
-			history.add(resolvedPrevTurn);
+			history.add(resolvedTurn);
 
-			TurnContext newTurnHeader = turnManager.advance(nextActive);
-			TurnContext newTurn = new TurnContext(newTurnHeader.turnNumber(), null, newTurnHeader.activePlayerId());
+			TeamId nextTeam = getNextTeam(battle.teams(), activeTeam);
+			TurnManager turnManager = turnManagers.get(pBattleId);
+			if (turnManager == null) {
+				throw new IllegalStateException("Battle already finished");
+			}
+			TurnContext newTurn = turnManager.advance(nextTeam);
 
 			updated = new BattleContext(
-					battle.battleId(), battle.playerIds(), battle.spectatorIds(),
-					newTurn, battle.phase(), battle.winnerPlayerId(),
+					battle.battleId(), battle.teams(), battle.spectatorIds(),
+					newTurn, battle.phase(), battle.winnerTeamId(),
 					history
 			);
 		} else {
-			TurnContext sameTurn = new TurnContext(battle.turnContext().turnNumber(), merged, nextActive);
+			TurnContext sameTurn = new TurnContext(
+					battle.turnContext().turnNumber(),
+					merged,
+					activeTeam,
+					playersWhoActed
+			);
 			updated = new BattleContext(
-					battle.battleId(), battle.playerIds(), battle.spectatorIds(),
-					sameTurn, battle.phase(), battle.winnerPlayerId(),
+					battle.battleId(), battle.teams(), battle.spectatorIds(),
+					sameTurn, battle.phase(), battle.winnerTeamId(),
 					history
 			);
 		}
@@ -172,31 +201,11 @@ public class DefaultBattleService implements BattleService {
 		return updated;
 	}
 
-	private boolean hasAllPlayersActed(List<UserId> pPlayers, Map<UserId, String> pActions) {
-		if (pPlayers == null || pPlayers.size() < MAX_PLAYERS) return false;
-		if (pActions == null || pActions.isEmpty()) return false;
-		for (UserId p : pPlayers) {
-			if (!pActions.containsKey(p)) return false;
-		}
-		return true;
-	}
-
-	private UserId playerWhoHasNotActed(List<UserId> pPlayers, Map<UserId, String> pActions, UserId pCurrentActive) {
-		if (pPlayers == null || pPlayers.isEmpty()) return null;
-		for (UserId p : pPlayers) {
-			if (pActions == null || !pActions.containsKey(p)) {
-				return p;
-			}
-		}
-		return pCurrentActive != null ? pCurrentActive : pPlayers.getFirst();
-	}
-
-	private UserId deriveNextActivePlayer(List<UserId> pPlayers, UserId pCurrent) {
-		if (pPlayers == null || pPlayers.isEmpty()) return null;
-		if (pCurrent == null) return pPlayers.getFirst();
-		int idx = pPlayers.indexOf(pCurrent);
-		if (idx < 0) return pPlayers.getFirst();
-		return pPlayers.get((idx + 1) % pPlayers.size());
+	private TeamId getNextTeam(Map<TeamId, List<UserId>> pTeams, TeamId pCurrentTeam) {
+		List<TeamId> teamIds = new ArrayList<>(pTeams.keySet());
+		int currentIndex = teamIds.indexOf(pCurrentTeam);
+		if (currentIndex < 0) return teamIds.getFirst();
+		return teamIds.get((currentIndex + 1) % teamIds.size());
 	}
 
 	@Override
@@ -207,14 +216,16 @@ public class DefaultBattleService implements BattleService {
 		TurnManager tm = turnManagers.get(pBattleId);
 		if (tm != null) tm.finish();
 
-		TurnContext finishedTurn = new TurnContext(TurnManager.FINISHED, null, null);
+		TeamId winnerTeam = pWinnerId != null ? battle.getTeamForPlayer(pWinnerId) : null;
+
+		TurnContext finishedTurn = new TurnContext(TurnManager.FINISHED, null, null, null);
 		List<TurnHistoryContext> history = new ArrayList<>(battle.turnHistory());
 		TurnHistoryContext finalHistoricalTurn = new TurnHistoryContext(TurnManager.FINISHED, null);
 		history.add(finalHistoricalTurn);
 
 		var updated = new BattleContext(
-				battle.battleId(), battle.playerIds(), battle.spectatorIds(),
-				finishedTurn, battle.phase(), pWinnerId,
+				battle.battleId(), battle.teams(), battle.spectatorIds(),
+				finishedTurn, battle.phase(), winnerTeam,
 				history
 		);
 
@@ -230,54 +241,104 @@ public class DefaultBattleService implements BattleService {
 
 	@Override
 	public JoinBattleResponse joinBattle(BattleId pBattleId, JoinBattleRequest pRequest) {
-		var ctx = resolveBattleUserLists(pBattleId, pRequest.userId());
-		if (ctx == null) return null;
+		synchronized (getBattleLock(pBattleId)) {
+			var battle = repo.get(pBattleId);
+			if (battle == null) return null;
 
-		UserProfileContext profileContext = new UserProfileContext(new UserContext(ctx.userId(), ctx.userId().toString()));
-		if (ctx.players().contains(ctx.userId())) {
-			return buildPlayerJoinResponse(pBattleId, profileContext, ctx.userId());
+			if (pRequest.userId() == null || pRequest.userId().isBlank()) {
+				throw new IllegalArgumentException("userId is required");
+			}
+
+			UserId userId = UserId.parse(pRequest.userId());
+			UserProfileContext profileContext = new UserProfileContext(
+					new UserContext(userId, userId.toString())
+			);
+
+			if (battle.getAllPlayerIds().contains(userId)) {
+				return buildPlayerJoinResponse(pBattleId, profileContext, userId);
+			}
+
+			Map<TeamId, List<UserId>> mutableTeams = new LinkedHashMap<>();
+			battle.teams().forEach((teamId, players) ->
+					mutableTeams.put(teamId, new ArrayList<>(players))
+			);
+
+			List<UserId> spectators = new ArrayList<>(battle.spectatorIds());
+			spectators.remove(userId);
+
+			TeamId targetTeam = pRequest.parseTeamId();
+
+			if (targetTeam != null) {
+				if (!mutableTeams.containsKey(targetTeam)) {
+					mutableTeams.put(targetTeam, new ArrayList<>());
+				}
+				mutableTeams.get(targetTeam).add(userId);
+			} else {
+				TeamId smallestTeam = findSmallestTeam(mutableTeams);
+				if (smallestTeam == null) {
+					smallestTeam = TeamId.generate();
+					mutableTeams.put(smallestTeam, new ArrayList<>());
+				}
+				mutableTeams.get(smallestTeam).add(userId);
+			}
+
+			var updated = new BattleContext(
+					battle.battleId(), mutableTeams, spectators,
+					battle.turnContext(), battle.phase(), battle.winnerTeamId(),
+					battle.turnHistory()
+			);
+
+			repo.update(updated);
+			return buildPlayerJoinResponse(pBattleId, profileContext, userId);
 		}
+	}
 
-		if (ctx.players().size() < MAX_PLAYERS) {
-			ctx.players().add(ctx.userId());
-			ctx.spectators().remove(ctx.userId());
-		} else {
-			if (!ctx.spectators().contains(ctx.userId())) ctx.spectators().add(ctx.userId());
-			ctx.players().remove(ctx.userId());
-		}
-
-		var updated = new BattleContext(
-				ctx.battle().battleId(), ctx.players(), ctx.spectators(),
-				ctx.battle().turnContext(), ctx.battle().phase(), ctx.battle().winnerPlayerId(),
-				ctx.battle().turnHistory()
-		);
-
-		repo.update(updated);
-
-		if (ctx.players().contains(ctx.userId())) {
-			return buildPlayerJoinResponse(pBattleId, profileContext, ctx.userId());
-		} else {
-			var spectatorCtx = new SpectatorBattleContext(profileContext);
-			return new JoinBattleResponse.Spectator(pBattleId, spectatorCtx);
-		}
+	private TeamId findSmallestTeam(Map<TeamId, List<UserId>> pTeams) {
+		if (pTeams.isEmpty()) return null;
+		return pTeams.entrySet().stream()
+				.min(Comparator.comparingInt(e -> e.getValue().size()))
+				.map(Map.Entry::getKey)
+				.orElse(null);
 	}
 
 	@Override
 	public BattleContext leaveBattle(BattleId pBattleId, LeaveBattleRequest pRequest) {
-		var ctx = resolveBattleUserLists(pBattleId, pRequest.userId());
-		if (ctx == null) return null;
+		synchronized (getBattleLock(pBattleId)) {
+			var battle = repo.get(pBattleId);
+			if (battle == null) return null;
 
-		boolean removed = ctx.players().remove(ctx.userId()) | ctx.spectators().remove(ctx.userId());
-		if (!removed) return ctx.battle();
+			if (pRequest.userId() == null || pRequest.userId().isBlank()) {
+				throw new IllegalArgumentException("userId is required");
+			}
 
-		var updated = new BattleContext(
-				ctx.battle().battleId(), ctx.players(), ctx.spectators(),
-				ctx.battle().turnContext(), ctx.battle().phase(), ctx.battle().winnerPlayerId(),
-				ctx.battle().turnHistory()
-		);
+			UserId userId = UserId.parse(pRequest.userId());
 
-		repo.update(updated);
-		return updated;
+			Map<TeamId, List<UserId>> mutableTeams = new LinkedHashMap<>();
+			boolean removed = false;
+			for (Map.Entry<TeamId, List<UserId>> entry : battle.teams().entrySet()) {
+				List<UserId> players = new ArrayList<>(entry.getValue());
+				if (players.remove(userId)) {
+					removed = true;
+				}
+				if (!players.isEmpty()) {
+					mutableTeams.put(entry.getKey(), players);
+				}
+			}
+
+			List<UserId> spectators = new ArrayList<>(battle.spectatorIds());
+			removed |= spectators.remove(userId);
+
+			if (!removed) return battle;
+
+			var updated = new BattleContext(
+					battle.battleId(), mutableTeams, spectators,
+					battle.turnContext(), battle.phase(), battle.winnerTeamId(),
+					battle.turnHistory()
+			);
+
+			repo.update(updated);
+			return updated;
+		}
 	}
 
 	private JoinBattleResponse.Player buildPlayerJoinResponse(BattleId pBattleId, UserProfileContext pContext, UserId pUserId) {
@@ -285,23 +346,5 @@ public class DefaultBattleService implements BattleService {
 		party = partyService.preparePartyForBattle(party);
 		var playerCtx = new PlayerBattleContext(pContext, party);
 		return new JoinBattleResponse.Player(pBattleId, playerCtx);
-	}
-
-	private BattleUserLists resolveBattleUserLists(BattleId pBattleId, String rawUserId) {
-		var battle = repo.get(pBattleId);
-		if (battle == null) return null;
-
-		if (rawUserId == null || rawUserId.isBlank()) {
-			throw new IllegalArgumentException("userId is required");
-		}
-
-		UserId user = UserId.parse(rawUserId);
-		List<UserId> players = new ArrayList<>(battle.playerIds() != null ? battle.playerIds() : List.of());
-		List<UserId> spectators = new ArrayList<>(battle.spectatorIds() != null ? battle.spectatorIds() : List.of());
-
-		return new BattleUserLists(battle, user, players, spectators);
-	}
-
-	private record BattleUserLists(BattleContext battle, UserId userId, List<UserId> players, List<UserId> spectators) {
 	}
 }

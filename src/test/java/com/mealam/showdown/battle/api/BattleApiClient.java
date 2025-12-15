@@ -52,6 +52,15 @@ public class BattleApiClient {
 		return client.send(req, HttpResponse.BodyHandlers.ofString());
 	}
 
+	public HttpResponse<String> join(String pBattleId, String pUserId, String pTeamId) throws Exception {
+		HttpRequest req = HttpRequest.newBuilder()
+				.uri(URI.create(baseUrl() + "/api/battle/" + pBattleId + "/join"))
+				.header("Content-Type", "application/json")
+				.POST(HttpRequest.BodyPublishers.ofString("{\"userId\":\"" + pUserId + "\",\"teamId\":\"" + pTeamId + "\"}"))
+				.build();
+		return client.send(req, HttpResponse.BodyHandlers.ofString());
+	}
+
 	public HttpResponse<String> leave(String pBattleId, String pUserId) throws Exception {
 		HttpRequest req = HttpRequest.newBuilder()
 				.uri(URI.create(baseUrl() + "/api/battle/" + pBattleId + "/leave"))
