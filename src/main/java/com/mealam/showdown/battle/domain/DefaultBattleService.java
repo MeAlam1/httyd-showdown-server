@@ -209,6 +209,10 @@ public class DefaultBattleService implements BattleService {
 		var battle = repo.get(pBattleId);
 		if (battle == null) return null;
 
+		if (rawUserId == null || rawUserId.isBlank()) {
+			throw new IllegalArgumentException("userId is required");
+		}
+
 		UserId user = UserId.parse(rawUserId);
 		List<UserId> players = new ArrayList<>(battle.playerIds() != null ? battle.playerIds() : List.of());
 		List<UserId> spectators = new ArrayList<>(battle.spectatorIds() != null ? battle.spectatorIds() : List.of());
