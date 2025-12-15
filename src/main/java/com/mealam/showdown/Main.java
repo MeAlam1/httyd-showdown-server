@@ -6,7 +6,6 @@ import io.javalin.http.HttpStatus;
 import io.javalin.json.JavalinJackson;
 
 public final class Main {
-
 	private Main() {
 	}
 
@@ -18,9 +17,12 @@ public final class Main {
 
 	public static Javalin createApp() {
 		Javalin app = Javalin.create(config -> {
-			config.bundledPlugins.enableCors(cors ->
-					cors.addRule(rule -> rule.allowHost("http://localhost:7070"))
-			);
+			config.bundledPlugins.enableCors(cors -> {
+				cors.addRule(rule -> {
+					rule.allowHost("http://localhost:5173");
+					rule.allowCredentials = true;
+				});
+			});
 			config.jsonMapper(new JavalinJackson());
 		}).get("/", ctx -> ctx.result("Hello World"));
 

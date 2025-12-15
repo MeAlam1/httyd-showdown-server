@@ -7,8 +7,7 @@ import com.mealam.showdown.battle.data.turns.TurnManager;
 import com.mealam.showdown.battle.dto.request.CreateBattleRequest;
 import com.mealam.showdown.battle.dto.request.JoinBattleRequest;
 import com.mealam.showdown.battle.dto.request.LeaveBattleRequest;
-import com.mealam.showdown.battle.dto.response.BattleSummaryResponse;
-import com.mealam.showdown.battle.dto.response.TurnAdvanceResponse;
+import com.mealam.showdown.battle.dto.response.CreateBattleResponse;
 import com.mealam.showdown.user.data.UserId;
 import com.mealam.showdown.utils.http.ResponseUtils;
 import com.mealam.showdown.utils.logging.BaseLogLevel;
@@ -27,7 +26,7 @@ public class BattleController {
 		try {
 			var req = pContext.bodyAsClass(CreateBattleRequest.class);
 			var battle = service.createBattle(req);
-			ResponseUtils.created(pContext, BattleSummaryResponse.from(battle));
+			ResponseUtils.created(pContext, new CreateBattleResponse(battle));
 		} catch (Exception pException) {
 			BaseLogger.log(BaseLogLevel.ERROR, "Error creating battle", pException);
 			ResponseUtils.serverError(pContext, "Failed to create battle", "battle_create_failed");
@@ -42,7 +41,7 @@ public class BattleController {
 				ResponseUtils.notFound(pContext, "Battle not found", "battle_not_found");
 				return;
 			}
-			ResponseUtils.ok(pContext, BattleSummaryResponse.from(battle));
+			ResponseUtils.ok(pContext, new CreateBattleResponse(battle));
 		} catch (IllegalArgumentException pIllegalArgumentException) {
 			ResponseUtils.badRequest(pContext, "Invalid battle ID", "invalid_battle_id");
 		} catch (Exception pException) {
@@ -59,7 +58,7 @@ public class BattleController {
 				ResponseUtils.notFound(pContext, "Battle not found", "battle_not_found");
 				return;
 			}
-			ResponseUtils.ok(pContext, BattleSummaryResponse.from(battle));
+			ResponseUtils.ok(pContext, new CreateBattleResponse(battle));
 		} catch (IllegalStateException pIllegalStateException) {
 			ResponseUtils.badRequest(pContext, pIllegalStateException.getMessage(), "battle_start_invalid_state");
 		} catch (Exception pException) {
@@ -89,8 +88,6 @@ public class BattleController {
 			try {
 				turnData = pContext.bodyAsClass(TurnContext.class);
 			} catch (Exception pException) {
-				// TODO: Remove the Comment below once the TurnContext validation is implemented
-				//ResponseUtils.badRequest(pContext, "Invalid turn data", "invalid_turn_data");
 				return;
 			}
 
@@ -99,7 +96,7 @@ public class BattleController {
 				ResponseUtils.notFound(pContext, "Battle not found", "battle_not_found");
 				return;
 			}
-			ResponseUtils.ok(pContext, TurnAdvanceResponse.from(battle));
+			ResponseUtils.ok(pContext, new CreateBattleResponse(battle));
 		} catch (IllegalStateException | IllegalArgumentException pIllegalException) {
 			BaseLogger.log(BaseLogLevel.WARNING, "Invalid state: " + pIllegalException.getMessage());
 			ResponseUtils.badRequest(pContext, pIllegalException.getMessage(), "turn_advance_invalid");
@@ -120,7 +117,7 @@ public class BattleController {
 				ResponseUtils.notFound(pContext, "Battle not found", "battle_not_found");
 				return;
 			}
-			ResponseUtils.ok(pContext, BattleSummaryResponse.from(battle));
+			ResponseUtils.ok(pContext, new CreateBattleResponse(battle));
 		} catch (Exception pException) {
 			BaseLogger.log(BaseLogLevel.ERROR, "Error finishing battle", pException);
 			ResponseUtils.serverError(pContext, "Internal server error", "battle_finish_error");
@@ -156,7 +153,7 @@ public class BattleController {
 				ResponseUtils.notFound(pContext, "Battle not found", "battle_not_found");
 				return;
 			}
-			ResponseUtils.ok(pContext, BattleSummaryResponse.from(battle));
+			ResponseUtils.ok(pContext, new CreateBattleResponse(battle));
 		} catch (IllegalArgumentException pIllegalArgumentException) {
 			ResponseUtils.badRequest(pContext, "Invalid request", "leave_invalid_request");
 		} catch (Exception pException) {

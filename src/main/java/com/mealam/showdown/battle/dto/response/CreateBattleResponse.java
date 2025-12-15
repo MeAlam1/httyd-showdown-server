@@ -9,4 +9,4 @@ package com.mealam.showdown.battle.dto.response;
 
 import com.mealam.showdown.battle.context.BattleContext;
 
-public record CreateBattleResponse(String battleId, BattleContext context) {}
+public record CreateBattleResponse(BattleContext context) {}
