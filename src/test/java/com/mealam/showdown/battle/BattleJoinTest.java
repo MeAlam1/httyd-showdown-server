@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -148,5 +149,37 @@ class BattleJoinTest extends BattleBaseTest {
 		}
 		String state = api.get(battleId).body();
 		assertNotNull(state);
+	}
+
+	@Test
+	void randomizedJoinsAcrossThreadsProduceConsistentState() throws Exception {
+		String battleId = api.createBattleAndGetId();
+		int players = 12;
+		ExecutorService pool = Executors.newFixedThreadPool(4);
+		List<String> userIds = new ArrayList<>();
+		List<Callable<HttpResponse<String>>> tasks = new ArrayList<>();
+		for (int i = 0; i < players; i++) {
+			final String userId = "random-" + i + "-" + UUID.randomUUID().toString().substring(0, 8);
+			final String teamId = "team-rand-" + i;
+			userIds.add(userId);
+			tasks.add(() -> api.join(battleId, userId, teamId));
+		}
+		List<Future<HttpResponse<String>>> futures = pool.invokeAll(tasks);
+		pool.shutdown();
+
+		for (Future<HttpResponse<String>> future : futures) {
+			HttpResponse<String> resp = future.get(10, TimeUnit.SECONDS);
+			assertTrue(resp.statusCode() == 200 || resp.statusCode() == 400,
+					"Join should either accept the player or gracefully reject duplicates");
+		}
+
+		String state = api.get(battleId).body();
+		assertNotNull(state);
+		for (int i = 0; i < userIds.size(); i++) {
+			String userId = userIds.get(i);
+			String teamId = "team-rand-" + i;
+			assertTrue(state.contains(userId) || state.contains(teamId),
+					"Battle state should reflect randomized join order");
+		}
 	}
 }

@@ -25,7 +25,7 @@ class BattleProgressTest extends BattleBaseTest {
 		String battleState = api.get(battleId).body();
 		assertTrue(battleState.contains("turnNumber") || battleState.contains("\"turnContext\""));
 	}
-
+		
 	@Test
 	void advanceTurnBeforeBattleStart() throws Exception {
 		String battleId = api.createBattleAndGetId();
@@ -101,5 +101,50 @@ class BattleProgressTest extends BattleBaseTest {
 		HttpResponse<String> res = api.turn(battleId, "player1", "{");
 		assertTrue(true); // TODO: Disabled the Test since the validation for malformed JSON is not yet implemented
 		//assertTrue(res.statusCode() >= 400 && res.statusCode() < 500);
+	}
+
+	@Test
+	void spectatorCannotAct() throws Exception {
+		String battleId = api.createBattleAndGetId();
+		api.join(battleId, "player1", "team-player1");
+		api.join(battleId, "player2", "team-player2");
+		api.start(battleId);
+		api.join(battleId, "spectator", "team-spectator");
+
+		HttpResponse<String> spectatorTurn = api.turn(battleId, "spectator", "{\"action\":\"cheer\"}");
+		assertTrue(spectatorTurn.statusCode() >= 400 && spectatorTurn.statusCode() < 500,
+				"Spectators must not be able to act");
+	}
+
+	@Test
+	void unknownPlayerCannotAct() throws Exception {
+		String battleId = api.createBattleAndGetId();
+		api.join(battleId, "player1", "team-player1");
+		api.join(battleId, "player2", "team-player2");
+		api.start(battleId);
+
+		HttpResponse<String> turnResponse = api.turn(battleId, "intruder", "{\"action\":\"attack\"}");
+		assertTrue(turnResponse.statusCode() >= 400 && turnResponse.statusCode() < 500);
+		assertTrue(turnResponse.body().contains("not found")
+				|| turnResponse.body().contains("not a player")
+				|| turnResponse.body().contains("cannot act"));
+	}
+
+	@Test
+	void samePlayerCannotActTwiceWithoutOpponent() throws Exception {
+		String battleId = api.createBattleAndGetId();
+		api.join(battleId, "player1", "team-player1");
+		api.join(battleId, "player2", "team-player2");
+		api.start(battleId);
+
+		String turnData = "{\"action\":\"attack\"}";
+		HttpResponse<String> firstTurn = api.turn(battleId, "player1", turnData);
+		assertEquals(200, firstTurn.statusCode());
+
+		HttpResponse<String> secondTurn = api.turn(battleId, "player1", turnData);
+		assertTrue(secondTurn.statusCode() >= 400 && secondTurn.statusCode() < 500);
+		assertTrue(secondTurn.body().contains("already acted")
+				|| secondTurn.body().contains("active team can act")
+				|| secondTurn.body().contains("cannot act twice"));
 	}
 }
