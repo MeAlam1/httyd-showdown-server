@@ -14,7 +14,7 @@ public interface BattleService {
 
 	BattleContext startBattle(BattleId pBattleId);
 
-	BattleContext advanceTurn(BattleId pBattleId, TurnBattleRequest pTurnData);
+	BattleContext advanceTurn(BattleId pBattleId, UserId pActingUserId, TurnBattleRequest pTurnData);
 
 	BattleContext finishBattle(BattleId pBattleId, UserId pWinnerId);
 

@@ -3,7 +3,7 @@ package com.mealam.showdown.battle.infra;
 import com.mealam.showdown.battle.api.BattleRepository;
 import com.mealam.showdown.battle.context.BattleContext;
 import com.mealam.showdown.battle.data.BattleId;
-import com.mealam.showdown.battle.data.turns.TurnManager;
+import com.mealam.showdown.battle.data.TurnManager;
 import com.mealam.showdown.utils.logging.BaseLogLevel;
 import com.mealam.showdown.utils.logging.BaseLogger;
 

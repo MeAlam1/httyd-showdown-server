@@ -9,9 +9,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.WebSocket;
 import java.nio.charset.StandardCharsets;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class BattleApiClient {
 
@@ -73,11 +70,12 @@ public class BattleApiClient {
 		return client.send(req, HttpResponse.BodyHandlers.ofString());
 	}
 
-	public HttpResponse<String> turn(String pBattleId, String pTurnData) throws Exception {
+	public HttpResponse<String> turn(String pBattleId, String pUserId, String pTurnData) throws Exception {
 		HttpRequest req = HttpRequest.newBuilder()
 				.uri(URI.create(baseUrl() + "/api/battle/" + pBattleId + "/turn"))
 				.header("Content-Type", "application/json")
-				.POST(HttpRequest.BodyPublishers.ofString(pTurnData))
+				.header("Authorization", "Bearer " + pUserId)
+				.POST(HttpRequest.BodyPublishers.ofString(pTurnData == null ? "{}" : pTurnData))
 				.build();
 		return client.send(req, HttpResponse.BodyHandlers.ofString());
 	}

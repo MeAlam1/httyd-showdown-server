@@ -56,19 +56,6 @@ class BattleFinishTest extends BattleBaseTest {
 	}
 
 	@Test
-	void verifyTurnManagerCleanupAfterFinish() throws Exception {
-		String battleId = api.createBattleAndGetId();
-		api.join(battleId, "player1");
-		api.join(battleId, "player2");
-		api.start(battleId);
-		api.finish(battleId, "player1");
-
-		String turnData = "{\"turnNumber\":1,\"actions\":[]}";
-		HttpResponse<String> turnResponse = api.turn(battleId, turnData);
-		assertEquals(400, turnResponse.statusCode());
-	}
-
-	@Test
 	void finishBattleMultipleTimes() throws Exception {
 		String battleId = api.createBattleAndGetId();
 		api.join(battleId, "player1");

@@ -2,7 +2,7 @@ package com.mealam.showdown.battle.http;
 
 import com.mealam.showdown.battle.api.BattleService;
 import com.mealam.showdown.battle.data.BattleId;
-import com.mealam.showdown.battle.data.turns.TurnManager;
+import com.mealam.showdown.battle.data.TurnManager;
 import com.mealam.showdown.battle.dto.request.CreateBattleRequest;
 import com.mealam.showdown.battle.dto.request.JoinBattleRequest;
 import com.mealam.showdown.battle.dto.request.LeaveBattleRequest;
@@ -75,16 +75,31 @@ public class BattleController {
 				ResponseUtils.notFound(pContext, "Battle not found", "battle_not_found");
 				return;
 			}
-			if (existing.turnContext() == null || existing.turnContext().turnNumber() == TurnManager.NOT_STARTED) {
+			var ctx = existing.turnContext();
+			if (ctx == null || (ctx.turnNumber() == TurnManager.NOT_STARTED && ctx.activePlayerId() == null)) {
 				ResponseUtils.badRequest(pContext, "Battle not started", "battle_not_started");
 				return;
 			}
-			if (existing.turnContext().turnNumber() == TurnManager.FINISHED) {
+			if (ctx.turnNumber() == TurnManager.FINISHED) {
 				ResponseUtils.badRequest(pContext, "Battle already finished", "battle_already_finished");
 				return;
 			}
 
-			TurnBattleRequest turnReq = null;
+			UserId actingUserId = null;
+			String authHeader = pContext.header("Authorization");
+			if (authHeader != null && authHeader.startsWith("Bearer ")) {
+				String tokenUser = authHeader.substring("Bearer ".length()).trim();
+				if (!tokenUser.isBlank()) {
+					try {
+						actingUserId = UserId.parse(tokenUser);
+					} catch (IllegalArgumentException ex) {
+						ResponseUtils.badRequest(pContext, "Invalid Authorization bearer token", "invalid_authorization");
+						return;
+					}
+				}
+			}
+
+			TurnBattleRequest turnReq;
 			try {
 				turnReq = pContext.bodyAsClass(TurnBattleRequest.class);
 			} catch (Exception pException) {
@@ -92,7 +107,7 @@ public class BattleController {
 				return;
 			}
 
-			var battle = service.advanceTurn(id, turnReq);
+			var battle = service.advanceTurn(id, actingUserId, turnReq);
 			if (battle == null) {
 				ResponseUtils.notFound(pContext, "Battle not found", "battle_not_found");
 				return;

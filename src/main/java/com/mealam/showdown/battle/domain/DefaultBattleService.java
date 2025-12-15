@@ -5,8 +5,7 @@ import com.mealam.showdown.battle.api.BattleService;
 import com.mealam.showdown.battle.context.*;
 import com.mealam.showdown.battle.data.BattleId;
 import com.mealam.showdown.battle.data.Phase;
-import com.mealam.showdown.battle.data.turns.TurnContext;
-import com.mealam.showdown.battle.data.turns.TurnManager;
+import com.mealam.showdown.battle.data.TurnManager;
 import com.mealam.showdown.battle.dto.request.CreateBattleRequest;
 import com.mealam.showdown.battle.dto.request.JoinBattleRequest;
 import com.mealam.showdown.battle.dto.request.LeaveBattleRequest;
@@ -16,7 +15,7 @@ import com.mealam.showdown.battle.party.PartyService;
 import com.mealam.showdown.user.context.UserContext;
 import com.mealam.showdown.user.context.UserProfileContext;
 import com.mealam.showdown.user.data.UserId;
-		
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -54,7 +53,8 @@ public class DefaultBattleService implements BattleService {
 
 		var battle = new BattleContext(
 				battleId, playerIds, spectatorIds,
-				initialTurn, Phase.REGISTRY.defaultVersion(), null
+				initialTurn, Phase.REGISTRY.defaultVersion(), null,
+				new ArrayList<>()
 		);
 
 		repo.save(battle);
@@ -81,11 +81,16 @@ public class DefaultBattleService implements BattleService {
 			throw new IllegalStateException("Cannot start battle: need 2 players, but only " + battle.playerIds().size() + " joined");
 		}
 
-		TurnContext startContext = turnManager.startBattle();
+		UserId startingPlayer = battle.playerIds().getFirst();
+		TurnContext startContext = turnManager.startBattle(startingPlayer);
+
+		var inProgress = Phase.REGISTRY.versions().get("in_progress");
+		List<TurnContext> history = new ArrayList<>(battle.turnHistory());
 
 		var updated = new BattleContext(
 				battle.battleId(), battle.playerIds(), battle.spectatorIds(),
-				startContext, battle.phase(), battle.winnerPlayerId()
+				startContext, inProgress, battle.winnerPlayerId(),
+				history
 		);
 
 		repo.update(updated);
@@ -93,7 +98,7 @@ public class DefaultBattleService implements BattleService {
 	}
 
 	@Override
-	public BattleContext advanceTurn(BattleId pBattleId, TurnBattleRequest pTurnData) {
+	public BattleContext advanceTurn(BattleId pBattleId, UserId pActingUserId, TurnBattleRequest pTurnData) {
 		var battle = repo.get(pBattleId);
 		if (battle == null) return null;
 
@@ -103,35 +108,97 @@ public class DefaultBattleService implements BattleService {
 		if (battle.turnContext().turnNumber() == TurnManager.FINISHED) {
 			throw new IllegalStateException("Battle already finished");
 		}
+		if (pActingUserId == null) {
+			throw new IllegalArgumentException("Acting user is required");
+		}
+		if (battle.playerIds() == null || !battle.playerIds().contains(pActingUserId)) {
+			throw new IllegalArgumentException("Acting user is not a player in this battle");
+		}
+
+		UserId active = battle.turnContext().activePlayerId();
+		if (active == null || !active.equals(pActingUserId)) {
+			throw new IllegalArgumentException("Only the active player can act");
+		}
 
 		TurnManager turnManager = turnManagers.get(pBattleId);
 		if (turnManager == null) {
 			throw new IllegalStateException("Battle already finished");
 		}
 
-		final int nextTurnNumber = (pTurnData != null && pTurnData.turnNumber() != null)
-				? pTurnData.turnNumber()
-				: battle.turnContext().turnNumber() + 1;
-
-		Map<UserId, String> actions = null;
-		if (pTurnData != null && pTurnData.actions() != null) {
-			actions = new LinkedHashMap<>();
-			for (var entry : pTurnData.actions().entrySet()) {
-				if (entry.getKey() == null || entry.getKey().isBlank()) continue;
-				actions.put(UserId.parse(entry.getKey()), entry.getValue());
-			}
+		Map<UserId, String> merged = new LinkedHashMap<>();
+		if (battle.turnContext().actions() != null) merged.putAll(battle.turnContext().actions());
+		if (pTurnData != null && pTurnData.action() != null && !pTurnData.action().isBlank()) {
+			merged.put(pActingUserId, pTurnData.action());
 		}
 
-		TurnContext input = new TurnContext(nextTurnNumber, actions);
-		TurnContext newTurn = turnManager.advance(input);
+		boolean bothActed = hasAllPlayersActed(battle.playerIds(), merged);
 
-		var updated = new BattleContext(
-				battle.battleId(), battle.playerIds(), battle.spectatorIds(),
-				newTurn, battle.phase(), battle.winnerPlayerId()
-		);
+		UserId currentActive = battle.turnContext().activePlayerId();
+		UserId nextActive;
+		if (bothActed) {
+			nextActive = deriveNextActivePlayer(battle.playerIds(), currentActive);
+		} else {
+			nextActive = playerWhoHasNotActed(battle.playerIds(), merged, currentActive);
+		}
+
+		List<TurnContext> history = new ArrayList<>(battle.turnHistory());
+		BattleContext updated;
+
+		if (bothActed) {
+			TurnContext newTurnHeader = turnManager.advance(nextActive);
+			TurnContext newTurn = new TurnContext(newTurnHeader.turnNumber(), null, newTurnHeader.activePlayerId());
+
+			TurnContext resolvedPrevTurn = new TurnContext(
+					battle.turnContext().turnNumber(),
+					merged,
+					battle.turnContext().activePlayerId()
+			);
+			history.add(resolvedPrevTurn);
+
+			updated = new BattleContext(
+					battle.battleId(), battle.playerIds(), battle.spectatorIds(),
+					newTurn, battle.phase(), battle.winnerPlayerId(),
+					history
+			);
+		} else {
+			TurnContext sameTurn = new TurnContext(battle.turnContext().turnNumber(), merged, nextActive);
+			history.add(sameTurn);
+			updated = new BattleContext(
+					battle.battleId(), battle.playerIds(), battle.spectatorIds(),
+					sameTurn, battle.phase(), battle.winnerPlayerId(),
+					history
+			);
+		}
 
 		repo.update(updated);
 		return updated;
+	}
+
+	private boolean hasAllPlayersActed(List<UserId> pPlayers, Map<UserId, String> pActions) {
+		if (pPlayers == null || pPlayers.size() < MAX_PLAYERS) return false;
+		if (pActions == null || pActions.isEmpty()) return false;
+		for (UserId p : pPlayers) {
+			if (!pActions.containsKey(p)) return false;
+		}
+		return true;
+	}
+
+	private UserId playerWhoHasNotActed(List<UserId> pPlayers, Map<UserId, String> pActions, UserId pCurrentActive) {
+		if (pPlayers == null || pPlayers.isEmpty()) return null;
+		for (UserId p : pPlayers) {
+			if (pActions == null || !pActions.containsKey(p)) {
+				return p;
+			}
+		}
+		return pCurrentActive != null ? pCurrentActive : pPlayers.getFirst();
+	}
+
+	private UserId deriveNextActivePlayer(List<UserId> pPlayers, UserId pCurrent) {
+		if (pPlayers == null || pPlayers.isEmpty()) return null;
+		if (pCurrent == null) return pPlayers.getFirst();
+		int idx = pPlayers.indexOf(pCurrent);
+		if (idx < 0) return pPlayers.getFirst();
+		return pPlayers.get((idx + 1) % pPlayers.size());
 	}
 
 	@Override
@@ -142,9 +209,14 @@ public class DefaultBattleService implements BattleService {
 		TurnManager tm = turnManagers.get(pBattleId);
 		if (tm != null) tm.finish();
 
+		TurnContext finishedTurn = new TurnContext(TurnManager.FINISHED, null, null);
+		List<TurnContext> history = new ArrayList<>(battle.turnHistory());
+		history.add(finishedTurn);
+
 		var updated = new BattleContext(
 				battle.battleId(), battle.playerIds(), battle.spectatorIds(),
-				new TurnContext(TurnManager.FINISHED, null), battle.phase(), pWinnerId
+				finishedTurn, battle.phase(), pWinnerId,
+				history
 		);
 
 		repo.update(updated);
@@ -177,7 +249,8 @@ public class DefaultBattleService implements BattleService {
 
 		var updated = new BattleContext(
 				ctx.battle().battleId(), ctx.players(), ctx.spectators(),
-				ctx.battle().turnContext(), ctx.battle().phase(), ctx.battle().winnerPlayerId()
+				ctx.battle().turnContext(), ctx.battle().phase(), ctx.battle().winnerPlayerId(),
+				ctx.battle().turnHistory()
 		);
 
 		repo.update(updated);
@@ -200,7 +273,8 @@ public class DefaultBattleService implements BattleService {
 
 		var updated = new BattleContext(
 				ctx.battle().battleId(), ctx.players(), ctx.spectators(),
-				ctx.battle().turnContext(), ctx.battle().phase(), ctx.battle().winnerPlayerId()
+				ctx.battle().turnContext(), ctx.battle().phase(), ctx.battle().winnerPlayerId(),
+				ctx.battle().turnHistory()
 		);
 
 		repo.update(updated);
@@ -210,7 +284,7 @@ public class DefaultBattleService implements BattleService {
 	private JoinBattleResponse.Player buildPlayerJoinResponse(BattleId pBattleId, UserProfileContext pContext, UserId pUserId) {
 		List<DragonBattleContext> party = partyService.getUserParty(pUserId);
 		party = partyService.preparePartyForBattle(party);
-		var playerCtx = new PlayerBattleContext(pContext, party, false);
+		var playerCtx = new PlayerBattleContext(pContext, party);
 		return new JoinBattleResponse.Player(pBattleId, playerCtx);
 	}
 
