@@ -158,38 +158,74 @@ public class DefaultBattleService implements BattleService {
 		playersWhoActed.add(pActingUserId);
 
 		List<UserId> currentTeamPlayers = battle.teams().get(activeTeam);
+		if (currentTeamPlayers == null || currentTeamPlayers.isEmpty()) {
+			throw new IllegalStateException("Active team has no players");
+		}
+
 		boolean allTeamMembersActed = currentTeamPlayers.stream()
 				.allMatch(playersWhoActed::contains);
+
+		Set<TeamId> completedTeams = new LinkedHashSet<>(
+				battle.turnContext().teamsCompleted() != null
+						? battle.turnContext().teamsCompleted()
+						: Set.of()
+		);
 
 		List<TurnHistoryContext> history = new ArrayList<>(battle.turnHistory());
 		BattleContext updated;
 
 		if (allTeamMembersActed) {
-			TurnHistoryContext resolvedTurn = new TurnHistoryContext(
+			completedTeams.add(activeTeam);
+			Map<UserId, String> resolvedActions = Map.copyOf(merged);
+			history.add(new TurnHistoryContext(
 					battle.turnContext().turnNumber(),
-					merged
-			);
-			history.add(resolvedTurn);
+					resolvedActions
+			));
 
-			TeamId nextTeam = getNextTeam(battle.teams(), activeTeam);
-			TurnManager turnManager = turnManagers.get(pBattleId);
-			if (turnManager == null) {
-				throw new IllegalStateException("Battle already finished");
+			boolean allTeamsFinishedTurn = completedTeams.size() >= battle.teams().size();
+
+			if (allTeamsFinishedTurn) {
+				TeamId nextTurnOpeningTeam = getNextTeam(battle.teams(), activeTeam);
+				TurnManager turnManager = turnManagers.get(pBattleId);
+				if (turnManager == null) {
+					throw new IllegalStateException("Battle already finished");
+				}
+				TurnContext newTurn = turnManager.advance(nextTurnOpeningTeam);
+
+				updated = new BattleContext(
+						battle.battleId(), battle.teams(), battle.spectatorIds(),
+						newTurn, battle.phase(), battle.winnerTeamId(),
+						history
+				);
+			} else {
+				TeamId nextPendingTeam = getNextPendingTeam(battle.teams(), activeTeam, completedTeams);
+				TurnContext sameTurnNextTeam = new TurnContext(
+						battle.turnContext().turnNumber(),
+						null,
+						nextPendingTeam,
+						new HashSet<>(),
+						Set.copyOf(completedTeams)
+				);
+
+				updated = new BattleContext(
+						battle.battleId(), battle.teams(), battle.spectatorIds(),
+						sameTurnNextTeam, battle.phase(), battle.winnerTeamId(),
+						history
+				);
 			}
-			TurnContext newTurn = turnManager.advance(nextTeam);
-
-			updated = new BattleContext(
-					battle.battleId(), battle.teams(), battle.spectatorIds(),
-					newTurn, battle.phase(), battle.winnerTeamId(),
-					history
-			);
 		} else {
+			Set<TeamId> existingCompletedTeams = battle.turnContext().teamsCompleted() != null
+					? battle.turnContext().teamsCompleted()
+					: Set.of();
+
 			TurnContext sameTurn = new TurnContext(
 					battle.turnContext().turnNumber(),
-					merged,
+					Map.copyOf(merged),
 					activeTeam,
-					playersWhoActed
+					Set.copyOf(playersWhoActed),
+					Set.copyOf(existingCompletedTeams)
 			);
+
 			updated = new BattleContext(
 					battle.battleId(), battle.teams(), battle.spectatorIds(),
 					sameTurn, battle.phase(), battle.winnerTeamId(),
@@ -208,6 +244,19 @@ public class DefaultBattleService implements BattleService {
 		return teamIds.get((currentIndex + 1) % teamIds.size());
 	}
 
+	private TeamId getNextPendingTeam(Map<TeamId, List<UserId>> pTeams, TeamId pCurrentTeam, Set<TeamId> pCompletedTeams) {
+		List<TeamId> teamIds = new ArrayList<>(pTeams.keySet());
+		if (teamIds.isEmpty()) return pCurrentTeam;
+		int currentIndex = teamIds.indexOf(pCurrentTeam);
+		for (int i = 1; i <= teamIds.size(); i++) {
+			TeamId candidate = teamIds.get((currentIndex + i) % teamIds.size());
+			if (!pCompletedTeams.contains(candidate)) {
+				return candidate;
+			}
+		}
+		return teamIds.getFirst();
+	}
+
 	@Override
 	public BattleContext finishBattle(BattleId pBattleId, UserId pWinnerId) {
 		var battle = repo.get(pBattleId);
@@ -218,7 +267,7 @@ public class DefaultBattleService implements BattleService {
 
 		TeamId winnerTeam = pWinnerId != null ? battle.getTeamForPlayer(pWinnerId) : null;
 
-		TurnContext finishedTurn = new TurnContext(TurnManager.FINISHED, null, null, null);
+		TurnContext finishedTurn = new TurnContext(TurnManager.FINISHED, null, null, null, null);
 		List<TurnHistoryContext> history = new ArrayList<>(battle.turnHistory());
 		TurnHistoryContext finalHistoricalTurn = new TurnHistoryContext(TurnManager.FINISHED, null);
 		history.add(finalHistoricalTurn);

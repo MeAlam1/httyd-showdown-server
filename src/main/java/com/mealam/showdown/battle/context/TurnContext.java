@@ -11,6 +11,7 @@ public record TurnContext(
 		int turnNumber,
 		@Nullable Map<UserId, String> actions,
 		@Nullable TeamId activeTeamId,
-		@Nullable Set<UserId> playersWhoActed
+		@Nullable Set<UserId> playersWhoActed,
+		@Nullable Set<TeamId> teamsCompleted
 ) {
 }

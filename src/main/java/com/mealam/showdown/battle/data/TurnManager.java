@@ -8,13 +8,13 @@ public class TurnManager {
 
 	public static final int NOT_STARTED = 0;
 	public static final int FINISHED = -1;
-	
+
 	private volatile int currentTurn;
 	private volatile TurnContext currentTurnContextInstance;
 
 	public synchronized TurnContext createBattle() {
 		currentTurn = NOT_STARTED;
-		currentTurnContextInstance = new TurnContext(NOT_STARTED, null, null, null);
+		currentTurnContextInstance = new TurnContext(NOT_STARTED, null, null, null, null);
 		return currentTurnContextInstance;
 	}
 
@@ -23,7 +23,7 @@ public class TurnManager {
 			throw new IllegalStateException("Battle already started or finished");
 		}
 		currentTurn = 1;
-		currentTurnContextInstance = new TurnContext(currentTurn, null, pStartingTeamId, new HashSet<>());
+		currentTurnContextInstance = new TurnContext(currentTurn, null, pStartingTeamId, new HashSet<>(), new HashSet<>());
 		return currentTurnContextInstance;
 	}
 
@@ -39,12 +39,12 @@ public class TurnManager {
 		} else {
 			currentTurn++;
 		}
-		currentTurnContextInstance = new TurnContext(currentTurn, null, pNextActiveTeamId, new HashSet<>());
+		currentTurnContextInstance = new TurnContext(currentTurn, null, pNextActiveTeamId, new HashSet<>(), new HashSet<>());
 		return currentTurnContextInstance;
 	}
 
 	public synchronized void finish() {
 		currentTurn = FINISHED;
-		currentTurnContextInstance = new TurnContext(FINISHED, null, null, null);
+		currentTurnContextInstance = new TurnContext(FINISHED, null, null, null, null);
 	}
 }
