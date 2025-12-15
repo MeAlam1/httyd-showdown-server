@@ -1,3 +1,4 @@
+// java
 package com.mealam.showdown.battle.api;
 
 import com.mealam.showdown.Main;
@@ -5,8 +6,12 @@ import io.javalin.Javalin;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
+import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.CountDownLatch;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -20,7 +25,15 @@ public abstract class BattleBaseTest {
 
 	@BeforeEach
 	void setup() {
-		System.setProperty("showdown.data.dir", "D:\\Personal\\httyd-showdown-server");
+		Path dataRoot = Paths.get("D:\\Personal\\httyd-showdown-server");
+		try {
+			Files.createDirectories(dataRoot);
+			Files.createDirectories(dataRoot.resolve("battles"));
+		} catch (IOException e) {
+			throw new IllegalStateException("Failed to prepare data dir at " + dataRoot, e);
+		}
+		System.setProperty("showdown.data.dir", dataRoot.toString());
+
 		app = Main.createApp();
 		app.start(0);
 		port = app.port();

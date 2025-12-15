@@ -28,6 +28,7 @@ public class FileBattleRepository implements BattleRepository {
 
 		try {
 			Files.createDirectories(battlesDir);
+			BaseLogger.log(BaseLogLevel.INFO, "Initialized FileBattleRepository at: " + battlesDir);
 		} catch (IOException pIoException) {
 			throw new IllegalStateException("Failed to create battles directory: " + battlesDir, pIoException);
 		}
@@ -35,6 +36,7 @@ public class FileBattleRepository implements BattleRepository {
 
 	@Override
 	public BattleContext save(BattleContext pBattle) {
+		BaseLogger.log(BaseLogLevel.INFO, "FileRepo.save called for battleId=" + pBattle.battleId());
 		write(toFilePath(pBattle.battleId()), pBattle);
 		return pBattle;
 	}
@@ -42,8 +44,12 @@ public class FileBattleRepository implements BattleRepository {
 	@Override
 	public BattleContext get(BattleId pBattleId) {
 		Path file = toFilePath(pBattleId);
-		if (!Files.exists(file)) return null;
+		if (!Files.exists(file)) {
+			BaseLogger.log(BaseLogLevel.WARNING, "Battle file does not exist: " + file);
+			return null;
+		}
 		try {
+			BaseLogger.log(BaseLogLevel.INFO, "Reading battle file: " + file);
 			return mapper.readValue(file.toFile(), BattleContext.class);
 		} catch (IOException pIoException) {
 			BaseLogger.log(BaseLogLevel.ERROR, "Failed to read battle file: " + file, pIoException);
@@ -53,6 +59,7 @@ public class FileBattleRepository implements BattleRepository {
 
 	@Override
 	public void update(BattleContext pBattle) {
+		BaseLogger.log(BaseLogLevel.INFO, "FileRepo.update called for battleId=" + pBattle.battleId());
 		write(toFilePath(pBattle.battleId()), pBattle);
 	}
 
@@ -63,7 +70,9 @@ public class FileBattleRepository implements BattleRepository {
 	private void write(Path pFile, BattleContext pBattle) {
 		try {
 			Files.createDirectories(pFile.getParent());
+			BaseLogger.log(BaseLogLevel.INFO, "Writing battle file: " + pFile);
 			mapper.writeValue(pFile.toFile(), pBattle);
+			BaseLogger.log(BaseLogLevel.INFO, "Battle persisted to file: " + pBattle.battleId());
 		} catch (IOException pIoException) {
 			BaseLogger.log(BaseLogLevel.ERROR, "Failed to write battle file: " + pFile, pIoException);
 			throw new IllegalStateException("Failed to persist battle: " + pBattle.battleId(), pIoException);
