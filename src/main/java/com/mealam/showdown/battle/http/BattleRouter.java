@@ -3,7 +3,7 @@ package com.mealam.showdown.battle.http;
 import com.mealam.showdown.battle.api.BattleService;
 import com.mealam.showdown.battle.domain.DefaultBattleService;
 import com.mealam.showdown.battle.infra.FileBattleRepository;
-import com.mealam.showdown.battle.infra.HybridBattleRepository;
+import com.mealam.showdown.battle.infra.DefaultBattleRepository;
 import com.mealam.showdown.battle.infra.InMemoryBattleRepository;
 import com.mealam.showdown.battle.infra.ws.BattleWebSocket;
 import com.mealam.showdown.battle.party.PartyService;
@@ -22,9 +22,9 @@ public class BattleRouter {
 	public static void configure(Javalin pApp) {
 		Path root = Path.of("D:\\Personal\\httyd-showdown-server");
 
-		var mem = new InMemoryBattleRepository();
-		var file = new FileBattleRepository(root);
-		var hybrid = new HybridBattleRepository(mem, file);
+		InMemoryBattleRepository mem = new InMemoryBattleRepository();
+		FileBattleRepository file = new FileBattleRepository(root);
+		DefaultBattleRepository hybrid = new DefaultBattleRepository(mem, file);
 
 		BattleService service = new DefaultBattleService(
 				hybrid,

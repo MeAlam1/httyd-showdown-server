@@ -9,12 +9,12 @@ import com.mealam.showdown.utils.logging.BaseLogger;
 
 import java.util.Objects;
 
-public class HybridBattleRepository implements BattleRepository {
+public class DefaultBattleRepository implements BattleRepository {
 
 	private final InMemoryBattleRepository memRepo;
 	private final FileBattleRepository fileRepo;
 
-	public HybridBattleRepository(InMemoryBattleRepository pMemRepo, FileBattleRepository pFileRepo) {
+	public DefaultBattleRepository(InMemoryBattleRepository pMemRepo, FileBattleRepository pFileRepo) {
 		this.memRepo = Objects.requireNonNull(pMemRepo);
 		this.fileRepo = Objects.requireNonNull(pFileRepo);
 		BaseLogger.log(BaseLogLevel.INFO, "HybridBattleRepository initialized");
