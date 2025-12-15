@@ -20,6 +20,7 @@ public abstract class BattleBaseTest {
 
 	@BeforeEach
 	void setup() {
+		System.setProperty("showdown.data.dir", "D:\\Personal\\httyd-showdown-server");
 		app = Main.createApp();
 		app.start(0);
 		port = app.port();

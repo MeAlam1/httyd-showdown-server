@@ -1,42 +1,55 @@
 package com.mealam.showdown.api;
 
+import com.mealam.showdown.loader.cache.ResourceCache;
 import com.mealam.showdown.utils.path.PathUtils;
 import com.mealam.showdown.utils.resource.ResourceUtils;
 import io.javalin.Javalin;
 import io.javalin.http.HttpStatus;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class StaticAPIRouter {
 
 	private static final String BASE_PATH = "static/api/";
-	private static final Map<String, String> CACHE = new ConcurrentHashMap<>();
+	private static final Executor backgroundExecutor = Executors.newFixedThreadPool(2);
+	private static final Executor serverExecutor = Executors.newSingleThreadExecutor();
+	private static volatile boolean initialized = false;
 
 	public static void register(Javalin pApp) {
-		pApp.get("/static/api/<path>", ctx -> {
-			String requestPath = ctx.pathParam("path");
+		ensureInitialized();
+
+		pApp.get("/static/api/<path>", pContext -> {
+			String requestPath = pContext.pathParam("path");
 
 			if (!PathUtils.isValidSegment(requestPath)) {
-				ctx.status(HttpStatus.BAD_REQUEST)
-						.json(Map.of("error", "Invalid path segment", "path", requestPath));
+				pContext.status(HttpStatus.BAD_REQUEST)
+						.json(java.util.Map.of("error", "Invalid path segment", "path", requestPath));
 				return;
 			}
 
 			String normalized = PathUtils.normalize(requestPath);
 			String resourcePath = BASE_PATH + (normalized.endsWith(".json") ? normalized : normalized + ".json");
 
-			//TODO: Combine with the Loader Package
-			String json = CACHE.computeIfAbsent(resourcePath, ResourceUtils::loadResource);
+			String json = ResourceUtils.loadResource(resourcePath);
 
 			if (json == null) {
-				ctx.status(HttpStatus.NOT_FOUND)
-						.json(Map.of("error", "Resource not found", "resource", resourcePath));
+				pContext.status(HttpStatus.NOT_FOUND)
+						.json(java.util.Map.of("error", "Resource not found", "resource", resourcePath));
 				return;
 			}
 
-			ctx.contentType("application/json");
-			ctx.result(json);
+			pContext.contentType("application/json");
+			pContext.result(json);
 		});
+	}
+
+	private static void ensureInitialized() {
+		if (initialized) return;
+		synchronized (StaticAPIRouter.class) {
+			if (initialized) return;
+			ResourceCache.reload(backgroundExecutor, serverExecutor).join();
+			initialized = true;
+		}
 	}
 }

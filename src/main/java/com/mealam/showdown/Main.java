@@ -1,6 +1,5 @@
 package com.mealam.showdown;
 
-import com.mealam.showdown.loader.LoadInitializer;
 import com.mealam.showdown.router.Routes;
 import io.javalin.Javalin;
 import io.javalin.http.HttpStatus;
@@ -25,8 +24,6 @@ public final class Main {
 			config.jsonMapper(new JavalinJackson());
 		}).get("/", ctx -> ctx.result("Hello World"));
 
-		LoadInitializer.init();
-		
 		Routes.register(app);
 
 		app.exception(Exception.class, (e, ctx) ->

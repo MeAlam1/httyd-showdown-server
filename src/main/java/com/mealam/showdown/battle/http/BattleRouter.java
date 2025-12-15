@@ -2,10 +2,13 @@ package com.mealam.showdown.battle.http;
 
 import com.mealam.showdown.battle.api.BattleService;
 import com.mealam.showdown.battle.domain.DefaultBattleService;
-import com.mealam.showdown.battle.infra.InMemoryBattleRepository;
+import com.mealam.showdown.battle.infra.FileBattleRepository;
 import com.mealam.showdown.battle.infra.ws.BattleWebSocket;
 import com.mealam.showdown.battle.party.PartyService;
+import com.mealam.showdown.utils.fs.StorageRoot;
 import io.javalin.Javalin;
+
+import java.nio.file.Path;
 
 public class BattleRouter {
 
@@ -16,8 +19,9 @@ public class BattleRouter {
 	}
 
 	public static void configure(Javalin pApp) {
+		Path root = StorageRoot.resolveAppDataRoot();
 		BattleService service = new DefaultBattleService(
-				new InMemoryBattleRepository(),
+				new FileBattleRepository(root),
 				new PartyService()
 		);
 
