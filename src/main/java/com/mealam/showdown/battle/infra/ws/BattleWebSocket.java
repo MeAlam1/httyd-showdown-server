@@ -16,11 +16,18 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class BattleWebSocket {
 
+	private static volatile BattleWebSocket INSTANCE;
+
 	private final Map<BattleId, Set<WsContext>> sessions = new ConcurrentHashMap<>();
 	private final BattleService service;
 
 	public BattleWebSocket(BattleService pService) {
 		this.service = pService;
+		INSTANCE = this;
+	}
+
+	public static BattleWebSocket get() {
+		return INSTANCE;
 	}
 
 	public void configure(WsConfig pConfig) {
@@ -47,8 +54,11 @@ public class BattleWebSocket {
 					return;
 				}
 
-				WebSocketMessage msg = WebSocketMessage.of("update", message);
-				broadcast(battleId, msg);
+				WebSocketMessage echo = WebSocketMessage.of("update", message);
+				broadcast(battleId, echo);
+
+				WebSocketMessage state = WebSocketMessage.of("state", battle);
+				broadcast(battleId, state);
 			} catch (Exception e) {
 				BaseLogger.log(BaseLogLevel.ERROR, "Error processing message", e);
 				safeError(pContext, "message_processing_error");
@@ -64,6 +74,16 @@ public class BattleWebSocket {
 				BaseLogger.log(BaseLogLevel.ERROR, "Error during disconnection", e);
 			}
 		});
+	}
+
+	public void publish(BattleContext pBattle) {
+		if (pBattle == null) return;
+		try {
+			WebSocketMessage state = WebSocketMessage.of("state", pBattle);
+			broadcast(pBattle.battleId(), state);
+		} catch (Exception e) {
+			BaseLogger.log(BaseLogLevel.WARNING, "Failed to publish battle state", e);
+		}
 	}
 
 	private BattleId extractBattleId(WsContext pContext) {

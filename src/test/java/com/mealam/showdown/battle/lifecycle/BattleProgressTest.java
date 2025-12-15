@@ -44,11 +44,24 @@ class BattleProgressTest extends BattleBaseTest {
 		api.join(battleId, "player2");
 		api.start(battleId);
 
-		for (int i = 1; i <= 3; i++) {
-			String turnData = "{\"action\":\"attack\"}";
-			HttpResponse<String> turnResponse = api.turn(battleId, "player1", turnData);
-			assertEquals(400, turnResponse.statusCode()); // TODO: Look into after dinner
-		}
+		String turnData = "{\"action\":\"attack\"}";
+
+		HttpResponse<String> r1 = api.turn(battleId, "player1", turnData);
+		assertEquals(200, r1.statusCode());
+
+		HttpResponse<String> r1Again = api.turn(battleId, "player1", turnData);
+		assertEquals(400, r1Again.statusCode());
+		assertTrue(r1Again.body().contains("Only the active player can act"));
+
+		HttpResponse<String> r2 = api.turn(battleId, "player2", turnData);
+		assertEquals(200, r2.statusCode());
+
+		HttpResponse<String> r2Again = api.turn(battleId, "player2", turnData);
+		assertEquals(400, r2Again.statusCode());
+		assertTrue(r2Again.body().contains("Only the active player can act"));
+
+		HttpResponse<String> r3 = api.turn(battleId, "player1", turnData);
+		assertEquals(200, r3.statusCode());
 
 		String battleState = api.get(battleId).body();
 		assertTrue(battleState.contains("turnNumber"));

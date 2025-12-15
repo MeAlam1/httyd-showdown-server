@@ -16,7 +16,7 @@ public record BattleContext(
 		TurnContext turnContext,
 		Phase phase,
 		@Nullable UserId winnerPlayerId,
-		List<TurnContext> turnHistory
+		List<TurnHistoryContext> turnHistory
 ) {
 
 	public BattleContext {

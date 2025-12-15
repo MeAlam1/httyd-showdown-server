@@ -85,7 +85,7 @@ public class DefaultBattleService implements BattleService {
 		TurnContext startContext = turnManager.startBattle(startingPlayer);
 
 		var inProgress = Phase.REGISTRY.versions().get("in_progress");
-		List<TurnContext> history = new ArrayList<>(battle.turnHistory());
+		List<TurnHistoryContext> history = new ArrayList<>(battle.turnHistory());
 
 		var updated = new BattleContext(
 				battle.battleId(), battle.playerIds(), battle.spectatorIds(),
@@ -141,19 +141,18 @@ public class DefaultBattleService implements BattleService {
 			nextActive = playerWhoHasNotActed(battle.playerIds(), merged, currentActive);
 		}
 
-		List<TurnContext> history = new ArrayList<>(battle.turnHistory());
+		List<TurnHistoryContext> history = new ArrayList<>(battle.turnHistory());
 		BattleContext updated;
 
 		if (bothActed) {
-			TurnContext newTurnHeader = turnManager.advance(nextActive);
-			TurnContext newTurn = new TurnContext(newTurnHeader.turnNumber(), null, newTurnHeader.activePlayerId());
-
-			TurnContext resolvedPrevTurn = new TurnContext(
+			TurnHistoryContext resolvedPrevTurn = new TurnHistoryContext(
 					battle.turnContext().turnNumber(),
-					merged,
-					battle.turnContext().activePlayerId()
+					merged
 			);
 			history.add(resolvedPrevTurn);
+
+			TurnContext newTurnHeader = turnManager.advance(nextActive);
+			TurnContext newTurn = new TurnContext(newTurnHeader.turnNumber(), null, newTurnHeader.activePlayerId());
 
 			updated = new BattleContext(
 					battle.battleId(), battle.playerIds(), battle.spectatorIds(),
@@ -162,7 +161,6 @@ public class DefaultBattleService implements BattleService {
 			);
 		} else {
 			TurnContext sameTurn = new TurnContext(battle.turnContext().turnNumber(), merged, nextActive);
-			history.add(sameTurn);
 			updated = new BattleContext(
 					battle.battleId(), battle.playerIds(), battle.spectatorIds(),
 					sameTurn, battle.phase(), battle.winnerPlayerId(),
@@ -210,8 +208,9 @@ public class DefaultBattleService implements BattleService {
 		if (tm != null) tm.finish();
 
 		TurnContext finishedTurn = new TurnContext(TurnManager.FINISHED, null, null);
-		List<TurnContext> history = new ArrayList<>(battle.turnHistory());
-		history.add(finishedTurn);
+		List<TurnHistoryContext> history = new ArrayList<>(battle.turnHistory());
+		TurnHistoryContext finalHistoricalTurn = new TurnHistoryContext(TurnManager.FINISHED, null);
+		history.add(finalHistoricalTurn);
 
 		var updated = new BattleContext(
 				battle.battleId(), battle.playerIds(), battle.spectatorIds(),
