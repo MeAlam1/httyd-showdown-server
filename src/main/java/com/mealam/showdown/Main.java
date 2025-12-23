@@ -1,5 +1,7 @@
 package com.mealam.showdown;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.mealam.showdown.router.Routes;
 import io.javalin.Javalin;
 import io.javalin.http.HttpStatus;
@@ -16,6 +18,10 @@ public final class Main {
 	}
 
 	public static Javalin createApp() {
+		ObjectMapper mapper = new ObjectMapper()
+				.findAndRegisterModules()
+				.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
 		Javalin app = Javalin.create(config -> {
 			config.bundledPlugins.enableCors(cors -> {
 				cors.addRule(rule -> {
@@ -24,7 +30,7 @@ public final class Main {
 					rule.allowCredentials = true;
 				});
 			});
-			config.jsonMapper(new JavalinJackson());
+			config.jsonMapper(new JavalinJackson(mapper, false));
 		}).get("/", ctx -> ctx.result("Hello World"));
 
 		Routes.register(app);

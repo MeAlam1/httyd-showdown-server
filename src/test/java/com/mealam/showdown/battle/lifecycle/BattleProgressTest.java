@@ -15,6 +15,7 @@ class BattleProgressTest extends BattleBaseTest {
 		String battleId = api.createBattleAndGetId();
 		api.join(battleId, "player1", "team-player1");
 		api.join(battleId, "player2", "team-player2");
+
 		HttpResponse<String> startResp = api.start(battleId);
 		assertEquals(200, startResp.statusCode(), "Start should succeed");
 
@@ -25,7 +26,7 @@ class BattleProgressTest extends BattleBaseTest {
 		String battleState = api.get(battleId).body();
 		assertTrue(battleState.contains("turnNumber") || battleState.contains("\"turnContext\""));
 	}
-		
+
 	@Test
 	void advanceTurnBeforeBattleStart() throws Exception {
 		String battleId = api.createBattleAndGetId();

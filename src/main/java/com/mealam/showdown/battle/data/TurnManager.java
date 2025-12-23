@@ -2,7 +2,7 @@ package com.mealam.showdown.battle.data;
 
 import com.mealam.showdown.battle.context.TurnContext;
 
-import java.util.HashSet;
+import java.util.Map;
 
 public class TurnManager {
 
@@ -14,37 +14,55 @@ public class TurnManager {
 
 	public synchronized TurnContext createBattle() {
 		currentTurn = NOT_STARTED;
-		currentTurnContextInstance = new TurnContext(NOT_STARTED, null, null, null, null);
+		currentTurnContextInstance = new TurnContext(
+				NOT_STARTED,
+				TurnContext.TurnStatus.NOT_STARTED,
+				null,
+				null
+		);
 		return currentTurnContextInstance;
 	}
 
 	public synchronized TurnContext startBattle(TeamId pStartingTeamId) {
-		if (currentTurn != NOT_STARTED) {
+		if (currentTurnContextInstance != null && currentTurnContextInstance.status() != TurnContext.TurnStatus.NOT_STARTED) {
 			throw new IllegalStateException("Battle already started or finished");
 		}
 		currentTurn = 1;
-		currentTurnContextInstance = new TurnContext(currentTurn, null, pStartingTeamId, new HashSet<>(), new HashSet<>());
+		currentTurnContextInstance = new TurnContext(
+				currentTurn,
+				TurnContext.TurnStatus.IN_PROGRESS,
+				pStartingTeamId,
+				Map.of()
+		);
 		return currentTurnContextInstance;
 	}
 
 	public synchronized TurnContext advance(TeamId pNextActiveTeamId) {
-		if (currentTurn == FINISHED) {
+		if (currentTurnContextInstance != null && currentTurnContextInstance.status() == TurnContext.TurnStatus.FINISHED) {
 			throw new IllegalStateException("Battle is over");
 		}
-		if (currentTurn == NOT_STARTED) {
-			if (currentTurnContextInstance == null || currentTurnContextInstance.activeTeamId() == null) {
-				throw new IllegalStateException("Battle hasn't started");
-			}
-			currentTurn = 1;
-		} else {
-			currentTurn++;
+		if (currentTurnContextInstance == null || currentTurnContextInstance.status() == TurnContext.TurnStatus.NOT_STARTED) {
+			throw new IllegalStateException("Battle hasn't started");
 		}
-		currentTurnContextInstance = new TurnContext(currentTurn, null, pNextActiveTeamId, new HashSet<>(), new HashSet<>());
+
+		currentTurn = Math.max(1, currentTurn + 1);
+		currentTurnContextInstance = new TurnContext(
+				currentTurn,
+				TurnContext.TurnStatus.IN_PROGRESS,
+				pNextActiveTeamId,
+				Map.of()
+		);
 		return currentTurnContextInstance;
 	}
 
-	public synchronized void finish() {
+	public synchronized TurnContext finish() {
 		currentTurn = FINISHED;
-		currentTurnContextInstance = new TurnContext(FINISHED, null, null, null, null);
+		currentTurnContextInstance = new TurnContext(
+				FINISHED,
+				TurnContext.TurnStatus.FINISHED,
+				null,
+				null
+		);
+		return currentTurnContextInstance;
 	}
 }

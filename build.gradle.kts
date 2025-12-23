@@ -33,6 +33,7 @@ dependencies {
     implementation(libs.javalin)
     implementation(libs.slf4j.simple)
     implementation(libs.jackson)
+    implementation(libs.jackson.datatype.jsr310)
 
     implementation(libs.gson)
     implementation(libs.fastutil)

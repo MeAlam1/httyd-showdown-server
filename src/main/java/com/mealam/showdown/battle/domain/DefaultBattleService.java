@@ -20,7 +20,10 @@ import com.mealam.showdown.battle.party.PartyService;
 import com.mealam.showdown.user.context.UserContext;
 import com.mealam.showdown.user.context.UserProfileContext;
 import com.mealam.showdown.user.data.UserId;
+import com.mealam.showdown.utils.logging.BaseLogLevel;
+import com.mealam.showdown.utils.logging.BaseLogger;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -87,7 +90,8 @@ public class DefaultBattleService implements BattleService {
 			throw new IllegalStateException("Turn manager not found for battle");
 		}
 
-		if (battle.turnContext() != null && battle.turnContext().turnNumber() != TurnManager.NOT_STARTED) {
+		TurnContext current = battle.turnContext();
+		if (current != null && current.status() != TurnContext.TurnStatus.NOT_STARTED) {
 			throw new IllegalStateException("Battle already started");
 		}
 		if (battle.teams() == null || battle.teams().isEmpty()) {
@@ -115,126 +119,147 @@ public class DefaultBattleService implements BattleService {
 
 	@Override
 	public BattleContext advanceTurn(BattleId pBattleId, UserId pActingUserId, TurnBattleRequest pTurnData) {
+		BaseLogger.log(BaseLogLevel.INFO,
+				"Service.advanceTurn → start battleId=" + pBattleId
+						+ " actingUserId=" + pActingUserId
+						+ " action=" + (pTurnData == null ? "null" : pTurnData.action()));
+
 		var battle = repo.get(pBattleId);
-		if (battle == null) return null;
-
-		if (battle.turnContext() == null || battle.turnContext().turnNumber() == TurnManager.NOT_STARTED) {
-			throw new IllegalStateException("Battle not started");
-		}
-		if (battle.turnContext().turnNumber() == TurnManager.FINISHED) {
-			throw new IllegalStateException("Battle already finished");
-		}
-		if (pActingUserId == null) {
-			throw new IllegalArgumentException("Acting user is required");
+		if (battle == null) {
+			BaseLogger.log(BaseLogLevel.WARNING, "Service.advanceTurn → battle not found battleId=" + pBattleId);
+			return null;
 		}
 
-		TeamId playerTeam = battle.getTeamForPlayer(pActingUserId);
-		if (playerTeam == null) {
-			throw new IllegalArgumentException("Acting user is not a player in this battle");
-		}
+		try {
+			var ctx = battle.turnContext();
 
-		TeamId activeTeam = battle.turnContext().activeTeamId();
-		if (activeTeam == null || !activeTeam.equals(playerTeam)) {
-			throw new IllegalArgumentException("Only players from the active team can act");
-		}
+			if (ctx == null || ctx.status() == TurnContext.TurnStatus.NOT_STARTED) {
+				throw new IllegalStateException("Battle not started");
+			}
+			if (ctx.status() == TurnContext.TurnStatus.FINISHED) {
+				throw new IllegalStateException("Battle already finished");
+			}
+			if (pActingUserId == null) {
+				throw new IllegalArgumentException("Acting user is required");
+			}
+			if (pTurnData == null || pTurnData.action() == null || pTurnData.action().isBlank()) {
+				throw new IllegalArgumentException("Action is required");
+			}
 
-		Set<UserId> playersWhoActed = new HashSet<>(
-				battle.turnContext().playersWhoActed() != null
-						? battle.turnContext().playersWhoActed()
-						: Set.of()
-		);
+			TeamId playerTeam = battle.getTeamForPlayer(pActingUserId);
+			if (playerTeam == null) {
+				throw new IllegalArgumentException("Acting user is not a player in this battle");
+			}
 
-		if (playersWhoActed.contains(pActingUserId)) {
-			throw new IllegalArgumentException("Player has already acted this turn");
-		}
+			TeamId activeTeam = ctx.activeTeamId();
+			if (activeTeam == null || !activeTeam.equals(playerTeam)) {
+				throw new IllegalArgumentException("Only players from the active team can act");
+			}
 
-		Map<UserId, String> merged = new LinkedHashMap<>();
-		if (battle.turnContext().actions() != null) {
-			merged.putAll(battle.turnContext().actions());
-		}
-		if (pTurnData != null && pTurnData.action() != null && !pTurnData.action().isBlank()) {
-			merged.put(pActingUserId, pTurnData.action());
-		}
-		playersWhoActed.add(pActingUserId);
+			List<UserId> activeTeamPlayers = battle.teams().get(activeTeam);
+			if (activeTeamPlayers == null || activeTeamPlayers.isEmpty()) {
+				throw new IllegalStateException("Active team has no players");
+			}
 
-		List<UserId> currentTeamPlayers = battle.teams().get(activeTeam);
-		if (currentTeamPlayers == null || currentTeamPlayers.isEmpty()) {
-			throw new IllegalStateException("Active team has no players");
-		}
+			Map<String, TurnContext.PlayerTurnSubmission> merged = new LinkedHashMap<>();
+			if (ctx.submissions() != null) merged.putAll(ctx.submissions());
 
-		boolean allTeamMembersActed = currentTeamPlayers.stream()
-				.allMatch(playersWhoActed::contains);
+			String actingKey = pActingUserId.toString();
+			if (merged.containsKey(actingKey)) {
+				throw new IllegalArgumentException("Player has already acted this turn");
+			}
 
-		Set<TeamId> completedTeams = new LinkedHashSet<>(
-				battle.turnContext().teamsCompleted() != null
-						? battle.turnContext().teamsCompleted()
-						: Set.of()
-		);
+			Instant submittedAt = Instant.now();
+			merged.put(
+					actingKey,
+					new TurnContext.PlayerTurnSubmission(actingKey, pTurnData.action(), submittedAt)
+			);
 
-		List<TurnHistoryContext> history = new ArrayList<>(battle.turnHistory());
-		BattleContext updated;
+			boolean activeTeamFinished = activeTeamPlayers.stream()
+					.map(UserId::toString)
+					.allMatch(merged::containsKey);
 
-		if (allTeamMembersActed) {
-			completedTeams.add(activeTeam);
-			Map<UserId, String> resolvedActions = Map.copyOf(merged);
-			history.add(new TurnHistoryContext(
-					battle.turnContext().turnNumber(),
-					resolvedActions
+			List<TurnHistoryContext> history = new ArrayList<>(battle.turnHistory());
+			List<TurnHistoryContext.TurnEvent> events = new ArrayList<>();
+			events.add(new TurnHistoryContext.TurnEvent.ActionSubmitted(
+					submittedAt, pActingUserId, playerTeam, pTurnData.action()
 			));
 
-			boolean allTeamsFinishedTurn = completedTeams.size() >= battle.teams().size();
+			if (!activeTeamFinished) {
+				TurnContext sameTurn = new TurnContext(
+						ctx.turnNumber(),
+						TurnContext.TurnStatus.IN_PROGRESS,
+						activeTeam,
+						Map.copyOf(merged)
+				);
 
-			if (allTeamsFinishedTurn) {
-				TeamId nextTurnOpeningTeam = getNextTeam(battle.teams(), activeTeam);
-				TurnManager turnManager = turnManagers.get(pBattleId);
-				if (turnManager == null) {
-					throw new IllegalStateException("Battle already finished");
-				}
-				TurnContext newTurn = turnManager.advance(nextTurnOpeningTeam);
-
-				updated = new BattleContext(
+				var updated = new BattleContext(
 						battle.battleId(), battle.teams(), battle.spectatorIds(),
-						newTurn, battle.phase(), battle.winnerTeamId(),
+						sameTurn, battle.phase(), battle.winnerTeamId(),
 						history
 				);
-			} else {
-				TeamId nextPendingTeam = getNextPendingTeam(battle.teams(), activeTeam, completedTeams);
-				TurnContext sameTurnNextTeam = new TurnContext(
-						battle.turnContext().turnNumber(),
-						null,
-						nextPendingTeam,
-						new HashSet<>(),
-						Set.copyOf(completedTeams)
-				);
 
-				updated = new BattleContext(
-						battle.battleId(), battle.teams(), battle.spectatorIds(),
-						sameTurnNextTeam, battle.phase(), battle.winnerTeamId(),
-						history
-				);
+				repo.update(updated);
+				return updated;
 			}
-		} else {
-			Set<TeamId> existingCompletedTeams = battle.turnContext().teamsCompleted() != null
-					? battle.turnContext().teamsCompleted()
-					: Set.of();
 
-			TurnContext sameTurn = new TurnContext(
-					battle.turnContext().turnNumber(),
-					Map.copyOf(merged),
+			Instant endedAt = Instant.now();
+			events.add(new TurnHistoryContext.TurnEvent.TeamCompleted(endedAt, activeTeam));
+
+			Map<String, String> finalActions = new LinkedHashMap<>();
+			for (var e : merged.entrySet()) finalActions.put(e.getKey(), e.getValue().action());
+
+			TeamId nextTurnOpeningTeam = getNextTeam(battle.teams(), activeTeam);
+
+			TurnManager turnManager = turnManagers.get(pBattleId);
+			if (turnManager == null) {
+				throw new IllegalStateException("Turn manager not found for battle");
+			}
+
+			int fromTurn = ctx.turnNumber();
+			TurnContext newTurn = turnManager.advance(nextTurnOpeningTeam);
+
+			Instant advancedAt = Instant.now();
+			events.add(new TurnHistoryContext.TurnEvent.TurnAdvanced(
+					advancedAt, fromTurn, newTurn.turnNumber(), nextTurnOpeningTeam
+			));
+
+			Instant turnStartedAt = events.getFirst().at();
+
+			history.add(new TurnHistoryContext(
+					ctx.turnNumber(),
+					turnStartedAt,
+					endedAt,
 					activeTeam,
-					Set.copyOf(playersWhoActed),
-					Set.copyOf(existingCompletedTeams)
-			);
+					List.copyOf(events),
+					new TurnHistoryContext.TurnResolution(Map.copyOf(finalActions))
+			));
 
-			updated = new BattleContext(
+			var updated = new BattleContext(
 					battle.battleId(), battle.teams(), battle.spectatorIds(),
-					sameTurn, battle.phase(), battle.winnerTeamId(),
+					newTurn, battle.phase(), battle.winnerTeamId(),
 					history
 			);
-		}
 
-		repo.update(updated);
-		return updated;
+			repo.update(updated);
+
+			BaseLogger.log(BaseLogLevel.INFO,
+					"Service.advanceTurn → advanced battleId=" + pBattleId
+							+ " fromTurn=" + fromTurn
+							+ " toTurn=" + newTurn.turnNumber()
+							+ " nextActiveTeamId=" + newTurn.activeTeamId()
+							+ " turnHistory=" + history.size());
+
+			return updated;
+
+		} catch (RuntimeException ex) {
+			BaseLogger.log(BaseLogLevel.ERROR,
+					"Service.advanceTurn → failed battleId=" + pBattleId
+							+ " actingUserId=" + pActingUserId
+							+ " action=" + (pTurnData == null ? "null" : pTurnData.action()),
+					ex);
+			throw ex;
+		}
 	}
 
 	private TeamId getNextTeam(Map<TeamId, List<UserId>> pTeams, TeamId pCurrentTeam) {
@@ -244,37 +269,31 @@ public class DefaultBattleService implements BattleService {
 		return teamIds.get((currentIndex + 1) % teamIds.size());
 	}
 
-	private TeamId getNextPendingTeam(Map<TeamId, List<UserId>> pTeams, TeamId pCurrentTeam, Set<TeamId> pCompletedTeams) {
-		List<TeamId> teamIds = new ArrayList<>(pTeams.keySet());
-		if (teamIds.isEmpty()) return pCurrentTeam;
-		int currentIndex = teamIds.indexOf(pCurrentTeam);
-		for (int i = 1; i <= teamIds.size(); i++) {
-			TeamId candidate = teamIds.get((currentIndex + i) % teamIds.size());
-			if (!pCompletedTeams.contains(candidate)) {
-				return candidate;
-			}
-		}
-		return teamIds.getFirst();
-	}
-
 	@Override
 	public BattleContext finishBattle(BattleId pBattleId, UserId pWinnerId) {
 		var battle = repo.get(pBattleId);
 		if (battle == null) return null;
 
 		TurnManager tm = turnManagers.get(pBattleId);
-		if (tm != null) tm.finish();
+		TurnContext finishedCtx = (tm != null) ? tm.finish() : new TurnContext(
+				-1, TurnContext.TurnStatus.FINISHED, null, null
+		);
 
 		TeamId winnerTeam = pWinnerId != null ? battle.getTeamForPlayer(pWinnerId) : null;
 
-		TurnContext finishedTurn = new TurnContext(TurnManager.FINISHED, null, null, null, null);
 		List<TurnHistoryContext> history = new ArrayList<>(battle.turnHistory());
-		TurnHistoryContext finalHistoricalTurn = new TurnHistoryContext(TurnManager.FINISHED, null);
-		history.add(finalHistoricalTurn);
+		history.add(new TurnHistoryContext(
+				finishedCtx.turnNumber(),
+				Instant.now(),
+				Instant.now(),
+				null,
+				List.of(new TurnHistoryContext.TurnEvent.BattleFinished(Instant.now(), winnerTeam)),
+				null
+		));
 
 		var updated = new BattleContext(
 				battle.battleId(), battle.teams(), battle.spectatorIds(),
-				finishedTurn, battle.phase(), winnerTeam,
+				finishedCtx, battle.phase(), winnerTeam,
 				history
 		);
 
