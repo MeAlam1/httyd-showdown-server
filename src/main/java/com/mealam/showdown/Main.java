@@ -20,6 +20,7 @@ public final class Main {
 			config.bundledPlugins.enableCors(cors -> {
 				cors.addRule(rule -> {
 					rule.allowHost("http://localhost:5173");
+					rule.allowHost("http://localhost:5174");
 					rule.allowCredentials = true;
 				});
 			});
