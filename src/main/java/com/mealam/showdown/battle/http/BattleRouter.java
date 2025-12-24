@@ -1,5 +1,6 @@
 package com.mealam.showdown.battle.http;
 
+import com.mealam.showdown.Main;
 import com.mealam.showdown.battle.api.BattleService;
 import com.mealam.showdown.battle.domain.DefaultBattleService;
 import com.mealam.showdown.battle.infra.FileBattleRepository;
@@ -9,7 +10,9 @@ import com.mealam.showdown.battle.infra.ws.BattleWebSocket;
 import com.mealam.showdown.battle.party.PartyService;
 import io.javalin.Javalin;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class BattleRouter {
 
@@ -20,19 +23,24 @@ public class BattleRouter {
 	}
 
 	public static void configure(Javalin pApp) {
-		Path root = Path.of("D:\\Personal\\httyd-showdown-server");
+		try {
+			Path classesRoot = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+			Path dataRoot = classesRoot.resolve("..").normalize().resolve("httyd-showdown-server");
 
-		InMemoryBattleRepository mem = new InMemoryBattleRepository();
-		FileBattleRepository file = new FileBattleRepository(root);
-		DefaultBattleRepository hybrid = new DefaultBattleRepository(mem, file);
+			InMemoryBattleRepository mem = new InMemoryBattleRepository();
+			FileBattleRepository file = new FileBattleRepository(dataRoot);
+			DefaultBattleRepository hybrid = new DefaultBattleRepository(mem, file);
 
-		BattleService service = new DefaultBattleService(
-				hybrid,
-				new PartyService()
-		);
+			BattleService service = new DefaultBattleService(
+					hybrid,
+					new PartyService()
+			);
 
-		new BattleRouter(service).register(pApp);
-		pApp.ws("/ws/battle/{id}", new BattleWebSocket(service)::configure);
+			new BattleRouter(service).register(pApp);
+			pApp.ws("/ws/battle/{id}", new BattleWebSocket(service)::configure);
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to prepare data dir", e);
+		}
 	}
 
 	public void register(Javalin pApp) {

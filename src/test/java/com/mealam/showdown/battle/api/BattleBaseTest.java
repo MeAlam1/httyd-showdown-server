@@ -1,4 +1,3 @@
-// java
 package com.mealam.showdown.battle.api;
 
 import com.mealam.showdown.Main;
@@ -25,14 +24,16 @@ public abstract class BattleBaseTest {
 
 	@BeforeEach
 	void setup() {
-		Path dataRoot = Paths.get("D:\\Personal\\httyd-showdown-server");
 		try {
+			Path classesRoot = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+			Path dataRoot = classesRoot.resolve("..").normalize().resolve("httyd-showdown-server");
+
 			Files.createDirectories(dataRoot);
 			Files.createDirectories(dataRoot.resolve("battles"));
-		} catch (IOException e) {
-			throw new IllegalStateException("Failed to prepare data dir at " + dataRoot, e);
+			System.setProperty("showdown.data.dir", dataRoot.toString());
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to prepare data dir", e);
 		}
-		System.setProperty("showdown.data.dir", dataRoot.toString());
 
 		app = Main.createApp();
 		app.start(0);
