@@ -7,11 +7,11 @@
  */
 package com.mealam.showdown.battle.context;
 
-import com.mealam.showdown.user.context.UserProfileContext;
+import com.mealam.showdown.user.context.UserContext;
 
 import java.util.List;
 
 public record PlayerBattleContext(
-		UserProfileContext user,
+		UserContext user,
 		List<DragonBattleContext> party) {
 }

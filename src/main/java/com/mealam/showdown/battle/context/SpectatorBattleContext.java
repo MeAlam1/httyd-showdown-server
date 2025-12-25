@@ -7,7 +7,8 @@
  */
 package com.mealam.showdown.battle.context;
 
-import com.mealam.showdown.user.context.UserProfileContext;
+import com.mealam.showdown.user.context.UserContext;
 
 public record SpectatorBattleContext(
-		UserProfileContext user) {}
+		UserContext user) {
+}

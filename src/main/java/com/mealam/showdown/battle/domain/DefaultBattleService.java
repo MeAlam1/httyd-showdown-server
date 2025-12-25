@@ -18,7 +18,6 @@ import com.mealam.showdown.battle.dto.request.TurnBattleRequest;
 import com.mealam.showdown.battle.dto.response.JoinBattleResponse;
 import com.mealam.showdown.battle.party.PartyService;
 import com.mealam.showdown.user.context.UserContext;
-import com.mealam.showdown.user.context.UserProfileContext;
 import com.mealam.showdown.user.data.UserId;
 import com.mealam.showdown.utils.logging.BaseLogLevel;
 import com.mealam.showdown.utils.logging.BaseLogger;
@@ -318,8 +317,8 @@ public class DefaultBattleService implements BattleService {
 			}
 
 			UserId userId = UserId.parse(pRequest.userId());
-			UserProfileContext profileContext = new UserProfileContext(
-					new UserContext(userId, userId.toString())
+			UserContext profileContext = new UserContext(
+					userId, userId.toString()
 			);
 
 			if (battle.getAllPlayerIds().contains(userId)) {
@@ -409,7 +408,7 @@ public class DefaultBattleService implements BattleService {
 		}
 	}
 
-	private JoinBattleResponse.Player buildPlayerJoinResponse(BattleId pBattleId, UserProfileContext pContext, UserId pUserId) {
+	private JoinBattleResponse.Player buildPlayerJoinResponse(BattleId pBattleId, UserContext pContext, UserId pUserId) {
 		List<DragonBattleContext> party = partyService.getUserParty(pUserId);
 		party = partyService.preparePartyForBattle(party);
 		var playerCtx = new PlayerBattleContext(pContext, party);
