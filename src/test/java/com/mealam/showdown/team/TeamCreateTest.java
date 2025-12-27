@@ -12,7 +12,7 @@ class TeamCreateTest extends TeamBaseTest {
 
 	@Test
 	void createTeam() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"alpha-team\",\"dragonIds\":[\"d1\",\"d2\"]}");
+		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"alpha-team\",\"dragonIds\":[\"flightmare\"]}");
 		assertEquals(201, createResponse.statusCode());
 
 		String body = createResponse.body();
@@ -27,11 +27,12 @@ class TeamCreateTest extends TeamBaseTest {
 		HttpResponse<String> getResponse = api.getTeam(teamId);
 		assertEquals(200, getResponse.statusCode());
 		assertTrue(getResponse.body().contains("alpha-team"));
+		assertTrue(getResponse.body().contains("flightmare"));
 	}
 
 	@Test
 	void createTeamRejectsMissingName() throws Exception {
-		HttpResponse<String> res = api.createTeam("{\"dragonIds\":[\"d1\"]}");
+		HttpResponse<String> res = api.createTeam("{\"dragonIds\":[\"flightmare\"]}");
 		assertEquals(400, res.statusCode());
 	}
 
@@ -52,5 +53,86 @@ class TeamCreateTest extends TeamBaseTest {
 		HttpResponse<String> getResponse = api.getTeam(teamId);
 		assertEquals(200, getResponse.statusCode());
 		assertTrue(getResponse.body().contains("no-dragons"));
+	}
+
+	@Test
+	void createTeamRejectsUnknownDragonId() throws Exception {
+		HttpResponse<String> res = api.createTeam("{\"name\":\"bad-team\",\"dragonIds\":[\"does-not-exist\"]}");
+		assertEquals(400, res.statusCode());
+	}
+
+	@Test
+	void createTeamTrimsDragonIds() throws Exception {
+		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"trim-team\",\"dragonIds\":[\"  flightmare  \"]}");
+		assertEquals(201, createResponse.statusCode());
+
+		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());
+		HttpResponse<String> getResponse = api.getTeam(teamId);
+
+		assertEquals(200, getResponse.statusCode());
+		assertTrue(getResponse.body().contains("trim-team"));
+		assertTrue(getResponse.body().contains("flightmare"));
+	}
+
+	@Test
+	void createTeamIgnoresBlankAndNullLikeDragonIds() throws Exception {
+		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"ignore-blanks\",\"dragonIds\":[\" \",\"flightmare\",\"\"]}");
+		assertEquals(201, createResponse.statusCode());
+
+		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());
+		HttpResponse<String> getResponse = api.getTeam(teamId);
+
+		assertEquals(200, getResponse.statusCode());
+		assertTrue(getResponse.body().contains("ignore-blanks"));
+		assertTrue(getResponse.body().contains("flightmare"));
+	}
+
+	@Test
+	void createTeamDeduplicatesDragonIds() throws Exception {
+		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"dupe-team\",\"dragonIds\":[\"flightmare\",\"flightmare\",\"  flightmare \"]}");
+		assertEquals(201, createResponse.statusCode());
+
+		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());
+		HttpResponse<String> getResponse = api.getTeam(teamId);
+
+		assertEquals(200, getResponse.statusCode());
+		assertTrue(getResponse.body().contains("dupe-team"));
+
+		String responseBody = getResponse.body();
+		int first = responseBody.indexOf("flightmare");
+		int last = responseBody.lastIndexOf("flightmare");
+		assertTrue(first >= 0);
+		assertEquals(first, last);
+	}
+
+	@Test
+	void createTeamRejectsOverMaxTeamSize() throws Exception {
+		HttpResponse<String> res = api.createTeam(
+				"{\"name\":\"too-big\",\"dragonIds\":[\"flightmare\",\"speed_stinger\",\"night_fury\",\"armorwing\",\"timberjack\",\"deadly_nadder\",\"terrible_terror\"]}"
+		);
+		assertEquals(400, res.statusCode());
+	}
+
+	@Test
+	void createTeamAndGetTeamNotFound() throws Exception {
+		HttpResponse<String> res = api.getTeam("non-existent-team-id");
+		assertEquals(404, res.statusCode());
+	}
+
+	@Test
+	void createThenDeleteThenGetNotFound() throws Exception {
+		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"delete-me\",\"dragonIds\":[\"flightmare\"]}");
+		assertEquals(201, createResponse.statusCode());
+
+		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());
+		assertNotNull(teamId);
+		assertFalse(teamId.isBlank());
+
+		HttpResponse<String> deleteResponse = api.deleteTeam(teamId);
+		assertEquals(200, deleteResponse.statusCode());
+		assertTrue(deleteResponse.body().contains("deleted"));
+
+		HttpResponse<String> getResponse = api.getTeam(teamId);
+		assertEquals(404, getResponse.statusCode());
 	}
 }
