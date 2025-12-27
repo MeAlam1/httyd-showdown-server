@@ -1,21 +1,97 @@
 {
+  "schemaVersion": "0.0.1",
   "id": "buffalord",
   "name": "Buffalord",
-  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/6/63/Buffalord_png.png",
-  "origin": "Dragons: Race to the Edge",
-  "classes": [
-    "Mystery"
-  ],
-  "stats": {
-    "attack": 8,
-    "speed": 6,
-    "armor": 16,
-    "firepower": 12,
-    "shotLimit": 6,
-    "venom": -20,
-    "jawStrength": 6,
-    "stealth": 4
+  "trainable": true,
+  "classification": {
+    "class": [
+      "Mystery"
+    ],
+    "former": null,
+    "size": "-",
+    "habitat": "-"
   },
-  "learnSet": [
-  ]
+  "appearances": {
+    "movies": [],
+    "series": [],
+    "games": []
+  },
+  "biology": {
+    "diet": [],
+    "temperament": "-",
+    "fireType": [],
+    "features": [],
+    "colors": []
+  },
+  "abilities": {},
+  "physicalStats": {
+    "length": {
+      "ft": 0,
+      "meters": 0
+    },
+    "weight": {
+      "lbs": 0,
+      "kg": 0
+    },
+    "wingspan": {
+      "ft": 0,
+      "meters": 0
+    }
+  },
+  "individuals": [],
+  "subspecies": [],
+  "hybrids": [],
+  "stats": {
+    "internal": {
+      "notes": [
+        "These stats are used by the battle engine related to this api."
+      ],
+      "attack": 8,
+      "speed": 6,
+      "defense": 16,
+      "firepower": 12,
+      "stealth": 4,
+      "stamina": 0
+    },
+    "external": {
+      "notes": [
+        "These stats are from the Fandom: https://howtotrainyourdragon.fandom.com/wiki/"
+      ],
+      "values": {
+        "attack": 8,
+        "speed": 6,
+        "armor": 16,
+        "firepower": 12,
+        "shotLimit": 6,
+        "venom": -20,
+        "jawStrength": 6,
+        "stealth": 4
+      }
+    }
+  },
+  "media": {
+    "images": [
+      {
+        "name": "Logo",
+        "url": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/6/63/Buffalord_png.png"
+      },
+      {
+        "name": "Size",
+        "url": "-"
+      }
+    ],
+    "videos": [],
+    "sounds": [
+      {
+        "name": "Roar",
+        "url": "-"
+      }
+    ]
+  },
+  "tags": [],
+  "metadata": {
+    "canonical": true,
+    "introducedIn": "Dragons: Race to the Edge",
+    "lastUpdated": "2025-12-27"
+  }
 }

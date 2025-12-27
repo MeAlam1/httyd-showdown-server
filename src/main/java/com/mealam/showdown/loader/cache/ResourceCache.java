@@ -8,7 +8,7 @@
 package com.mealam.showdown.loader.cache;
 
 import com.mealam.showdown.loader.JsonLoader;
-import com.mealam.showdown.loader.cache.dragons.DragonsCache;
+import com.mealam.showdown.loader.cache.dragon.DragonCache;
 import com.mealam.showdown.loader.cache.moves.MovesCache;
 import com.mealam.showdown.utils.logging.BaseLogLevel;
 import com.mealam.showdown.utils.logging.BaseLogger;
@@ -19,10 +19,10 @@ import java.util.concurrent.Executor;
 
 public class ResourceCache extends JsonLoader {
 
-	private static Map<String, DragonsCache> DRAGONS = Collections.emptyMap();
+	private static Map<String, DragonCache> DRAGONS = Collections.emptyMap();
 	private static Map<String, MovesCache> MOVES = Collections.emptyMap();
 
-	public static Map<String, DragonsCache> getDragons() {
+	public static Map<String, DragonCache> getDragons() {
 		return DRAGONS;
 	}
 
@@ -32,7 +32,7 @@ public class ResourceCache extends JsonLoader {
 
 	public static CompletableFuture<Void> reload(Executor pBackgroundExecutor, Executor pServerExecutor) {
 		clearCaches();
-		CompletableFuture<Map<String, DragonsCache>> dragons = loadStaticDragons(pBackgroundExecutor);
+		CompletableFuture<Map<String, DragonCache>> dragons = loadStaticDragons(pBackgroundExecutor);
 		CompletableFuture<Map<String, MovesCache>> moves = loadStaticMoves(pBackgroundExecutor);
 
 		return CompletableFuture.allOf(dragons, moves)

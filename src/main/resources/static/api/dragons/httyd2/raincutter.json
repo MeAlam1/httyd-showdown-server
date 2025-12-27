@@ -1,21 +1,97 @@
 {
+  "schemaVersion": "0.0.1",
   "id": "raincutter",
   "name": "Raincutter",
-  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/3/3b/HTTYD2-Raincutter-Transparent.png",
-  "origin": "How To Train Your Dragon 2",
-  "classes": [
-    "Sharp"
-  ],
-  "stats": {
-    "attack": 8,
-    "speed": 8,
-    "armor": 6,
-    "firepower": 12,
-    "shotLimit": 10,
-    "venom": 6,
-    "jawStrength": 5,
-    "stealth": 14
+  "trainable": true,
+  "classification": {
+    "class": [
+      "Sharp"
+    ],
+    "former": null,
+    "size": "-",
+    "habitat": "-"
   },
-  "learnSet": [
-  ]
+  "appearances": {
+    "movies": [],
+    "series": [],
+    "games": []
+  },
+  "biology": {
+    "diet": [],
+    "temperament": "-",
+    "fireType": [],
+    "features": [],
+    "colors": []
+  },
+  "abilities": {},
+  "physicalStats": {
+    "length": {
+      "ft": 0,
+      "meters": 0
+    },
+    "weight": {
+      "lbs": 0,
+      "kg": 0
+    },
+    "wingspan": {
+      "ft": 0,
+      "meters": 0
+    }
+  },
+  "individuals": [],
+  "subspecies": [],
+  "hybrids": [],
+  "stats": {
+    "internal": {
+      "notes": [
+        "These stats are used by the battle engine related to this api."
+      ],
+      "attack": 8,
+      "speed": 8,
+      "defense": 6,
+      "firepower": 12,
+      "stealth": 14,
+      "stamina": 0
+    },
+    "external": {
+      "notes": [
+        "These stats are from the Fandom: https://howtotrainyourdragon.fandom.com/wiki/"
+      ],
+      "values": {
+        "attack": 8,
+        "speed": 8,
+        "armor": 6,
+        "firepower": 12,
+        "shotLimit": 10,
+        "venom": 6,
+        "jawStrength": 5,
+        "stealth": 14
+      }
+    }
+  },
+  "media": {
+    "images": [
+      {
+        "name": "Logo",
+        "url": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/3/3b/HTTYD2-Raincutter-Transparent.png"
+      },
+      {
+        "name": "Size",
+        "url": "-"
+      }
+    ],
+    "videos": [],
+    "sounds": [
+      {
+        "name": "Roar",
+        "url": "-"
+      }
+    ]
+  },
+  "tags": [],
+  "metadata": {
+    "canonical": true,
+    "introducedIn": "How To Train Your Dragon 2",
+    "lastUpdated": "2025-12-27"
+  }
 }

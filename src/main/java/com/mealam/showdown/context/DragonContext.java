@@ -7,12 +7,12 @@
  */
 package com.mealam.showdown.context;
 
-import com.mealam.showdown.loader.cache.dragons.DragonsCache;
+import com.mealam.showdown.loader.cache.dragon.DragonCache;
 import com.mealam.showdown.move.enums.Status;
 import java.util.List;
 
 public record DragonContext(
-		DragonsCache baseData,
+		DragonCache baseData,
 		String dragonId,
 		String name,
 		int level,

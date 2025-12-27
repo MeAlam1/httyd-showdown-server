@@ -1,21 +1,97 @@
 {
+  "schemaVersion": "0.0.1",
   "id": "speed_stinger",
   "name": "Speed Stinger",
-  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/4/4b/Rapidijon.png",
-  "origin": "Dragons: Defenders of Berk",
-  "classes": [
-    "Sharp"
-  ],
-  "stats": {
-    "attack": 10,
-    "speed": 30,
-    "armor": 10,
-    "firepower": 0,
-    "shotLimit": 0,
-    "venom": 15,
-    "jawStrength": 5,
-    "stealth": 30
+  "trainable": true,
+  "classification": {
+    "class": [
+      "Sharp"
+    ],
+    "former": null,
+    "size": "-",
+    "habitat": "-"
   },
-  "learnSet": [
-  ]
+  "appearances": {
+    "movies": [],
+    "series": [],
+    "games": []
+  },
+  "biology": {
+    "diet": [],
+    "temperament": "-",
+    "fireType": [],
+    "features": [],
+    "colors": []
+  },
+  "abilities": {},
+  "physicalStats": {
+    "length": {
+      "ft": 0,
+      "meters": 0
+    },
+    "weight": {
+      "lbs": 0,
+      "kg": 0
+    },
+    "wingspan": {
+      "ft": 0,
+      "meters": 0
+    }
+  },
+  "individuals": [],
+  "subspecies": [],
+  "hybrids": [],
+  "stats": {
+    "internal": {
+      "notes": [
+        "These stats are used by the battle engine related to this api."
+      ],
+      "attack": 10,
+      "speed": 30,
+      "defense": 10,
+      "firepower": 0,
+      "stealth": 30,
+      "stamina": 0
+    },
+    "external": {
+      "notes": [
+        "These stats are from the Fandom: https://howtotrainyourdragon.fandom.com/wiki/"
+      ],
+      "values": {
+        "attack": 10,
+        "speed": 30,
+        "armor": 10,
+        "firepower": 0,
+        "shotLimit": 0,
+        "venom": 15,
+        "jawStrength": 5,
+        "stealth": 30
+      }
+    }
+  },
+  "media": {
+    "images": [
+      {
+        "name": "Logo",
+        "url": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/4/4b/Rapidijon.png"
+      },
+      {
+        "name": "Size",
+        "url": "-"
+      }
+    ],
+    "videos": [],
+    "sounds": [
+      {
+        "name": "Roar",
+        "url": "-"
+      }
+    ]
+  },
+  "tags": [],
+  "metadata": {
+    "canonical": true,
+    "introducedIn": "Dragons: Defenders of Berk",
+    "lastUpdated": "2025-12-27"
+  }
 }

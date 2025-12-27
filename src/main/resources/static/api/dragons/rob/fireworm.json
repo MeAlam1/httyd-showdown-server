@@ -1,21 +1,97 @@
 {
+  "schemaVersion": "0.0.1",
   "id": "fireworm",
   "name": "Fireworm",
-  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/0/00/HTTYD3-Fireworm1-Transparent.png",
-  "origin": "Dragons: Riders of Berk",
-  "classes": [
-    "Stoker"
-  ],
-  "stats": {
-    "attack": 4,
-    "speed": 3,
-    "armor": 5,
-    "firepower": 30,
-    "shotLimit": 6,
-    "venom": 0,
-    "jawStrength": 0,
-    "stealth": 6
+  "trainable": true,
+  "classification": {
+    "class": [
+      "Stoker"
+    ],
+    "former": null,
+    "size": "-",
+    "habitat": "-"
   },
-  "learnSet": [
-  ]
+  "appearances": {
+    "movies": [],
+    "series": [],
+    "games": []
+  },
+  "biology": {
+    "diet": [],
+    "temperament": "-",
+    "fireType": [],
+    "features": [],
+    "colors": []
+  },
+  "abilities": {},
+  "physicalStats": {
+    "length": {
+      "ft": 0,
+      "meters": 0
+    },
+    "weight": {
+      "lbs": 0,
+      "kg": 0
+    },
+    "wingspan": {
+      "ft": 0,
+      "meters": 0
+    }
+  },
+  "individuals": [],
+  "subspecies": [],
+  "hybrids": [],
+  "stats": {
+    "internal": {
+      "notes": [
+        "These stats are used by the battle engine related to this api."
+      ],
+      "attack": 4,
+      "speed": 3,
+      "defense": 5,
+      "firepower": 30,
+      "stealth": 6,
+      "stamina": 0
+    },
+    "external": {
+      "notes": [
+        "These stats are from the Fandom: https://howtotrainyourdragon.fandom.com/wiki/"
+      ],
+      "values": {
+        "attack": 4,
+        "speed": 3,
+        "armor": 5,
+        "firepower": 30,
+        "shotLimit": 6,
+        "venom": 0,
+        "jawStrength": 0,
+        "stealth": 6
+      }
+    }
+  },
+  "media": {
+    "images": [
+      {
+        "name": "Logo",
+        "url": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/0/00/HTTYD3-Fireworm1-Transparent.png"
+      },
+      {
+        "name": "Size",
+        "url": "-"
+      }
+    ],
+    "videos": [],
+    "sounds": [
+      {
+        "name": "Roar",
+        "url": "-"
+      }
+    ]
+  },
+  "tags": [],
+  "metadata": {
+    "canonical": true,
+    "introducedIn": "Dragons: Riders of Berk",
+    "lastUpdated": "2025-12-27"
+  }
 }

@@ -11,14 +11,17 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.mealam.showdown.Constants;
-import com.mealam.showdown.loader.cache.dragons.DragonsCache;
+import com.mealam.showdown.loader.cache.dragon.DragonCache;
 import com.mealam.showdown.loader.cache.moves.MovesCache;
 import com.mealam.showdown.loader.json.CacheFactory;
-import com.mealam.showdown.loader.json.deserialize.dragons.Dragons;
-import com.mealam.showdown.loader.json.deserialize.dragons.Stats;
+import com.mealam.showdown.loader.json.deserialize.common.Measurement;
+import com.mealam.showdown.loader.json.deserialize.common.NamedResource;
+import com.mealam.showdown.loader.json.deserialize.dragon.*;
+import com.mealam.showdown.loader.json.deserialize.dragon.stats.*;
 import com.mealam.showdown.loader.json.deserialize.moves.Effect;
 import com.mealam.showdown.loader.json.deserialize.moves.EffectTarget;
 import com.mealam.showdown.loader.json.deserialize.moves.Moves;
+import com.mealam.showdown.loader.json.dragon.DragonCacheFactory;
 import com.mealam.showdown.loader.json.moves.MovesCacheFactory;
 import com.mealam.showdown.utils.json.GsonHelper;
 import com.mealam.showdown.utils.logging.BaseLogLevel;
@@ -49,8 +52,20 @@ import java.util.stream.Stream;
 public class JsonLoader {
 
 	private static final Gson DRAGONS_GSON = new GsonBuilder().setPrettyPrinting().setLenient()
-			.registerTypeAdapter(Dragons.class, Dragons.deserializer())
-			.registerTypeAdapter(Stats.class, Stats.deserializer())
+			.registerTypeAdapter(Abilities.class, Abilities.deserializer())
+			.registerTypeAdapter(Appearances.class, Appearances.deserializer())
+			.registerTypeAdapter(Biology.class, Biology.deserializer())
+			.registerTypeAdapter(Classification.class, Classification.deserializer())
+			.registerTypeAdapter(Dragon.class, Dragon.deserializer())
+			.registerTypeAdapter(DragonStats.class, DragonStats.deserializer())
+			.registerTypeAdapter(ExternalStats.class, ExternalStats.deserializer())
+			.registerTypeAdapter(ExternalValues.class, ExternalValues.deserializer())
+			.registerTypeAdapter(InternalStats.class, InternalStats.deserializer())
+			.registerTypeAdapter(Measurement.class, Measurement.deserializer())
+			.registerTypeAdapter(Media.class, Media.deserializer())
+			.registerTypeAdapter(Metadata.class, Metadata.deserializer())
+			.registerTypeAdapter(NamedResource.class, NamedResource.deserializer())
+			.registerTypeAdapter(PhysicalStats.class, PhysicalStats.deserializer())
 			.create();
 
 	private static final Gson MOVES_GSON = new GsonBuilder().setPrettyPrinting().setLenient()
@@ -59,7 +74,7 @@ public class JsonLoader {
 			.registerTypeAdapter(EffectTarget.class, EffectTarget.deserializer())
 			.create();
 
-	protected static CompletableFuture<Map<String, DragonsCache>> loadStaticDragons(Executor pBackgroundExecutor) {
+	protected static CompletableFuture<Map<String, DragonCache>> loadStaticDragons(Executor pBackgroundExecutor) {
 		return bakeGeneral(
 				pBackgroundExecutor,
 				Constants.Loader.DRAGONS_PATH,
@@ -227,8 +242,9 @@ public class JsonLoader {
 	}
 
 	@NotNull
-	protected static DragonsCache bakeDragons(String pResourceName, JsonObject pJsonObject) {
-		return DRAGONS_GSON.fromJson(pJsonObject, DragonsCache.class);
+	protected static DragonCache bakeDragons(String pResourceName, JsonObject pJsonObject) {
+		Dragon dragons = DRAGONS_GSON.fromJson(pJsonObject, Dragon.class);
+		return CacheFactory.constructWithFactory(DragonCacheFactory.INSTANCE, dragons);
 	}
 
 	@NotNull

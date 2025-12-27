@@ -1,22 +1,97 @@
 {
+  "schemaVersion": "0.0.1",
   "id": "red_death",
   "name": "Red Death",
-  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/e/e4/Red_Death_flying_%28transparent%29.png",
-  "origin": "How To Train Your Dragon",
-  "classes": [
-    "Stoker"
-  ],
-  "stats": {
-    "attack": 28,
-    "speed": 7,
-    "armor": 30,
-    "firepower": 27,
-    "shotLimit": 9,
-    "venom": 0,
-    "jawStrength": 22,
-    "stealth": 2
+  "trainable": true,
+  "classification": {
+    "class": [
+      "Stoker"
+    ],
+    "former": null,
+    "size": "-",
+    "habitat": "-"
   },
-  "learnSet": [
-  ]
+  "appearances": {
+    "movies": [],
+    "series": [],
+    "games": []
+  },
+  "biology": {
+    "diet": [],
+    "temperament": "-",
+    "fireType": [],
+    "features": [],
+    "colors": []
+  },
+  "abilities": {},
+  "physicalStats": {
+    "length": {
+      "ft": 0,
+      "meters": 0
+    },
+    "weight": {
+      "lbs": 0,
+      "kg": 0
+    },
+    "wingspan": {
+      "ft": 0,
+      "meters": 0
+    }
+  },
+  "individuals": [],
+  "subspecies": [],
+  "hybrids": [],
+  "stats": {
+    "internal": {
+      "notes": [
+        "These stats are used by the battle engine related to this api."
+      ],
+      "attack": 28,
+      "speed": 7,
+      "defense": 30,
+      "firepower": 27,
+      "stealth": 2,
+      "stamina": 0
+    },
+    "external": {
+      "notes": [
+        "These stats are from the Fandom: https://howtotrainyourdragon.fandom.com/wiki/"
+      ],
+      "values": {
+        "attack": 28,
+        "speed": 7,
+        "armor": 30,
+        "firepower": 27,
+        "shotLimit": 9,
+        "venom": 0,
+        "jawStrength": 22,
+        "stealth": 2
+      }
+    }
+  },
+  "media": {
+    "images": [
+      {
+        "name": "Logo",
+        "url": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/e/e4/Red_Death_flying_%28transparent%29.png"
+      },
+      {
+        "name": "Size",
+        "url": "-"
+      }
+    ],
+    "videos": [],
+    "sounds": [
+      {
+        "name": "Roar",
+        "url": "-"
+      }
+    ]
+  },
+  "tags": [],
+  "metadata": {
+    "canonical": true,
+    "introducedIn": "How To Train Your Dragon",
+    "lastUpdated": "2025-12-27"
+  }
 }
-

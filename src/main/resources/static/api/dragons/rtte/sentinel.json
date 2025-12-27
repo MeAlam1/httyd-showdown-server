@@ -1,21 +1,97 @@
 {
+  "schemaVersion": "0.0.1",
   "id": "sentinel",
   "name": "Sentinel",
-  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/0/07/Sentinelaa.png",
-  "origin": "Dragons: Race to the Edge",
-  "classes": [
-    "Boulder"
-  ],
-  "stats": {
-    "attack": 12,
-    "speed": 8,
-    "armor": 15,
-    "firepower": 6,
-    "shotLimit": 8,
-    "venom": 0,
-    "jawStrength": 10,
-    "stealth": 16
+  "trainable": true,
+  "classification": {
+    "class": [
+      "Boulder"
+    ],
+    "former": null,
+    "size": "-",
+    "habitat": "-"
   },
-  "learnSet": [
-  ]
+  "appearances": {
+    "movies": [],
+    "series": [],
+    "games": []
+  },
+  "biology": {
+    "diet": [],
+    "temperament": "-",
+    "fireType": [],
+    "features": [],
+    "colors": []
+  },
+  "abilities": {},
+  "physicalStats": {
+    "length": {
+      "ft": 0,
+      "meters": 0
+    },
+    "weight": {
+      "lbs": 0,
+      "kg": 0
+    },
+    "wingspan": {
+      "ft": 0,
+      "meters": 0
+    }
+  },
+  "individuals": [],
+  "subspecies": [],
+  "hybrids": [],
+  "stats": {
+    "internal": {
+      "notes": [
+        "These stats are used by the battle engine related to this api."
+      ],
+      "attack": 12,
+      "speed": 8,
+      "defense": 15,
+      "firepower": 6,
+      "stealth": 16,
+      "stamina": 0
+    },
+    "external": {
+      "notes": [
+        "These stats are from the Fandom: https://howtotrainyourdragon.fandom.com/wiki/"
+      ],
+      "values": {
+        "attack": 12,
+        "speed": 8,
+        "armor": 15,
+        "firepower": 6,
+        "shotLimit": 8,
+        "venom": 0,
+        "jawStrength": 10,
+        "stealth": 16
+      }
+    }
+  },
+  "media": {
+    "images": [
+      {
+        "name": "Logo",
+        "url": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/0/07/Sentinelaa.png"
+      },
+      {
+        "name": "Size",
+        "url": "-"
+      }
+    ],
+    "videos": [],
+    "sounds": [
+      {
+        "name": "Roar",
+        "url": "-"
+      }
+    ]
+  },
+  "tags": [],
+  "metadata": {
+    "canonical": true,
+    "introducedIn": "Dragons: Race to the Edge",
+    "lastUpdated": "2025-12-27"
+  }
 }

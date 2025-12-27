@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "0.0.1",
+  "id": "-",
+  "name": "-",
+  "trainable": true,
+  "classification": {
+    "class": [
+      "-"
+    ],
+    "former": null,
+    "size": "-",
+    "habitat": "-"
+  },
+  "appearances": {
+    "movies": [],
+    "series": [
+    ],
+    "games": [
+    ]
+  },
+  "biology": {
+    "diet": [
+    ],
+    "temperament": "-",
+    "fireType": [
+    ],
+    "features": [
+    ],
+    "colors": []
+  },
+  "abilities": {},
+  "physicalStats": {
+    "length": {
+      "ft": 0,
+      "meters": 0
+    },
+    "weight": {
+      "lbs": 0,
+      "kg": 0
+    },
+    "wingspan": {
+      "ft": 0,
+      "meters": 0
+    }
+  },
+  "individuals": [
+  ],
+  "subspecies": [
+  ],
+  "hybrids": [
+  ],
+  "stats": {
+    "internal": {
+      "notes": [
+        "These stats are used by the battle engine related to this api."
+      ],
+      "attack": 0,
+      "speed": 0,
+      "defense": 0,
+      "firepower": 0,
+      "stealth": 0,
+      "stamina": 0
+    },
+    "external": {
+      "notes": [
+        "These stats are from the Fandom: https://howtotrainyourdragon.fandom.com/wiki/"
+      ],
+      "values": {
+        "attack": 0,
+        "speed": 0,
+        "armor": 0,
+        "firepower": 0,
+        "shotLimit": 0,
+        "venom": 0,
+        "jawStrength": 0,
+        "stealth": 0
+      }
+    }
+  },
+  "media": {
+    "images": [
+      {
+        "name": "Logo",
+        "url": "-"
+      },
+      {
+        "name": "Size",
+        "url": "-"
+      }
+    ],
+    "videos": [],
+    "sounds": [
+      {
+        "name": "Roar",
+        "url": "-"
+      }
+    ]
+  },
+  "tags": [
+  ],
+  "metadata": {
+    "canonical": true,
+    "introducedIn": "-",
+    "lastUpdated": "2025-12-27"
+  }
+}

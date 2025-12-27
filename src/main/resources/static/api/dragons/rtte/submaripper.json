@@ -1,22 +1,98 @@
 {
+  "schemaVersion": "0.0.1",
   "id": "submaripper",
   "name": "Submaripper",
-  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/9/96/Submaripper_Render.png",
-  "origin": "Dragons: Race to the Edge",
-  "classes": [
-    "Tracker",
-    "Tidal"
-  ],
-  "stats": {
-    "attack": 20,
-    "speed": 16,
-    "armor": 14,
-    "firepower": 0,
-    "shotLimit": 0,
-    "venom": 0,
-    "jawStrength": 30,
-    "stealth": 12
+  "trainable": true,
+  "classification": {
+    "class": [
+      "Tracker",
+      "Tidal"
+    ],
+    "former": null,
+    "size": "-",
+    "habitat": "-"
   },
-  "learnSet": [
-  ]
+  "appearances": {
+    "movies": [],
+    "series": [],
+    "games": []
+  },
+  "biology": {
+    "diet": [],
+    "temperament": "-",
+    "fireType": [],
+    "features": [],
+    "colors": []
+  },
+  "abilities": {},
+  "physicalStats": {
+    "length": {
+      "ft": 0,
+      "meters": 0
+    },
+    "weight": {
+      "lbs": 0,
+      "kg": 0
+    },
+    "wingspan": {
+      "ft": 0,
+      "meters": 0
+    }
+  },
+  "individuals": [],
+  "subspecies": [],
+  "hybrids": [],
+  "stats": {
+    "internal": {
+      "notes": [
+        "These stats are used by the battle engine related to this api."
+      ],
+      "attack": 20,
+      "speed": 16,
+      "defense": 14,
+      "firepower": 0,
+      "stealth": 12,
+      "stamina": 0
+    },
+    "external": {
+      "notes": [
+        "These stats are from the Fandom: https://howtotrainyourdragon.fandom.com/wiki/"
+      ],
+      "values": {
+        "attack": 20,
+        "speed": 16,
+        "armor": 14,
+        "firepower": 0,
+        "shotLimit": 0,
+        "venom": 0,
+        "jawStrength": 30,
+        "stealth": 12
+      }
+    }
+  },
+  "media": {
+    "images": [
+      {
+        "name": "Logo",
+        "url": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/9/96/Submaripper_Render.png"
+      },
+      {
+        "name": "Size",
+        "url": "-"
+      }
+    ],
+    "videos": [],
+    "sounds": [
+      {
+        "name": "Roar",
+        "url": "-"
+      }
+    ]
+  },
+  "tags": [],
+  "metadata": {
+    "canonical": true,
+    "introducedIn": "Dragons: Race to the Edge",
+    "lastUpdated": "2025-12-27"
+  }
 }

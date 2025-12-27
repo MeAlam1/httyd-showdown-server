@@ -1,0 +1,48 @@
+package com.mealam.showdown.loader.cache.dragon;
+
+import com.mealam.showdown.loader.cache.dragon.stats.DragonStatsCache;
+import com.mealam.showdown.loader.cache.dragon.stats.PhysicalStatsCache;
+import com.mealam.showdown.loader.json.deserialize.dragon.Dragon;
+
+import java.util.List;
+
+public record DragonCache(
+		String schemaVersion,
+		String id,
+		String name,
+		boolean trainable,
+		ClassificationCache classification,
+		AppearancesCache appearances,
+		BiologyCache biology,
+		AbilitiesCache abilities,
+		PhysicalStatsCache physicalStats,
+		List<String> individuals,
+		List<String> subspecies,
+		List<String> hybrids,
+		DragonStatsCache stats,
+		MediaCache media,
+		List<String> tags,
+		MetadataCache metadata
+) {
+
+	public static DragonCache construct(Dragon pSource) {
+		return new DragonCache(
+				pSource.schemaVersion(),
+				pSource.id(),
+				pSource.name(),
+				pSource.trainable(),
+				ClassificationCache.construct(pSource.classification()),
+				AppearancesCache.construct(pSource.appearances()),
+				BiologyCache.construct(pSource.biology()),
+				AbilitiesCache.construct(pSource.abilities()),
+				PhysicalStatsCache.construct(pSource.physicalStats()),
+				pSource.individuals(),
+				pSource.subspecies(),
+				pSource.hybrids(),
+				DragonStatsCache.construct(pSource.stats()),
+				MediaCache.construct(pSource.media()),
+				pSource.tags(),
+				MetadataCache.construct(pSource.metadata())
+		);
+	}
+}

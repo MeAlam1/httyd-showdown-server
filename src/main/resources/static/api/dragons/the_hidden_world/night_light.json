@@ -1,21 +1,97 @@
 {
+  "schemaVersion": "0.0.1",
   "id": "night_light",
   "name": "Night Light",
-  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/3/30/THW-Night_Lights-Transparent.png",
-  "origin": "The Hidden World",
-  "classes": [
-    "Strike"
-  ],
-  "stats": {
-    "attack": 15,
-    "speed": 20,
-    "armor": 18,
-    "firepower": 14,
-    "shotLimit": 6,
-    "venom": 0,
-    "jawStrength": 6,
-    "stealth": 18
+  "trainable": true,
+  "classification": {
+    "class": [
+      "Strike"
+    ],
+    "former": null,
+    "size": "-",
+    "habitat": "-"
   },
-  "learnSet": [
-  ]
+  "appearances": {
+    "movies": [],
+    "series": [],
+    "games": []
+  },
+  "biology": {
+    "diet": [],
+    "temperament": "-",
+    "fireType": [],
+    "features": [],
+    "colors": []
+  },
+  "abilities": {},
+  "physicalStats": {
+    "length": {
+      "ft": 0,
+      "meters": 0
+    },
+    "weight": {
+      "lbs": 0,
+      "kg": 0
+    },
+    "wingspan": {
+      "ft": 0,
+      "meters": 0
+    }
+  },
+  "individuals": [],
+  "subspecies": [],
+  "hybrids": [],
+  "stats": {
+    "internal": {
+      "notes": [
+        "These stats are used by the battle engine related to this api."
+      ],
+      "attack": 15,
+      "speed": 20,
+      "defense": 18,
+      "firepower": 14,
+      "stealth": 18,
+      "stamina": 0
+    },
+    "external": {
+      "notes": [
+        "These stats are from the Fandom: https://howtotrainyourdragon.fandom.com/wiki/"
+      ],
+      "values": {
+        "attack": 15,
+        "speed": 20,
+        "armor": 18,
+        "firepower": 14,
+        "shotLimit": 6,
+        "venom": 0,
+        "jawStrength": 6,
+        "stealth": 18
+      }
+    }
+  },
+  "media": {
+    "images": [
+      {
+        "name": "Logo",
+        "url": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/3/30/THW-Night_Lights-Transparent.png"
+      },
+      {
+        "name": "Size",
+        "url": "-"
+      }
+    ],
+    "videos": [],
+    "sounds": [
+      {
+        "name": "Roar",
+        "url": "-"
+      }
+    ]
+  },
+  "tags": [],
+  "metadata": {
+    "canonical": true,
+    "introducedIn": "The Hidden World",
+    "lastUpdated": "2025-12-27"
+  }
 }

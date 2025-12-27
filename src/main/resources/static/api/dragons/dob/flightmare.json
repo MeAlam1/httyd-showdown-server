@@ -1,21 +1,133 @@
 {
+  "schemaVersion": "0.0.1",
   "id": "flightmare",
   "name": "Flightmare",
-  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/3/31/Flightmare_infobox.png",
-  "origin": "Dragons: Defenders of Berk",
-  "classes": [
-    "Mystery"
+  "trainable": true,
+  "classification": {
+    "class": [
+      "Mystery"
+    ],
+    "former": "Fear",
+    "size": "Medium",
+    "habitat": "Rivers"
+  },
+  "appearances": {
+    "movies": [],
+    "series": [
+      "Dragons: Defenders of Berk",
+      "Dragons: Race to the Edge Season 2",
+      "Dragons: Race to the Edge Season 3"
+    ],
+    "games": [
+      "School of Dragons"
+    ]
+  },
+  "biology": {
+    "diet": [
+      "Fish",
+      "Algae"
+    ],
+    "temperament": "Aggressive",
+    "fireType": [
+      "Paralyzing toxic mist",
+      "Green acid blasts"
+    ],
+    "features": [
+      "Wing tendrils",
+      "Split tail",
+      "Translucent wings",
+      "Barbells",
+      "Ghostlike glow"
+    ],
+    "colors": []
+  },
+  "abilities": {},
+  "physicalStats": {
+    "length": {
+      "ft": 30,
+      "meters": 9.14
+    },
+    "weight": {
+      "lbs": 600,
+      "kg": 272.2
+    },
+    "wingspan": {
+      "ft": 50,
+      "meters": 15.24
+    }
+  },
+  "individuals": [
+    "Hofferson's Bane",
+    "Viggo's Flightmare",
+    "Trancemare",
+    "Skystreaker",
+    "Exotic Flightmare",
+    "Flaredawn",
+    "Blooming Boo",
+    "Titan Wing Flightmare of Forbidden Isles"
+  ],
+  "subspecies": [
+    "Summershine"
+  ],
+  "hybrids": [
+    "Dreadstrider",
+    "Frostmare"
   ],
   "stats": {
-    "attack": 10,
-    "speed": 8,
-    "armor": 4,
-    "firepower": 7,
-    "shotLimit": 4,
-    "venom": 10,
-    "jawStrength": 4,
-    "stealth": 7
+    "internal": {
+      "notes": [
+        "These stats are used by the battle engine related to this api."
+      ],
+      "attack": 10,
+      "speed": 8,
+      "defense": 4,
+      "firepower": 7,
+      "stealth": 7,
+      "stamina": 6
+    },
+    "external": {
+      "notes": [
+        "These stats are from the Fandom: https://howtotrainyourdragon.fandom.com/wiki/"
+      ],
+      "values": {
+        "attack": 10,
+        "speed": 8,
+        "armor": 4,
+        "firepower": 7,
+        "shotLimit": 4,
+        "venom": 10,
+        "jawStrength": 4,
+        "stealth": 7
+      }
+    }
   },
-  "learnSet": [
-  ]
+  "media": {
+    "images": [
+      {
+        "name": "Logo",
+        "url": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/3/31/Flightmare_infobox.png"
+      },
+      {
+        "name": "Size",
+        "url": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/c/c6/Flightmaresize.png"
+      }
+    ],
+    "videos": [],
+    "sounds": [
+      {
+        "name": "Roar",
+        "url": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/a/ac/FlightmareRoar.ogg"
+      }
+    ]
+  },
+  "tags": [
+    "bioluminescent",
+    "toxic",
+    "paralysis"
+  ],
+  "metadata": {
+    "canonical": true,
+    "introducedIn": "Dragons: Defenders of Berk",
+    "lastUpdated": "2025-12-27"
+  }
 }

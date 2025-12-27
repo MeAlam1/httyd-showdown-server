@@ -1,21 +1,97 @@
 {
+  "schemaVersion": "0.0.1",
   "id": "rumblehorn",
   "name": "Rumblehorn",
-  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/d/df/1481798442360.png",
-  "origin": "Dragons: Race to the Edge",
-  "classes": [
-    "Tracker"
-  ],
-  "stats": {
-    "attack": 11,
-    "speed": 7,
-    "armor": 12,
-    "firepower": 22,
-    "shotLimit": 4,
-    "venom": 0,
-    "jawStrength": 5,
-    "stealth": 6
+  "trainable": true,
+  "classification": {
+    "class": [
+      "Tracker"
+    ],
+    "former": null,
+    "size": "-",
+    "habitat": "-"
   },
-  "learnSet": [
-  ]
+  "appearances": {
+    "movies": [],
+    "series": [],
+    "games": []
+  },
+  "biology": {
+    "diet": [],
+    "temperament": "-",
+    "fireType": [],
+    "features": [],
+    "colors": []
+  },
+  "abilities": {},
+  "physicalStats": {
+    "length": {
+      "ft": 0,
+      "meters": 0
+    },
+    "weight": {
+      "lbs": 0,
+      "kg": 0
+    },
+    "wingspan": {
+      "ft": 0,
+      "meters": 0
+    }
+  },
+  "individuals": [],
+  "subspecies": [],
+  "hybrids": [],
+  "stats": {
+    "internal": {
+      "notes": [
+        "These stats are used by the battle engine related to this api."
+      ],
+      "attack": 11,
+      "speed": 7,
+      "defense": 12,
+      "firepower": 22,
+      "stealth": 6,
+      "stamina": 0
+    },
+    "external": {
+      "notes": [
+        "These stats are from the Fandom: https://howtotrainyourdragon.fandom.com/wiki/"
+      ],
+      "values": {
+        "attack": 11,
+        "speed": 7,
+        "armor": 12,
+        "firepower": 22,
+        "shotLimit": 4,
+        "venom": 0,
+        "jawStrength": 5,
+        "stealth": 6
+      }
+    }
+  },
+  "media": {
+    "images": [
+      {
+        "name": "Logo",
+        "url": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/d/df/1481798442360.png"
+      },
+      {
+        "name": "Size",
+        "url": "-"
+      }
+    ],
+    "videos": [],
+    "sounds": [
+      {
+        "name": "Roar",
+        "url": "-"
+      }
+    ]
+  },
+  "tags": [],
+  "metadata": {
+    "canonical": true,
+    "introducedIn": "Dragons: Race to the Edge",
+    "lastUpdated": "2025-12-27"
+  }
 }

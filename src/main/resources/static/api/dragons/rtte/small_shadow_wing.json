@@ -1,21 +1,97 @@
 {
+  "schemaVersion": "0.0.1",
   "id": "small_shadow_wing",
   "name": "Small Shadow Wing",
-  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/2/21/Small_Shadow_Render.png",
-  "origin": "Dragons: Race to the Edge",
-  "classes": [
-    "Stoker"
-  ],
-  "stats": {
-    "attack": 25,
-    "speed": 14,
-    "armor": 15,
-    "firepower": 18,
-    "shotLimit": 60,
-    "venom": 0,
-    "jawStrength": 12,
-    "stealth": 4
+  "trainable": true,
+  "classification": {
+    "class": [
+      "Stoker"
+    ],
+    "former": null,
+    "size": "-",
+    "habitat": "-"
   },
-  "learnSet": [
-  ]
+  "appearances": {
+    "movies": [],
+    "series": [],
+    "games": []
+  },
+  "biology": {
+    "diet": [],
+    "temperament": "-",
+    "fireType": [],
+    "features": [],
+    "colors": []
+  },
+  "abilities": {},
+  "physicalStats": {
+    "length": {
+      "ft": 0,
+      "meters": 0
+    },
+    "weight": {
+      "lbs": 0,
+      "kg": 0
+    },
+    "wingspan": {
+      "ft": 0,
+      "meters": 0
+    }
+  },
+  "individuals": [],
+  "subspecies": [],
+  "hybrids": [],
+  "stats": {
+    "internal": {
+      "notes": [
+        "These stats are used by the battle engine related to this api."
+      ],
+      "attack": 25,
+      "speed": 14,
+      "defense": 15,
+      "firepower": 18,
+      "stealth": 4,
+      "stamina": 0
+    },
+    "external": {
+      "notes": [
+        "These stats are from the Fandom: https://howtotrainyourdragon.fandom.com/wiki/"
+      ],
+      "values": {
+        "attack": 25,
+        "speed": 14,
+        "armor": 15,
+        "firepower": 18,
+        "shotLimit": 60,
+        "venom": 0,
+        "jawStrength": 12,
+        "stealth": 4
+      }
+    }
+  },
+  "media": {
+    "images": [
+      {
+        "name": "Logo",
+        "url": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/2/21/Small_Shadow_Render.png"
+      },
+      {
+        "name": "Size",
+        "url": "-"
+      }
+    ],
+    "videos": [],
+    "sounds": [
+      {
+        "name": "Roar",
+        "url": "-"
+      }
+    ]
+  },
+  "tags": [],
+  "metadata": {
+    "canonical": true,
+    "introducedIn": "Dragons: Race to the Edge",
+    "lastUpdated": "2025-12-27"
+  }
 }

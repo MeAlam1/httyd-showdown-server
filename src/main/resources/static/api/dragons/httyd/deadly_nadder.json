@@ -1,21 +1,97 @@
 {
+  "schemaVersion": "0.0.1",
   "id": "deadly_nadder",
   "name": "Deadly Nadder",
-  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/d/dd/NADDER.png",
-  "origin": "How To Train Your Dragon",
-  "classes": [
-    "Tracker"
-  ],
-  "stats": {
-    "attack": 10,
-    "speed": 8,
-    "armor": 16,
-    "firepower": 18,
-    "shotLimit": 6,
-    "venom": 16,
-    "jawStrength": 5,
-    "stealth": 10
+  "trainable": true,
+  "classification": {
+    "class": [
+      "Tracker"
+    ],
+    "former": null,
+    "size": "-",
+    "habitat": "-"
   },
-  "learnSet": [
-  ]
+  "appearances": {
+    "movies": [],
+    "series": [],
+    "games": []
+  },
+  "biology": {
+    "diet": [],
+    "temperament": "-",
+    "fireType": [],
+    "features": [],
+    "colors": []
+  },
+  "abilities": {},
+  "physicalStats": {
+    "length": {
+      "ft": 0,
+      "meters": 0
+    },
+    "weight": {
+      "lbs": 0,
+      "kg": 0
+    },
+    "wingspan": {
+      "ft": 0,
+      "meters": 0
+    }
+  },
+  "individuals": [],
+  "subspecies": [],
+  "hybrids": [],
+  "stats": {
+    "internal": {
+      "notes": [
+        "These stats are used by the battle engine related to this api."
+      ],
+      "attack": 10,
+      "speed": 8,
+      "defense": 16,
+      "firepower": 18,
+      "stealth": 10,
+      "stamina": 0
+    },
+    "external": {
+      "notes": [
+        "These stats are from the Fandom: https://howtotrainyourdragon.fandom.com/wiki/"
+      ],
+      "values": {
+        "attack": 10,
+        "speed": 8,
+        "armor": 16,
+        "firepower": 18,
+        "shotLimit": 6,
+        "venom": 16,
+        "jawStrength": 5,
+        "stealth": 10
+      }
+    }
+  },
+  "media": {
+    "images": [
+      {
+        "name": "Logo",
+        "url": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/d/dd/NADDER.png"
+      },
+      {
+        "name": "Size",
+        "url": "-"
+      }
+    ],
+    "videos": [],
+    "sounds": [
+      {
+        "name": "Roar",
+        "url": "-"
+      }
+    ]
+  },
+  "tags": [],
+  "metadata": {
+    "canonical": true,
+    "introducedIn": "How To Train Your Dragon",
+    "lastUpdated": "2025-12-27"
+  }
 }

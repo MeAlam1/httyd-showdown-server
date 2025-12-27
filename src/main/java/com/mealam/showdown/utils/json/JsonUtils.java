@@ -3,16 +3,19 @@ package com.mealam.showdown.utils.json;
 import com.google.gson.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings({ "unused" })
+@SuppressWarnings({"unused"})
 public final class JsonUtils {
 
-	private JsonUtils() {}
+	private JsonUtils() {
+	}
 
 	public static List<Float> jsonArrayToFloatList(@Nullable JsonArray pArray) throws JsonParseException {
 		if (pArray == null)
@@ -112,43 +115,47 @@ public final class JsonUtils {
 		return map;
 	}
 
+	private static boolean hasNonNull(JsonObject pObj, String pElementName) {
+		return pObj.has(pElementName) && !pObj.get(pElementName).isJsonNull();
+	}
+
 	@Nullable
 	public static Long getOptionalLong(JsonObject pObj, String pElementName) {
-		return pObj.has(pElementName) ? GsonHelper.getAsLong(pObj, pElementName) : null;
+		return hasNonNull(pObj, pElementName) ? GsonHelper.getAsLong(pObj, pElementName) : null;
 	}
 
 	@Nullable
 	public static Boolean getOptionalBoolean(JsonObject pObj, String pElementName) {
-		return pObj.has(pElementName) ? GsonHelper.getAsBoolean(pObj, pElementName) : null;
+		return hasNonNull(pObj, pElementName) ? GsonHelper.getAsBoolean(pObj, pElementName) : null;
 	}
 
 	@Nullable
 	public static Float getOptionalFloat(JsonObject pObj, String pElementName) {
-		return pObj.has(pElementName) ? GsonHelper.getAsFloat(pObj, pElementName) : null;
+		return hasNonNull(pObj, pElementName) ? GsonHelper.getAsFloat(pObj, pElementName) : null;
 	}
 
 	@Nullable
 	public static Double getOptionalDouble(JsonObject pObj, String pElementName) {
-		return pObj.has(pElementName) ? GsonHelper.getAsDouble(pObj, pElementName) : null;
+		return hasNonNull(pObj, pElementName) ? GsonHelper.getAsDouble(pObj, pElementName) : null;
 	}
 
 	@Nullable
 	public static Integer getOptionalInteger(JsonObject pObj, String pElementName) {
-		return pObj.has(pElementName) ? GsonHelper.getAsInt(pObj, pElementName) : null;
+		return hasNonNull(pObj, pElementName) ? GsonHelper.getAsInt(pObj, pElementName) : null;
 	}
 
 	@Nullable
 	public static String getOptionalString(JsonObject pObj, String pElementName) {
-		return pObj.has(pElementName) ? GsonHelper.getAsString(pObj, pElementName) : null;
+		return hasNonNull(pObj, pElementName) ? GsonHelper.getAsString(pObj, pElementName) : null;
 	}
 
 	@Nullable
 	public static <T> T getOptionalObject(JsonObject pObj, String pElementName, JsonDeserializationContext pContext, Class<T> pType) {
-		return pObj.has(pElementName) ? GsonHelper.getAsObject(pObj, pElementName, pContext, pType) : null;
+		return hasNonNull(pObj, pElementName) ? GsonHelper.getAsObject(pObj, pElementName, pContext, pType) : null;
 	}
 
 	@Nullable
 	public static JsonArray getOptionalJsonArray(JsonObject pObj, String pElementName) {
-		return pObj.has(pElementName) ? GsonHelper.getAsJsonArray(pObj, pElementName) : null;
+		return hasNonNull(pObj, pElementName) ? GsonHelper.getAsJsonArray(pObj, pElementName) : null;
 	}
 }

@@ -1,21 +1,97 @@
 {
+  "schemaVersion": "0.0.1",
   "id": "razorwhip",
   "name": "Razorwhip",
-  "image": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/5/53/Sisalladura.png",
-  "origin": "Dragons: Race to the Edge",
-  "classes": [
-    "Sharp"
-  ],
-  "stats": {
-    "attack": 18,
-    "speed": 18,
-    "armor": 32,
-    "firepower": 12,
-    "shotLimit": 10,
-    "venom": 8,
-    "jawStrength": 7,
-    "stealth": 5
+  "trainable": true,
+  "classification": {
+    "class": [
+      "Sharp"
+    ],
+    "former": null,
+    "size": "-",
+    "habitat": "-"
   },
-  "learnSet": [
-  ]
+  "appearances": {
+    "movies": [],
+    "series": [],
+    "games": []
+  },
+  "biology": {
+    "diet": [],
+    "temperament": "-",
+    "fireType": [],
+    "features": [],
+    "colors": []
+  },
+  "abilities": {},
+  "physicalStats": {
+    "length": {
+      "ft": 0,
+      "meters": 0
+    },
+    "weight": {
+      "lbs": 0,
+      "kg": 0
+    },
+    "wingspan": {
+      "ft": 0,
+      "meters": 0
+    }
+  },
+  "individuals": [],
+  "subspecies": [],
+  "hybrids": [],
+  "stats": {
+    "internal": {
+      "notes": [
+        "These stats are used by the battle engine related to this api."
+      ],
+      "attack": 18,
+      "speed": 18,
+      "defense": 32,
+      "firepower": 12,
+      "stealth": 5,
+      "stamina": 0
+    },
+    "external": {
+      "notes": [
+        "These stats are from the Fandom: https://howtotrainyourdragon.fandom.com/wiki/"
+      ],
+      "values": {
+        "attack": 18,
+        "speed": 18,
+        "armor": 32,
+        "firepower": 12,
+        "shotLimit": 10,
+        "venom": 8,
+        "jawStrength": 7,
+        "stealth": 5
+      }
+    }
+  },
+  "media": {
+    "images": [
+      {
+        "name": "Logo",
+        "url": "https://static.wikia.nocookie.net/howtotrainyourdragon/images/5/53/Sisalladura.png"
+      },
+      {
+        "name": "Size",
+        "url": "-"
+      }
+    ],
+    "videos": [],
+    "sounds": [
+      {
+        "name": "Roar",
+        "url": "-"
+      }
+    ]
+  },
+  "tags": [],
+  "metadata": {
+    "canonical": true,
+    "introducedIn": "Dragons: Race to the Edge",
+    "lastUpdated": "2025-12-27"
+  }
 }
