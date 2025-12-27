@@ -1,20 +1,19 @@
-package com.mealam.showdown.teambuilder.http;
+package com.mealam.showdown.team.http;
 
-import com.mealam.showdown.teambuilder.api.TeamBuilderService;
-import com.mealam.showdown.teambuilder.data.TeamId;
-import com.mealam.showdown.teambuilder.dto.request.CreateTeamRequest;
-import com.mealam.showdown.teambuilder.dto.request.UpdateTeamRequest;
-import com.mealam.showdown.teambuilder.dto.response.TeamResponse;
+import com.mealam.showdown.team.api.TeamService;
+import com.mealam.showdown.team.data.TeamId;
+import com.mealam.showdown.team.dto.request.CreateTeamRequest;
+import com.mealam.showdown.team.dto.response.TeamResponse;
 import com.mealam.showdown.utils.http.ResponseUtils;
 import com.mealam.showdown.utils.logging.BaseLogLevel;
 import com.mealam.showdown.utils.logging.BaseLogger;
 import io.javalin.http.Context;
 
-public class TeamBuilderController {
+public class TeamController {
 
-	private final TeamBuilderService service;
+	private final TeamService service;
 
-	public TeamBuilderController(TeamBuilderService pService) {
+	public TeamController(TeamService pService) {
 		this.service = pService;
 	}
 
@@ -45,35 +44,6 @@ public class TeamBuilderController {
 		} catch (Exception ex) {
 			BaseLogger.log(BaseLogLevel.ERROR, "Error retrieving team", ex);
 			ResponseUtils.serverError(pContext, "Internal server error", "team_get_error");
-		}
-	}
-
-	public void listTeams(Context pContext) {
-		try {
-			var ownerId = pContext.queryParam("ownerId");
-			var teams = service.listTeams(ownerId);
-			ResponseUtils.ok(pContext, teams);
-		} catch (Exception ex) {
-			BaseLogger.log(BaseLogLevel.ERROR, "Error listing teams", ex);
-			ResponseUtils.serverError(pContext, "Internal server error", "team_list_error");
-		}
-	}
-
-	public void updateTeam(Context pContext) {
-		try {
-			var id = TeamId.parse(pContext.pathParam("id"));
-			var req = pContext.bodyAsClass(UpdateTeamRequest.class);
-			var team = service.updateTeam(id, req);
-			if (team == null) {
-				ResponseUtils.notFound(pContext, "Team not found", "team_not_found");
-				return;
-			}
-			ResponseUtils.ok(pContext, new TeamResponse(team));
-		} catch (IllegalArgumentException ex) {
-			ResponseUtils.badRequest(pContext, ex.getMessage(), "team_update_invalid");
-		} catch (Exception ex) {
-			BaseLogger.log(BaseLogLevel.ERROR, "Error updating team", ex);
-			ResponseUtils.serverError(pContext, "Internal server error", "team_update_error");
 		}
 	}
 

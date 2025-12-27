@@ -1,4 +1,4 @@
-package com.mealam.showdown.teambuilder.data;
+package com.mealam.showdown.team.data;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.mealam.showdown.data.BaseId;
