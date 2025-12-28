@@ -17,6 +17,20 @@ public final class JsonUtils {
 	private JsonUtils() {
 	}
 
+	public static String createJsonMessage(String pKey, String pValue) {
+		return String.format("{\"%s\":\"%s\"}", escapeJson(pKey), escapeJson(pValue));
+	}
+
+	public static String escapeJson(String pInput) {
+		if (pInput == null) return "";
+		return pInput
+				.replace("\\", "\\\\")
+				.replace("\"", "\\\"")
+				.replace("\n", "\\n")
+				.replace("\r", "\\r")
+				.replace("\t", "\\t");
+	}
+
 	public static List<Float> jsonArrayToFloatList(@Nullable JsonArray pArray) throws JsonParseException {
 		if (pArray == null)
 			return new ArrayList<>();
