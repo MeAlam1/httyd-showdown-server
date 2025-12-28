@@ -4,7 +4,6 @@ import com.mealam.showdown.battle.data.BattleId;
 import com.mealam.showdown.battle.data.Phase;
 import com.mealam.showdown.battle.data.TeamId;
 import com.mealam.showdown.user.data.UserId;
-import com.mealam.showdown.utils.types.ListUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -23,12 +22,16 @@ public record BattleContext(
 		Map<TeamId, List<UserId>> mutableTeams = new LinkedHashMap<>();
 		if (teams != null) {
 			teams.forEach((teamId, playerIds) ->
-					mutableTeams.put(teamId, ListUtils.safeUnmodifiableList(playerIds))
+					mutableTeams.put(teamId, List.copyOf(playerIds == null ? List.of() : playerIds))
 			);
 		}
 		teams = Collections.unmodifiableMap(mutableTeams);
-		spectatorIds = ListUtils.safeUnmodifiableList(spectatorIds);
-		turnHistory = turnHistory == null ? List.of() : ListUtils.safeUnmodifiableList(new ArrayList<>(turnHistory));
+		spectatorIds = spectatorIds == null
+				? List.of()
+				: List.copyOf(spectatorIds);
+		turnHistory = turnHistory == null
+				? List.of()
+				: List.copyOf(turnHistory);
 	}
 
 	public List<UserId> getAllPlayerIds() {
