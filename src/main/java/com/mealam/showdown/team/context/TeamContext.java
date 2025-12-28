@@ -8,10 +8,12 @@ public record TeamContext(
 		TeamId teamId,
 		String name,
 		List<String> dragonIds
+		//List<DragonContext> dragons
 ) {
 	public TeamContext {
 		dragonIds = dragonIds == null
 				? List.of()
 				: List.copyOf(dragonIds);
+		//dragons = dragons == null ? List.of() : List.copyOf(dragons);
 	}
 }
