@@ -9,6 +9,7 @@ import com.mealam.showdown.team.dto.request.CreateTeamRequest;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -71,8 +72,32 @@ public class DefaultTeamService implements TeamService {
 			throw new IllegalStateException("Dragon cache is not loaded");
 		}
 
+		Set<String> allowed = new LinkedHashSet<>();
+		for (String key : dragons.keySet()) {
+			if (key == null) continue;
+			String k = key.trim();
+			if (k.isEmpty()) continue;
+
+			allowed.add(k);
+			allowed.add(k.toLowerCase(Locale.ROOT));
+
+			int slash = k.lastIndexOf('/');
+			if (slash >= 0 && slash + 1 < k.length()) {
+				String shortId = k.substring(slash + 1).trim();
+				if (!shortId.isEmpty()) {
+					allowed.add(shortId);
+					allowed.add(shortId.toLowerCase(Locale.ROOT));
+				}
+			}
+		}
+
 		for (String dragonId : pDragonIds) {
-			if (!dragons.containsKey(dragonId)) {
+			if (dragonId == null) continue;
+			String raw = dragonId.trim();
+			if (raw.isEmpty()) continue;
+
+			String lower = raw.toLowerCase(Locale.ROOT);
+			if (!allowed.contains(raw) && !allowed.contains(lower)) {
 				throw new IllegalArgumentException("Unknown dragonId: " + dragonId);
 			}
 		}
