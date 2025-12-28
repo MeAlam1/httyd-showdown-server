@@ -2,11 +2,6 @@ package com.mealam.showdown.team.context.dragon;
 
 import java.util.Map;
 
-/**
- * TE - Training Effort | Pokemon = EVs
- *
- * @param values
- */
 public record TrainingEffortContext(
 		Map<String, Integer> values
 ) {

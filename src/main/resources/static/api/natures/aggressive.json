@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "0.0.1",
+  "id": "aggressive",
+  "name": "Aggressive",
+  "description": "Prefers direct confrontation at the cost of endurance.",
+  "type": "behavioral",
+  "tags": [
+    "offensive",
+    "melee-focus",
+    "high-risk"
+  ],
+  "statMultipliers": {
+    "attack": 1.1,
+    "stamina": 0.9,
+    "defense": 0.95,
+    "critChance": 1.05,
+    "speed": 1.02
+  },
+  "growthCurves": {
+    "attack": "linear",
+    "stamina": "diminishing",
+    "critChance": "logarithmic"
+  },
+  "passiveEffects": [
+    {
+      "effectId": "damage_on_charge",
+      "parameters": {
+        "multiplier": 0.05,
+        "appliesTo": "initialHit"
+      }
+    }
+  ],
+  "metadata": {
+    "introducedIn": "1.0.0",
+    "lastUpdated": "2025-12-28"
+  }
+}
+  

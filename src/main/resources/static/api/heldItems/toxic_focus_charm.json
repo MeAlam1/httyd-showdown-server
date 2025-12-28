@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "0.0.1",
+  "id": "toxic_focus_charm",
+  "name": "Toxic Focus Charm",
+  "description": "Enhances the effectiveness of toxin-based attacks.",
+  "icon": "icons/items/toxic_focus_charm.png",
+  "effects": [
+    {
+      "effectId": "boost_elemental_damage",
+      "parameters": {
+        "element": "toxin",
+        "multiplier": 1.2,
+        "durationSeconds": null,
+        "appliesTo": [
+          "abilities",
+          "basicAttacks",
+          "itemSkills"
+        ]
+      }
+    },
+    {
+      "effectId": "apply_status_chance_bonus",
+      "parameters": {
+        "status": "paralysis",
+        "bonusChance": 0.15,
+        "maxStacks": 3,
+        "stackBehavior": "additive"
+      }
+    },
+    {
+      "effectId": "increase_status_duration",
+      "parameters": {
+        "status": "toxin",
+        "multiplier": 1.25,
+        "capSeconds": 10
+      }
+    },
+    {
+      "effectId": "on_crit_apply_toxin",
+      "parameters": {
+        "status": "toxin",
+        "chance": 0.05,
+        "durationSeconds": 4
+      }
+    }
+  ],
+  "conditions": {
+    "requiresTags": [
+      "toxic",
+      "venomous"
+    ],
+    "blockedIf": {
+      "dragonSize": "Small"
+    },
+    "minLevel": 8
+  },
+  "metadata": {
+    "introducedIn": "1.0.0",
+    "lastUpdated": "2025-12-28"
+  }
+}

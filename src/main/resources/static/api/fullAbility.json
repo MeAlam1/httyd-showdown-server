@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "0.0.1",
+  "id": "paralyzing_mist",
+  "name": "Paralyzing Mist",
+  "description": "Releases a toxic mist that can immobilize enemies.",
+  "type": "active",
+  "target": "enemy",
+  "effects": [
+    {
+      "effectId": "area_status_effect",
+      "parameters": {
+        "status": "paralysis",
+        "durationSeconds": 6,
+        "radiusMeters": 8,
+        "chance": 0.75,
+        "maxStacks": 1,
+        "stackBehavior": "refresh",
+        "resistType": "statusResistance"
+      }
+    }
+  ],
+  "scaling": {
+    "withStat": "firepower",
+    "multiplier": 0.1,
+    "perLevelMultiplier": 0.02,
+    "maxMultiplier": 2.0,
+    "capAtLevel": 50
+  },
+  "conditions": {
+    "blockedIn": [
+      "rain"
+    ],
+    "requiresTagOnCaster": [
+      "toxic",
+      "venomous"
+    ],
+    "requiresItems": [
+      {
+        "itemId": "toxin_canister",
+        "consume": false
+      }
+    ]
+  },
+  "metadata": {
+    "introducedIn": "1.0.0",
+    "lastUpdated": "2025-12-28"
+  }
+}
