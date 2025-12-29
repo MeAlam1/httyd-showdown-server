@@ -7,13 +7,13 @@ import java.util.List;
 public record TeamContext(
 		TeamId teamId,
 		String name,
-		List<String> dragonIds
-		//List<DragonContext> dragons
+		//List<String> dragonIds
+		List<DragonContext> dragons
 ) {
 	public TeamContext {
-		dragonIds = dragonIds == null
+		/*dragonIds = dragonIds == null
 				? List.of()
-				: List.copyOf(dragonIds);
-		//dragons = dragons == null ? List.of() : List.copyOf(dragons);
+				: List.copyOf(dragonIds);*/
+		dragons = dragons == null ? List.of() : List.copyOf(dragons);
 	}
 }

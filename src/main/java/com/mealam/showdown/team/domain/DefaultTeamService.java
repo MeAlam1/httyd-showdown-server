@@ -4,15 +4,19 @@ import com.mealam.showdown.loader.cache.ResourceCache;
 import com.mealam.showdown.team.api.TeamRepository;
 import com.mealam.showdown.team.api.TeamService;
 import com.mealam.showdown.team.context.TeamContext;
+import com.mealam.showdown.team.context.DragonContext;
+import com.mealam.showdown.team.factory.DragonContextBuilder;
+import com.mealam.showdown.team.factory.TeamContextBuilder;
 import com.mealam.showdown.team.data.TeamId;
 import com.mealam.showdown.team.dto.request.CreateTeamRequest;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class DefaultTeamService implements TeamService {
 
@@ -21,7 +25,7 @@ public class DefaultTeamService implements TeamService {
 	private final TeamRepository repo;
 
 	public DefaultTeamService(TeamRepository pRepo) {
-		this.repo = Objects.requireNonNull(pRepo, "PartyRepository is required");
+		this.repo = Objects.requireNonNull(pRepo, "TeamRepository is required");
 	}
 
 	@Override
@@ -29,6 +33,8 @@ public class DefaultTeamService implements TeamService {
 		if (pRequest == null) throw new IllegalArgumentException("Request is required");
 		if (pRequest.name() == null || pRequest.name().isBlank())
 			throw new IllegalArgumentException("name is required");
+
+		String trimmedName = pRequest.name().trim();
 
 		Set<String> normalizedIds = normalizeDragonIds(pRequest.dragonIds());
 		if (normalizedIds.size() > MAX_TEAM_SIZE) {
@@ -38,7 +44,19 @@ public class DefaultTeamService implements TeamService {
 		validateDragonIdsExist(normalizedIds);
 
 		TeamId id = TeamId.generate();
-		var ctx = new TeamContext(id, pRequest.name(), new ArrayList<>(normalizedIds));
+
+		List<DragonContext> dragons = normalizedIds.stream()
+				.map(this::buildMinimalDragon)
+				.toList();
+
+		TeamContextBuilder builder = TeamContextBuilder.builder()
+				.teamId(id)
+				.name(trimmedName);
+
+		dragons.forEach(builder::addDragon);
+
+		TeamContext ctx = builder.build();
+
 		return repo.save(ctx);
 	}
 
@@ -101,5 +119,11 @@ public class DefaultTeamService implements TeamService {
 				throw new IllegalArgumentException("Unknown dragonId: " + dragonId);
 			}
 		}
+	}
+
+	private DragonContext buildMinimalDragon(String id) {
+		return DragonContextBuilder.builder()
+				.id(id)
+				.build();
 	}
 }
