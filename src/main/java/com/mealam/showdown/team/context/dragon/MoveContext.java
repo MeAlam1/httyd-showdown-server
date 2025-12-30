@@ -2,7 +2,6 @@ package com.mealam.showdown.team.context.dragon;
 
 public record MoveContext(
 		String moveId,
-		String name,
 		int slot
 ) {
 	public MoveContext {

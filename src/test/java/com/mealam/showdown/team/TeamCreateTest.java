@@ -12,7 +12,7 @@ class TeamCreateTest extends TeamBaseTest {
 
 	@Test
 	void createTeam() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"alpha-team\",\"dragonIds\":[\"flightmare\"]}");
+		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"alpha-team\",\"dragons\":[{\"id\":\"flightmare\"}]}");
 		assertEquals(201, createResponse.statusCode());
 
 		String body = createResponse.body();
@@ -32,13 +32,13 @@ class TeamCreateTest extends TeamBaseTest {
 
 	@Test
 	void createTeamRejectsMissingName() throws Exception {
-		HttpResponse<String> res = api.createTeam("{\"dragonIds\":[\"flightmare\"]}");
+		HttpResponse<String> res = api.createTeam("{\"dragons\":[{\"id\":\"flightmare\"}]}");
 		assertEquals(400, res.statusCode());
 	}
 
 	@Test
 	void createTeamRejectsBlankName() throws Exception {
-		HttpResponse<String> res = api.createTeam("{\"name\":\"   \",\"dragonIds\":[]}");
+		HttpResponse<String> res = api.createTeam("{\"name\":\"   \",\"dragons\":[]}");
 		assertEquals(400, res.statusCode());
 	}
 
@@ -57,13 +57,13 @@ class TeamCreateTest extends TeamBaseTest {
 
 	@Test
 	void createTeamRejectsUnknownDragonId() throws Exception {
-		HttpResponse<String> res = api.createTeam("{\"name\":\"bad-team\",\"dragonIds\":[\"does-not-exist\"]}");
+		HttpResponse<String> res = api.createTeam("{\"name\":\"bad-team\",\"dragons\":[{\"id\":\"does-not-exist\"}]}");
 		assertEquals(400, res.statusCode());
 	}
 
 	@Test
 	void createTeamTrimsDragonIds() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"trim-team\",\"dragonIds\":[\"  flightmare  \"]}");
+		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"trim-team\",\"dragons\":[{\"id\":\"  flightmare  \"}]}");
 		assertEquals(201, createResponse.statusCode());
 
 		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());
@@ -76,7 +76,7 @@ class TeamCreateTest extends TeamBaseTest {
 
 	@Test
 	void createTeamIgnoresBlankAndNullLikeDragonIds() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"ignore-blanks\",\"dragonIds\":[\" \",\"flightmare\",\"\"]}");
+		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"ignore-blanks\",\"dragons\":[{\"id\":\" \"},{\"id\":\"flightmare\"},{\"id\":\"\"}]}");
 		assertEquals(201, createResponse.statusCode());
 
 		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());
@@ -89,7 +89,7 @@ class TeamCreateTest extends TeamBaseTest {
 
 	@Test
 	void createTeamDeduplicatesDragonIds() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"dupe-team\",\"dragonIds\":[\"flightmare\",\"flightmare\",\"  flightmare \"]}");
+		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"dupe-team\",\"dragons\":[{\"id\":\"flightmare\"},{\"id\":\"flightmare\"},{\"id\":\"  flightmare \"}]}");
 		assertEquals(201, createResponse.statusCode());
 
 		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());
@@ -108,7 +108,7 @@ class TeamCreateTest extends TeamBaseTest {
 	@Test
 	void createTeamRejectsOverMaxTeamSize() throws Exception {
 		HttpResponse<String> res = api.createTeam(
-				"{\"name\":\"too-big\",\"dragonIds\":[\"flightmare\",\"speed_stinger\",\"night_fury\",\"armorwing\",\"timberjack\",\"deadly_nadder\",\"terrible_terror\"]}"
+				"{\"name\":\"too-big\",\"dragons\":[{\"id\":\"flightmare\"},{\"id\":\"speed_stinger\"},{\"id\":\"night_fury\"},{\"id\":\"armorwing\"},{\"id\":\"timberjack\"},{\"id\":\"deadly_nadder\"},{\"id\":\"terrible_terror\"}]}"
 		);
 		assertEquals(400, res.statusCode());
 	}
@@ -121,7 +121,7 @@ class TeamCreateTest extends TeamBaseTest {
 
 	@Test
 	void createThenDeleteThenGetNotFound() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"delete-me\",\"dragonIds\":[\"flightmare\"]}");
+		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"delete-me\",\"dragons\":[{\"id\":\"flightmare\"}]}");
 		assertEquals(201, createResponse.statusCode());
 
 		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());

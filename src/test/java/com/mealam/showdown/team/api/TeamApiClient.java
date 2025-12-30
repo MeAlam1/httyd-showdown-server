@@ -48,7 +48,7 @@ public class TeamApiClient {
 	}
 
 	public String createTeamAndGetId(String pName) throws Exception {
-		String body = "{\"name\":\"" + (pName == null ? "" : pName) + "\",\"dragonIds\":[]}";
+		String body = "{\"name\":\"" + (pName == null ? "" : pName) + "\",\"dragons\":[]}";
 		HttpResponse<String> res = createTeam(body);
 		return TeamTestUtils.extractTeamIdFromBody(res.body());
 	}

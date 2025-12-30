@@ -33,8 +33,8 @@ public final class DragonContextBuilder {
 		return this;
 	}
 
-	public DragonContextBuilder nature(String pNature, Map<String, Double> pModifiers) {
-		this.nature = ContextFactories.createNature(pNature, pModifiers);
+	public DragonContextBuilder nature(String pNature) {
+		this.nature = ContextFactories.createNature(pNature);
 		return this;
 	}
 
@@ -43,8 +43,8 @@ public final class DragonContextBuilder {
 		return this;
 	}
 
-	public DragonContextBuilder ability(String pId, String pName) {
-		this.ability = ContextFactories.createAbility(pId, pName);
+	public DragonContextBuilder ability(String pId) {
+		this.ability = ContextFactories.createAbility(pId);
 		return this;
 	}
 
@@ -59,13 +59,13 @@ public final class DragonContextBuilder {
 		return this;
 	}
 
-	public DragonContextBuilder heldItem(String pId, String pName, String pEffect) {
-		this.heldItem = ContextFactories.createHeldItem(pId, pName, pEffect);
+	public DragonContextBuilder heldItem(String pId) {
+		this.heldItem = ContextFactories.createHeldItem(pId);
 		return this;
 	}
 
-	public DragonContextBuilder addMove(String pMoveId, String pName, int pSlot) {
-		this.moves.add(ContextFactories.createMove(pMoveId, pName, pSlot));
+	public DragonContextBuilder addMove(String pId, int pSlot) {
+		this.moves.add(ContextFactories.createMove(pId, pSlot));
 		return this;
 	}
 

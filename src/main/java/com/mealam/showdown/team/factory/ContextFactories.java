@@ -15,35 +15,34 @@ public final class ContextFactories {
 	private ContextFactories() {
 	}
 
-	public static AbilityContext createAbility(String pId, String pName) {
-		return new AbilityContext(pId, pName);
+	public static AbilityContext createAbility(String pId) {
+		return new AbilityContext(pId);
 	}
 
-	public static HeldItemContext createHeldItem(String pId, String pName, String pEffectDescription) {
-		return new HeldItemContext(pId, pName, pEffectDescription);
+	public static HeldItemContext createHeldItem(String pId) {
+		return new HeldItemContext(pId);
 	}
 
 	public static LevelContext createLevel(int pLevel) {
 		return new LevelContext(pLevel);
 	}
 
-	public static MoveContext createMove(String pMoveId, String pName, int pSlot) {
-		return new MoveContext(pMoveId, pName, pSlot);
+	public static MoveContext createMove(String pId, int pSlot) {
+		return new MoveContext(pId, pSlot);
 	}
 
-	public static NatureContext createNature(String pName, Map<String, Double> pModifiers) {
-		return new NatureContext(pName, pModifiers);
+	public static NatureContext createNature(String pId) {
+		return new NatureContext(pId);
 	}
 
 	public static StatsContext createStats(
-			int attack, int speed, int defense, int armor,
-			int firepower, int stealth, int stamina,
-			int shotLimit, int venom, int jawStrength) {
+			int pAttack, int pSpeed, int pDefense, int pArmor,
+			int pFirepower, int pStealth, int pStamina,
+			int pShotLimit, int pVenom, int pJawStrength) {
 		return new StatsContext(
-				attack, speed, defense, armor,
-				firepower, stealth, stamina,
-				shotLimit, venom, jawStrength
-		);
+				pAttack, pSpeed, pDefense, pArmor,
+				pFirepower, pStealth, pStamina,
+				pShotLimit, pVenom, pJawStrength);
 	}
 
 	public static TrainingEffortContext createTrainingEffort(Map<String, Integer> pValues) {

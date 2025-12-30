@@ -12,7 +12,7 @@ class TeamDeleteTest extends TeamBaseTest {
 
 	@Test
 	void deleteTeam() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"to-delete\",\"dragonIds\":[]}");
+		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"to-delete\",\"dragons\":[]}");
 		assertEquals(201, createResponse.statusCode());
 
 		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());
@@ -34,7 +34,7 @@ class TeamDeleteTest extends TeamBaseTest {
 
 	@Test
 	void deleteTeamTwiceSecondIsNotFound() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"delete-twice\",\"dragonIds\":[]}");
+		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"delete-twice\",\"dragons\":[]}");
 		assertEquals(201, createResponse.statusCode());
 
 		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());

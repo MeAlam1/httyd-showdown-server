@@ -9,6 +9,7 @@ import com.mealam.showdown.team.factory.DragonContextBuilder;
 import com.mealam.showdown.team.factory.TeamContextBuilder;
 import com.mealam.showdown.team.data.TeamId;
 import com.mealam.showdown.team.dto.request.CreateTeamRequest;
+import com.mealam.showdown.team.dto.request.CreateDragonRequest;
 
 import java.util.LinkedHashSet;
 import java.util.Locale;
@@ -36,7 +37,14 @@ public class DefaultTeamService implements TeamService {
 
 		String trimmedName = pRequest.name().trim();
 
-		Set<String> normalizedIds = normalizeDragonIds(pRequest.dragonIds());
+		List<String> rawIds = pRequest.dragons() == null
+				? List.of()
+				: pRequest.dragons().stream()
+				.filter(Objects::nonNull)
+				.map(CreateDragonRequest::id)
+				.collect(Collectors.toList());
+
+		Set<String> normalizedIds = normalizeDragonIds(rawIds);
 		if (normalizedIds.size() > MAX_TEAM_SIZE) {
 			throw new IllegalArgumentException("team size must be <= " + MAX_TEAM_SIZE);
 		}

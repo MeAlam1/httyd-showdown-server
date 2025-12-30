@@ -18,7 +18,7 @@ class TeamGetTest extends TeamBaseTest {
 
 	@Test
 	void getTeamReturnsCreatedTeam() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"lookup\",\"dragonIds\":[]}");
+		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"lookup\",\"dragons\":[]}");
 		assertEquals(201, createResponse.statusCode());
 
 		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());

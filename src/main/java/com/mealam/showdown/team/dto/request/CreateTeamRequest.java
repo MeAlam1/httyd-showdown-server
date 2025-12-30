@@ -6,6 +6,6 @@ import java.util.List;
 
 public record CreateTeamRequest(
 		@JsonProperty("name") String name,
-		@JsonProperty("dragonIds") List<String> dragonIds
+		@JsonProperty("dragons") List<CreateDragonRequest> dragons
 ) {
 }
