@@ -1,0 +1,14 @@
+{
+  "name": "ignore-blanks",
+  "dragons": [
+    {
+      "id": " "
+    },
+    {
+      "id": "flightmare"
+    },
+    {
+      "id": ""
+    }
+  ]
+}

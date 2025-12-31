@@ -1,0 +1,8 @@
+{
+  "name": "bad-team",
+  "dragons": [
+    {
+      "id": "does-not-exist"
+    }
+  ]
+}

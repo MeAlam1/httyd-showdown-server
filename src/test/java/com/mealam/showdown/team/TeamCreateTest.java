@@ -1,6 +1,12 @@
 package com.mealam.showdown.team;
 
 import com.mealam.showdown.team.api.TeamBaseTest;
+
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.nio.charset.StandardCharsets;
+
 import com.mealam.showdown.team.utils.TeamTestUtils;
 import org.junit.jupiter.api.Test;
 
@@ -10,9 +16,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TeamCreateTest extends TeamBaseTest {
 
+	@Override
+	protected String loadResource(String pResourcePath) throws IOException {
+		return super.loadResource("create/" + pResourcePath);
+	}
+
 	@Test
 	void createTeam() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"alpha-team\",\"dragons\":[{\"id\":\"flightmare\"}]}");
+		String payload = loadResource("createTeam.json");
+
+		HttpResponse<String> createResponse = api.createTeam(payload);
+		assertEquals(201, createResponse.statusCode());
 		assertEquals(201, createResponse.statusCode());
 
 		String body = createResponse.body();
@@ -32,19 +46,25 @@ class TeamCreateTest extends TeamBaseTest {
 
 	@Test
 	void createTeamRejectsMissingName() throws Exception {
-		HttpResponse<String> res = api.createTeam("{\"dragons\":[{\"id\":\"flightmare\"}]}");
-		assertEquals(400, res.statusCode());
+		String payload = loadResource("createTeamRejectsMissingName.json");
+
+		HttpResponse<String> createResponse = api.createTeam(payload);
+		assertEquals(400, createResponse.statusCode());
 	}
 
 	@Test
 	void createTeamRejectsBlankName() throws Exception {
-		HttpResponse<String> res = api.createTeam("{\"name\":\"   \",\"dragons\":[]}");
-		assertEquals(400, res.statusCode());
+		String payload = loadResource("createTeamRejectsBlankName.json");
+
+		HttpResponse<String> createResponse = api.createTeam(payload);
+		assertEquals(400, createResponse.statusCode());
 	}
 
 	@Test
 	void createTeamAllowsMissingDragonIds() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"no-dragons\"}");
+		String payload = loadResource("createTeamAllowsMissingDragonIds.json");
+
+		HttpResponse<String> createResponse = api.createTeam(payload);
 		assertEquals(201, createResponse.statusCode());
 
 		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());
@@ -57,13 +77,17 @@ class TeamCreateTest extends TeamBaseTest {
 
 	@Test
 	void createTeamRejectsUnknownDragonId() throws Exception {
-		HttpResponse<String> res = api.createTeam("{\"name\":\"bad-team\",\"dragons\":[{\"id\":\"does-not-exist\"}]}");
-		assertEquals(400, res.statusCode());
+		String payload = loadResource("createTeamRejectsUnknownDragonId.json");
+
+		HttpResponse<String> createResponse = api.createTeam(payload);
+		assertEquals(400, createResponse.statusCode());
 	}
 
 	@Test
 	void createTeamTrimsDragonIds() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"trim-team\",\"dragons\":[{\"id\":\"  flightmare  \"}]}");
+		String payload = loadResource("createTeamTrimsDragonIds.json");
+
+		HttpResponse<String> createResponse = api.createTeam(payload);
 		assertEquals(201, createResponse.statusCode());
 
 		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());
@@ -76,7 +100,9 @@ class TeamCreateTest extends TeamBaseTest {
 
 	@Test
 	void createTeamIgnoresBlankAndNullLikeDragonIds() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"ignore-blanks\",\"dragons\":[{\"id\":\" \"},{\"id\":\"flightmare\"},{\"id\":\"\"}]}");
+		String payload = loadResource("createTeamIgnoresBlankAndNullLikeDragonIds.json");
+
+		HttpResponse<String> createResponse = api.createTeam(payload);
 		assertEquals(201, createResponse.statusCode());
 
 		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());
@@ -89,7 +115,9 @@ class TeamCreateTest extends TeamBaseTest {
 
 	@Test
 	void createTeamDeduplicatesDragonIds() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"dupe-team\",\"dragons\":[{\"id\":\"flightmare\"},{\"id\":\"flightmare\"},{\"id\":\"  flightmare \"}]}");
+		String payload = loadResource("createTeamDeduplicatesDragonIds.json");
+
+		HttpResponse<String> createResponse = api.createTeam(payload);
 		assertEquals(201, createResponse.statusCode());
 
 		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());
@@ -107,10 +135,10 @@ class TeamCreateTest extends TeamBaseTest {
 
 	@Test
 	void createTeamRejectsOverMaxTeamSize() throws Exception {
-		HttpResponse<String> res = api.createTeam(
-				"{\"name\":\"too-big\",\"dragons\":[{\"id\":\"flightmare\"},{\"id\":\"speed_stinger\"},{\"id\":\"night_fury\"},{\"id\":\"armorwing\"},{\"id\":\"timberjack\"},{\"id\":\"deadly_nadder\"},{\"id\":\"terrible_terror\"}]}"
-		);
-		assertEquals(400, res.statusCode());
+		String payload = loadResource("createTeamRejectsOverMaxTeamSize.json");
+
+		HttpResponse<String> createResponse = api.createTeam(payload);
+		assertEquals(400, createResponse.statusCode());
 	}
 
 	@Test
@@ -121,7 +149,9 @@ class TeamCreateTest extends TeamBaseTest {
 
 	@Test
 	void createThenDeleteThenGetNotFound() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"delete-me\",\"dragons\":[{\"id\":\"flightmare\"}]}");
+		String payload = loadResource("createThenDeleteThenGetNotFound.json");
+
+		HttpResponse<String> createResponse = api.createTeam(payload);
 		assertEquals(201, createResponse.statusCode());
 
 		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());

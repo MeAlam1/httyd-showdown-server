@@ -4,15 +4,23 @@ import com.mealam.showdown.team.api.TeamBaseTest;
 import com.mealam.showdown.team.utils.TeamTestUtils;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TeamDeleteTest extends TeamBaseTest {
 
+	@Override
+	protected String loadResource(String pResourcePath) throws IOException {
+		return super.loadResource("delete/" + pResourcePath);
+	}
+
 	@Test
 	void deleteTeam() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"to-delete\",\"dragons\":[]}");
+		String payload = loadResource("deleteTeam.json");
+
+		HttpResponse<String> createResponse = api.createTeam(payload);
 		assertEquals(201, createResponse.statusCode());
 
 		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());
@@ -34,7 +42,9 @@ class TeamDeleteTest extends TeamBaseTest {
 
 	@Test
 	void deleteTeamTwiceSecondIsNotFound() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"delete-twice\",\"dragons\":[]}");
+		String payload = loadResource("deleteTeamTwiceSecondIsNotFound.json");
+
+		HttpResponse<String> createResponse = api.createTeam(payload);
 		assertEquals(201, createResponse.statusCode());
 
 		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());

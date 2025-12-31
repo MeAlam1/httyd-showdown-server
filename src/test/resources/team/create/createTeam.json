@@ -1,0 +1,48 @@
+{
+  "name": "alpha-team",
+  "dragons": [
+    {
+      "id": "flightmare",
+      "nickname": "Fighty",
+      "natureId": "brave-nature",
+      "level": 50,
+      "abilityId": "storm-rider",
+      "stats": {
+        "attack": 120,
+        "speed": 100,
+        "defense": 80,
+        "armor": 70,
+        "firepower": 130,
+        "stealth": 40,
+        "stamina": 110,
+        "shotLimit": 3,
+        "venom": 0,
+        "jawStrength": 90
+      },
+      "heldItemId": "mystic-claw",
+      "moves": [
+        {
+          "moveId": "flame-burst",
+          "slot": 1
+        },
+        {
+          "moveId": "tail-whip",
+          "slot": 2
+        },
+        {
+          "moveId": "sky-strike",
+          "slot": 3
+        },
+        {
+          "moveId": "roar",
+          "slot": 4
+        }
+      ],
+      "trainingEffort": {
+        "attack": 252,
+        "speed": 252,
+        "defense": 6
+      }
+    }
+  ]
+}

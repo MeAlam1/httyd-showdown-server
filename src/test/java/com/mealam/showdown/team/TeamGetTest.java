@@ -4,11 +4,17 @@ import com.mealam.showdown.team.api.TeamBaseTest;
 import com.mealam.showdown.team.utils.TeamTestUtils;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TeamGetTest extends TeamBaseTest {
+
+	@Override
+	protected String loadResource(String pResourcePath) throws IOException {
+		return super.loadResource("get/" + pResourcePath);
+	}
 
 	@Test
 	void getTeamNotFound() throws Exception {
@@ -18,7 +24,8 @@ class TeamGetTest extends TeamBaseTest {
 
 	@Test
 	void getTeamReturnsCreatedTeam() throws Exception {
-		HttpResponse<String> createResponse = api.createTeam("{\"name\":\"lookup\",\"dragons\":[]}");
+		String payload = loadResource("getTeamReturnsCreatedTeam.json");
+		HttpResponse<String> createResponse = api.createTeam(payload);
 		assertEquals(201, createResponse.statusCode());
 
 		String teamId = TeamTestUtils.extractTeamIdFromBody(createResponse.body());

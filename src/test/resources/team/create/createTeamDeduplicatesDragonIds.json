@@ -1,0 +1,14 @@
+{
+  "name": "dupe-team",
+  "dragons": [
+    {
+      "id": "flightmare"
+    },
+    {
+      "id": "flightmare"
+    },
+    {
+      "id": "  flightmare "
+    }
+  ]
+}

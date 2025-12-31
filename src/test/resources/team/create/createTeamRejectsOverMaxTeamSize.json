@@ -1,0 +1,26 @@
+{
+  "name": "too-big",
+  "dragons": [
+    {
+      "id": "flightmare"
+    },
+    {
+      "id": "speed_stinger"
+    },
+    {
+      "id": "night_fury"
+    },
+    {
+      "id": "armorwing"
+    },
+    {
+      "id": "timberjack"
+    },
+    {
+      "id": "deadly_nadder"
+    },
+    {
+      "id": "terrible_terror"
+    }
+  ]
+}
