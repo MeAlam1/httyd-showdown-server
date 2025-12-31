@@ -29,6 +29,7 @@ public class DefaultTeamService implements TeamService {
 		this.repo = Objects.requireNonNull(pRepo, "TeamRepository is required");
 	}
 
+
 	@Override
 	public TeamContext createTeam(CreateTeamRequest pRequest) {
 		if (pRequest == null) throw new IllegalArgumentException("Request is required");
@@ -37,24 +38,23 @@ public class DefaultTeamService implements TeamService {
 
 		String trimmedName = pRequest.name().trim();
 
-		List<String> rawIds = pRequest.dragons() == null
+		List<CreateDragonRequest> dragonRequests = pRequest.dragons() == null
 				? List.of()
-				: pRequest.dragons().stream()
-				.filter(Objects::nonNull)
-				.map(CreateDragonRequest::id)
-				.collect(Collectors.toList());
+				: pRequest.dragons().stream().filter(Objects::nonNull).toList();
 
-		Set<String> normalizedIds = normalizeDragonIds(rawIds);
-		if (normalizedIds.size() > MAX_TEAM_SIZE) {
+		if (dragonRequests.size() > MAX_TEAM_SIZE) {
 			throw new IllegalArgumentException("team size must be <= " + MAX_TEAM_SIZE);
 		}
 
+		Set<String> normalizedIds = normalizeDragonIds(
+				dragonRequests.stream().map(CreateDragonRequest::id).toList()
+		);
 		validateDragonIdsExist(normalizedIds);
 
 		TeamId id = TeamId.generate();
 
-		List<DragonContext> dragons = normalizedIds.stream()
-				.map(this::buildMinimalDragon)
+		List<DragonContext> dragons = dragonRequests.stream()
+				.map(this::buildFullDragon)
 				.toList();
 
 		TeamContextBuilder builder = TeamContextBuilder.builder()
@@ -66,6 +66,42 @@ public class DefaultTeamService implements TeamService {
 		TeamContext ctx = builder.build();
 
 		return repo.save(ctx);
+	}
+
+	private DragonContext buildFullDragon(CreateDragonRequest req) {
+		DragonContextBuilder builder = DragonContextBuilder.builder()
+				.id(req.id());
+
+		if (req.nickname() != null) builder.nickname(req.nickname());
+		if (req.natureId() != null) builder.nature(req.natureId());
+		if (req.level() != null) builder.level(req.level());
+		if (req.abilityId() != null) builder.ability(req.abilityId());
+		if (req.stats() != null) {
+			var s = req.stats();
+			builder.stats(
+					s.attack() != null ? s.attack() : 0,
+					s.speed() != null ? s.speed() : 0,
+					s.defense() != null ? s.defense() : 0,
+					s.armor() != null ? s.armor() : 0,
+					s.firepower() != null ? s.firepower() : 0,
+					s.stealth() != null ? s.stealth() : 0,
+					s.stamina() != null ? s.stamina() : 0,
+					s.shotLimit() != null ? s.shotLimit() : 0,
+					s.venom() != null ? s.venom() : 0,
+					s.jawStrength() != null ? s.jawStrength() : 0
+			);
+		}
+		if (req.heldItemId() != null) builder.heldItem(req.heldItemId());
+		if (req.moves() != null) {
+			for (var move : req.moves()) {
+				if (move != null && move.moveId() != null && move.slot() != null) {
+					builder.addMove(move.moveId(), move.slot());
+				}
+			}
+		}
+		if (req.trainingEffort() != null) builder.trainingEffort(req.trainingEffort());
+
+		return builder.build();
 	}
 
 	@Override
