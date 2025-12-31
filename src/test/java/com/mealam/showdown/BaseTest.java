@@ -38,8 +38,8 @@ public class BaseTest {
 	}
 
 	protected String loadResource(String pResourcePath) throws IOException {
-		try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(pResourcePath)) {
-			if (inputStream == null) throw new FileNotFoundException(pResourcePath);
+		try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(pResourcePath + ".json")) {
+			if (inputStream == null) throw new FileNotFoundException(pResourcePath + ".json");
 			return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
 		}
 	}
