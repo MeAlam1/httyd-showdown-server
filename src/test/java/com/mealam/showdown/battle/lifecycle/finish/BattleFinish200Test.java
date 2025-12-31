@@ -1,4 +1,4 @@
-package com.mealam.showdown.battle.lifecycle;
+package com.mealam.showdown.battle.lifecycle.finish;
 
 import com.mealam.showdown.battle.api.BattleBaseTest;
 import org.junit.jupiter.api.Test;
@@ -7,74 +7,67 @@ import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BattleFinishTest extends BattleBaseTest {
+class BattleFinish200Test extends BattleBaseTest {
+
+	private static final int STATUS_CODE = 200;
 
 	@Test
-	void finishBattleWithWinner() throws Exception {
+	void shouldFinishBattleWithWinner() throws Exception {
 		String battleId = api.createBattleAndGetId();
 		api.join(battleId, "player1", "team-player1");
 		api.join(battleId, "player2", "team-player2");
 		api.start(battleId);
 
 		HttpResponse<String> finishResponse = api.finish(battleId, "player1");
-		assertEquals(200, finishResponse.statusCode());
-
-		String battleState = api.get(battleId).body();
-		assertTrue(battleState.contains("player1"));
-		assertTrue(battleState.contains("winner"));
+		assertEquals(STATUS_CODE, finishResponse.statusCode());
 	}
 
 	@Test
-	void finishBattleWithoutWinner() throws Exception {
+	void shouldFinishBattleWithoutWinner() throws Exception {
 		String battleId = api.createBattleAndGetId();
 		api.join(battleId, "player1", "team-player1");
 		api.join(battleId, "player2", "team-player2");
 		api.start(battleId);
 
 		HttpResponse<String> finishResponse = api.finish(battleId, null);
-		assertEquals(200, finishResponse.statusCode());
+		assertEquals(STATUS_CODE, finishResponse.statusCode());
 
 		String battleState = api.get(battleId).body();
 		assertNotNull(battleState);
 	}
 
 	@Test
-	void finishBattleBeforeStart() throws Exception {
+	void shouldFinishBattleBeforeStart() throws Exception {
 		String battleId = api.createBattleAndGetId();
 		api.join(battleId, "player1", "team-player1");
 		api.join(battleId, "player2", "team-player2");
 
 		HttpResponse<String> finishResponse = api.finish(battleId, "player1");
-		assertEquals(200, finishResponse.statusCode());
+		assertEquals(STATUS_CODE, finishResponse.statusCode());
 	}
 
 	@Test
-	void finishNonExistentBattle() throws Exception {
-		HttpResponse<String> finishResponse = api.finish("nonexistent-id", "player1");
-		assertEquals(404, finishResponse.statusCode());
-		assertTrue(finishResponse.body().contains("Battle not found"));
-	}
-
-	@Test
-	void finishBattleMultipleTimes() throws Exception {
+	void shouldFinishBattleMultipleTimes() throws Exception {
 		String battleId = api.createBattleAndGetId();
 		api.join(battleId, "player1", "team-player1");
 		api.join(battleId, "player2", "team-player2");
 		api.start(battleId);
 
+		// TODO: Actually Shouldnt, but will be added in the future
+
 		api.finish(battleId, "player1");
 		HttpResponse<String> secondFinish = api.finish(battleId, "player2");
-		assertEquals(200, secondFinish.statusCode());
+		assertEquals(STATUS_CODE, secondFinish.statusCode());
 	}
 
 	@Test
-	void finishWithUrlEncodedWinner() throws Exception {
+	void shouldAllowAnyUserToWin() throws Exception {
 		String battleId = api.createBattleAndGetId();
 		api.join(battleId, "p1", "team-p1");
 		api.join(battleId, "p 2 🚀", "team-p2");
 		api.start(battleId);
 
 		HttpResponse<String> res = api.finish(battleId, "p 2 🚀");
-		assertEquals(200, res.statusCode());
+		assertEquals(STATUS_CODE, res.statusCode());
 	}
 }

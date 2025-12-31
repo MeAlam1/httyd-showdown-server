@@ -16,4 +16,8 @@ public class BattleTestUtils {
 		if (m.find()) return m.group(1);
 		throw new IllegalStateException("Could not extract id from response: " + pBody);
 	}
+
+	public static int countOccurrences(String pText, String pTarget) {
+		return (pText.length() - pText.replace(pTarget, "").length()) / pTarget.length();
+	}
 }

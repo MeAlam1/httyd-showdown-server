@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BattlePersistenceTest extends BattleBaseTest {
-		
+
 	private Path battleFile(String pBattleId) {
 		String root = System.getProperty("showdown.data.dir");
 		assertNotNull(root, "showdown.data.dir should be set by BattleBaseTest");
@@ -17,7 +17,7 @@ class BattlePersistenceTest extends BattleBaseTest {
 	}
 
 	@Test
-	void createBattlePersistsToFile() throws Exception {
+	void shouldCreateBattleFile() throws Exception {
 		String battleId = api.createBattleAndGetId();
 		Path file = battleFile(battleId);
 
@@ -28,7 +28,7 @@ class BattlePersistenceTest extends BattleBaseTest {
 	}
 
 	@Test
-	void finishBattlePersistsToFile() throws Exception {
+	void shouldFinishBattleStateToFile() throws Exception {
 		String battleId = api.createBattleAndGetId();
 		api.join(battleId, "p1", "team-p1");
 		api.join(battleId, "p2", "team-p2");
@@ -43,7 +43,7 @@ class BattlePersistenceTest extends BattleBaseTest {
 	}
 
 	@Test
-	void leavingAllPlayersPersistsToFile() throws Exception {
+	void shouldLeavePlayersStateToFile() throws Exception {
 		String battleId = api.createBattleAndGetId();
 		api.join(battleId, "p1", "team-p1");
 		api.join(battleId, "p2", "team-p2");
@@ -54,6 +54,7 @@ class BattlePersistenceTest extends BattleBaseTest {
 		Path file = battleFile(battleId);
 		assertTrue(Files.exists(file), "Battle file should exist when no players remain");
 		String content = Files.readString(file);
+		// TODO: Improve check when player data is persisted, this is bullcrap
 		assertTrue(content.contains("\"teams\"") || content.contains("battleId"));
 	}
 }

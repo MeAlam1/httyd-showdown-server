@@ -4,6 +4,7 @@ import com.mealam.showdown.BaseTest;
 import com.mealam.showdown.Main;
 import org.junit.jupiter.api.BeforeEach;
 
+import java.io.IOException;
 import java.net.http.WebSocket;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,6 +16,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 public abstract class BattleBaseTest extends BaseTest {
 
 	protected BattleApiClient api;
+
+	@Override
+	protected String loadResource(String pResourcePath) throws IOException {
+		return super.loadResource("battle/" + pResourcePath);
+	}
 
 	@BeforeEach
 	void setupBattle() {

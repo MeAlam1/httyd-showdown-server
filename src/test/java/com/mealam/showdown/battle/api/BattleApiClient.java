@@ -52,6 +52,7 @@ public class BattleApiClient {
 		return client.send(req, HttpResponse.BodyHandlers.ofString());
 	}
 
+	// TODO: Once the amount of JSON data for this API grows, consider using Resource Loading like with Team Tests
 	public HttpResponse<String> join(String pBattleId, String pUserId, String pTeamId) throws Exception {
 		HttpRequest req = HttpRequest.newBuilder()
 				.uri(URI.create(baseUrl() + "/api/battle/" + pBattleId + "/join"))
