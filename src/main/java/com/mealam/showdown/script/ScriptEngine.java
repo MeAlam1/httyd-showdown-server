@@ -16,23 +16,36 @@ import com.mealam.showdown.script.expression.SimpleExpressionEngine;
 import com.mealam.showdown.script.opcode.DefaultOpcodes;
 import com.mealam.showdown.script.opcode.OpcodeRegistry;
 import com.mealam.showdown.script.runtime.ExecutionContext;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Main entry point for script execution.
  * <p>
  * Example usage:
- * 
+ *
  * <pre>
- * 
+ *
  * var engine = ScriptEngine.createDefault();
  * var results = engine.runJson(context, abilityJson);
  * </pre>
  */
 public final class ScriptEngine {
 
+	/**
+	 * TODO:
+	 * Look into {@link javax.script}
+	 * <p>
+	 * Look into using java's ScriptEngine in stead of completely writing your own from scratch, should massively decrease your code.
+	 *
+	 * @see javax.script.Bindings
+	 * @see javax.script.ScriptEngine
+	 * @see javax.script.AbstractScriptEngine
+	 * @see javax.script.ScriptEngineManager
+	 * @see javax.script.SimpleScriptContext
+	 */
 	@NotNull
 	private final Interpreter interpreter;
 

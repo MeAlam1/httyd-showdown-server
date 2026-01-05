@@ -7,10 +7,12 @@
  */
 package com.mealam.showdown.script.runtime;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
+import java.util.random.RandomGenerator;
 
 /**
  * Simple in-memory execution context that captures emitted events.
@@ -18,19 +20,19 @@ import org.jetbrains.annotations.NotNull;
 public final class SimpleExecutionContext implements ExecutionContext {
 
 	@NotNull
-	private final Rng rng;
+	private final RandomGenerator rng;
 	@NotNull
 	private final Map<String, Object> vars;
 	@NotNull
 	private final List<EmittedEvent> events = new ArrayList<>();
 
-	public SimpleExecutionContext(@NotNull Rng pRng, @NotNull Map<String, Object> pVariables) {
+	public SimpleExecutionContext(@NotNull RandomGenerator pRng, @NotNull Map<String, Object> pVariables) {
 		this.rng = pRng;
 		this.vars = Map.copyOf(pVariables);
 	}
 
 	@Override
-	public @NotNull Rng rng() {
+	public @NotNull RandomGenerator rng() {
 		return rng;
 	}
 

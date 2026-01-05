@@ -8,6 +8,8 @@
 package com.mealam.showdown.script.runtime;
 
 import java.util.Map;
+import java.util.random.RandomGenerator;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -18,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 public interface ExecutionContext {
 
 	@NotNull
-	Rng rng();
+	RandomGenerator rng();
 
 	@NotNull
 	Map<String, Object> variables();

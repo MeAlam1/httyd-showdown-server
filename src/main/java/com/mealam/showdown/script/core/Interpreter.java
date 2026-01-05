@@ -10,10 +10,11 @@ package com.mealam.showdown.script.core;
 import com.mealam.showdown.script.expression.ExpressionEngine;
 import com.mealam.showdown.script.opcode.OpcodeRegistry;
 import com.mealam.showdown.script.runtime.ExecutionContext;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Executes a list of {@link Step}s against an {@link ExecutionContext}.

@@ -7,18 +7,20 @@
  */
 package com.mealam.showdown.script.runtime;
 
+import java.util.random.RandomGenerator;
+
 /**
  * Deterministic RNG that cycles through fixed values.
  * Useful for testing and reproducible runs.
  */
-public final class FixedRng implements Rng {
+public final class FixedRng implements RandomGenerator {
 
 	private final double[] values;
 	private int index;
 
 	public FixedRng(double... pValues) {
 		this.values = (pValues == null || pValues.length == 0)
-				? new double[] { 0.0 }
+				? new double[]{0.0}
 				: pValues.clone();
 		this.index = 0;
 	}
@@ -26,6 +28,14 @@ public final class FixedRng implements Rng {
 	@Override
 	public double nextDouble() {
 		double value = values[index % values.length];
+		index++;
+		return value;
+	}
+
+	// TODO: Fix
+	@Override
+	public long nextLong() {
+		long value = (long) values[index % values.length];
 		index++;
 		return value;
 	}
