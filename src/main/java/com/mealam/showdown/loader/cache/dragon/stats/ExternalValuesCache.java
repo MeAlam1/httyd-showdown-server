@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.cache.dragon.stats;
 
 import com.mealam.showdown.loader.json.deserialize.dragon.stats.DragonExternalValues;
@@ -11,8 +18,8 @@ public record ExternalValuesCache(
 		@Nullable Float shotLimit,
 		@Nullable Float venom,
 		@Nullable Float jawStrength,
-		@Nullable Float stealth
-) {
+		@Nullable Float stealth) {
+
 	public static ExternalValuesCache construct(DragonExternalValues pSource) {
 		return new ExternalValuesCache(
 				pSource.attack(),
@@ -22,7 +29,6 @@ public record ExternalValuesCache(
 				pSource.shotLimit(),
 				pSource.venom(),
 				pSource.jawStrength(),
-				pSource.stealth()
-		);
+				pSource.stealth());
 	}
 }

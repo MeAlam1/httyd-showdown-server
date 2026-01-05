@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.utils.http;
 
 import com.mealam.showdown.utils.http.dto.ApiResponse;
@@ -6,8 +13,7 @@ import io.javalin.http.Context;
 
 public final class ResponseUtils {
 
-	private ResponseUtils() {
-	}
+	private ResponseUtils() {}
 
 	public static <T> void ok(Context pContext, T pData) {
 		pContext.status(200).json(ApiResponse.success(pData));

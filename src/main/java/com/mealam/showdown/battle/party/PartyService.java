@@ -1,10 +1,16 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.battle.party;
 
 import com.mealam.showdown.battle.context.DragonBattleContext;
 import com.mealam.showdown.battle.context.MoveBattleContext;
 import com.mealam.showdown.move.enums.Status;
 import com.mealam.showdown.user.data.UserId;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,10 +32,8 @@ public class PartyService {
 				List.of(
 						new MoveBattleContext("ember", "Ember", 25, 25),
 						new MoveBattleContext("scratch", "Scratch", 35, 35),
-						new MoveBattleContext("growl", "Growl", 40, 40)
-				),
-				true
-		));
+						new MoveBattleContext("growl", "Growl", 40, 40)),
+				true));
 
 		party.add(new DragonBattleContext(
 				"flightmare",
@@ -40,10 +44,8 @@ public class PartyService {
 				Status.NONE,
 				List.of(
 						new MoveBattleContext("water_gun", "Water Gun", 25, 25),
-						new MoveBattleContext("tackle", "Tackle", 35, 35)
-				),
-				false
-		));
+						new MoveBattleContext("tackle", "Tackle", 35, 35)),
+				false));
 
 		party.add(new DragonBattleContext(
 				"thunderclaw",
@@ -54,10 +56,8 @@ public class PartyService {
 				Status.NONE,
 				List.of(
 						new MoveBattleContext("thunder_shock", "Thunder Shock", 30, 30),
-						new MoveBattleContext("quick_attack", "Quick Attack", 30, 30)
-				),
-				false
-		));
+						new MoveBattleContext("quick_attack", "Quick Attack", 30, 30)),
+				false));
 
 		return party;
 	}
@@ -76,11 +76,9 @@ public class PartyService {
 			return false;
 		}
 
-		return pParty.stream().allMatch(dragon ->
-				dragon.currentHp() > 0 &&
-						dragon.moves() != null &&
-						!dragon.moves().isEmpty()
-		);
+		return pParty.stream().allMatch(dragon -> dragon.currentHp() > 0 &&
+				dragon.moves() != null &&
+				!dragon.moves().isEmpty());
 	}
 
 	public List<DragonBattleContext> preparePartyForBattle(List<DragonBattleContext> pParty) {
@@ -102,8 +100,7 @@ public class PartyService {
 					dragon.maxHp(),
 					dragon.status(),
 					dragon.moves(),
-					i == 0
-			));
+					i == 0));
 		}
 
 		return prepared;

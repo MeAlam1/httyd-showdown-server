@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.json.deserialize.item;
 
 import com.google.gson.JsonDeserializationContext;
@@ -17,13 +24,14 @@ public record Item(
 		String icon,
 		List<ItemEffectsEntry> effects,
 		ItemConditions conditions,
-		Metadata metadata
-) {
+		Metadata metadata) {
+
 	public static JsonDeserializer<Item> deserializer() {
 		return new Deserializer();
 	}
 
 	private static final class Deserializer extends RecordJsonDeserializer<Item> {
+
 		@Override
 		protected Item deserializeObject(JsonObject pObj, JsonDeserializationContext pContext) {
 			return new Item(
@@ -34,8 +42,7 @@ public record Item(
 					GsonHelper.getAsString(pObj, "icon"),
 					JsonUtils.jsonArrayToObjectList(GsonHelper.getAsJsonArray(pObj, "effects"), pContext, ItemEffectsEntry.class),
 					GsonHelper.getAsObject(pObj, "conditions", pContext, ItemConditions.class),
-					GsonHelper.getAsObject(pObj, "metadata", pContext, Metadata.class)
-			);
+					GsonHelper.getAsObject(pObj, "metadata", pContext, Metadata.class));
 		}
 
 		@Override

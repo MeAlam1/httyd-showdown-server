@@ -15,12 +15,10 @@ public class ItemCacheFactory implements CacheFactory<ItemCache, Item> {
 
 	public static final ItemCacheFactory INSTANCE = new ItemCacheFactory();
 
-	private ItemCacheFactory() {
-	}
+	private ItemCacheFactory() {}
 
 	@Override
 	public ItemCache construct(Item pItem) {
 		return ItemCache.construct(pItem);
 	}
-
 }

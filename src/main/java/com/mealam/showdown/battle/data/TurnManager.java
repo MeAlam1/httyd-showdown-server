@@ -1,7 +1,13 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.battle.data;
 
 import com.mealam.showdown.battle.context.TurnContext;
-
 import java.util.Map;
 
 public class TurnManager {
@@ -18,8 +24,7 @@ public class TurnManager {
 				NOT_STARTED,
 				TurnContext.TurnStatus.NOT_STARTED,
 				null,
-				null
-		);
+				null);
 		return currentTurnContextInstance;
 	}
 
@@ -32,8 +37,7 @@ public class TurnManager {
 				currentTurn,
 				TurnContext.TurnStatus.IN_PROGRESS,
 				pStartingTeamId,
-				Map.of()
-		);
+				Map.of());
 		return currentTurnContextInstance;
 	}
 
@@ -50,8 +54,7 @@ public class TurnManager {
 				currentTurn,
 				TurnContext.TurnStatus.IN_PROGRESS,
 				pNextActiveTeamId,
-				Map.of()
-		);
+				Map.of());
 		return currentTurnContextInstance;
 	}
 
@@ -61,8 +64,7 @@ public class TurnManager {
 				FINISHED,
 				TurnContext.TurnStatus.FINISHED,
 				null,
-				null
-		);
+				null);
 		return currentTurnContextInstance;
 	}
 }

@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown;
 
 import java.util.logging.Logger;
@@ -11,11 +18,9 @@ public final class Constants {
 
 	public static final Logger LOGGER = Logger.getLogger(NAME);
 
-
 	public static volatile boolean isLoggingEnabled = true;
 
-	private Constants() {
-	}
+	private Constants() {}
 
 	public static final class Loader {
 
@@ -37,10 +42,8 @@ public final class Constants {
 
 		public static final Pattern SUFFIX_STRIPPER = Pattern.compile("\\.json$");
 		public static final Pattern PREFIX_STRIPPER = Pattern.compile(
-				"^(dob/)((httyd/)|(httyd2/)|(the_hidden_world/)|(rob/)|(rtte/))?"
-		);
+				"^(dob/)((httyd/)|(httyd2/)|(the_hidden_world/)|(rob/)|(rtte/))?");
 
-		private Loader() {
-		}
+		private Loader() {}
 	}
 }

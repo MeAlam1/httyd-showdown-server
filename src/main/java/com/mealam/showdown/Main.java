@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,8 +15,8 @@ import io.javalin.http.HttpStatus;
 import io.javalin.json.JavalinJackson;
 
 public final class Main {
-	private Main() {
-	}
+
+	private Main() {}
 
 	public static void main(String[] args) {
 		Javalin app = createApp();
@@ -35,9 +42,7 @@ public final class Main {
 
 		Routes.register(app);
 
-		app.exception(Exception.class, (e, ctx) ->
-				ctx.status(HttpStatus.INTERNAL_SERVER_ERROR).json(e.getMessage())
-		);
+		app.exception(Exception.class, (e, ctx) -> ctx.status(HttpStatus.INTERNAL_SERVER_ERROR).json(e.getMessage()));
 
 		return app;
 	}

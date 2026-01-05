@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.json.deserialize.common;
 
 import com.google.gson.JsonDeserializationContext;
@@ -14,13 +21,14 @@ public record Measurement(
 		@Nullable Float centimeters,
 		@Nullable Float yards,
 		@Nullable Float kilometers,
-		@Nullable Float miles
-) {
+		@Nullable Float miles) {
+
 	public static JsonDeserializer<Measurement> deserializer() {
 		return new Deserializer();
 	}
 
 	private static final class Deserializer extends RecordJsonDeserializer<Measurement> {
+
 		@Override
 		protected Measurement deserializeObject(JsonObject pObj, JsonDeserializationContext pContext) {
 			return new Measurement(
@@ -30,8 +38,7 @@ public record Measurement(
 					JsonUtils.getOptionalFloat(pObj, "centimeters"),
 					JsonUtils.getOptionalFloat(pObj, "yards"),
 					JsonUtils.getOptionalFloat(pObj, "kilometers"),
-					JsonUtils.getOptionalFloat(pObj, "miles")
-			);
+					JsonUtils.getOptionalFloat(pObj, "miles"));
 		}
 
 		@Override

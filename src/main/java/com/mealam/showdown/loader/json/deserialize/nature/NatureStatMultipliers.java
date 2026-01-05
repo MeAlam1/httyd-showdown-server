@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.json.deserialize.nature;
 
 import com.google.gson.JsonDeserializationContext;
@@ -11,13 +18,14 @@ public record NatureStatMultipliers(
 		float stamina,
 		float defense,
 		float critChance,
-		float speed
-) {
+		float speed) {
+
 	public static JsonDeserializer<NatureStatMultipliers> deserializer() {
 		return new Deserializer();
 	}
 
 	private static final class Deserializer extends RecordJsonDeserializer<NatureStatMultipliers> {
+
 		@Override
 		protected NatureStatMultipliers deserializeObject(JsonObject pObj, JsonDeserializationContext pContext) {
 			return new NatureStatMultipliers(
@@ -25,8 +33,7 @@ public record NatureStatMultipliers(
 					GsonHelper.getAsFloat(pObj, "stamina"),
 					GsonHelper.getAsFloat(pObj, "defense"),
 					GsonHelper.getAsFloat(pObj, "critChance"),
-					GsonHelper.getAsFloat(pObj, "speed")
-			);
+					GsonHelper.getAsFloat(pObj, "speed"));
 		}
 
 		@Override

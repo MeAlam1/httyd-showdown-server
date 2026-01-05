@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.battle.http;
 
 import com.mealam.showdown.battle.api.BattleService;
@@ -14,7 +21,6 @@ import com.mealam.showdown.utils.http.ResponseUtils;
 import com.mealam.showdown.utils.logging.BaseLogLevel;
 import com.mealam.showdown.utils.logging.BaseLogger;
 import io.javalin.http.Context;
-
 import java.util.Map;
 import java.util.UUID;
 
@@ -145,7 +151,8 @@ public class BattleController {
 			} catch (Exception pException) {
 				BaseLogger.log(BaseLogLevel.WARNING,
 						"[traceId=" + traceId + "] turn.advance -> invalid JSON payload for actingUserId=" + actingUserId
-								+ " battleId=" + id, pException);
+								+ " battleId=" + id,
+						pException);
 				ResponseUtils.badRequest(pContext, "Invalid turn payload", "turn_payload_invalid");
 				return;
 			}
@@ -205,7 +212,8 @@ public class BattleController {
 				BaseLogger.log(BaseLogLevel.ERROR,
 						"[traceId=" + traceId + "] turn.advance -> response serialization/write failed battleId=" + id
 								+ " exType=" + ex.getClass().getName()
-								+ " msg=" + ex.getMessage(), ex);
+								+ " msg=" + ex.getMessage(),
+						ex);
 				ResponseUtils.serverError(pContext, "Internal server error", "turn_advance_response_error");
 				return;
 			}
@@ -220,7 +228,8 @@ public class BattleController {
 				BaseLogger.log(BaseLogLevel.ERROR,
 						"[traceId=" + traceId + "] turn.advance -> websocket publish failed battleId=" + id
 								+ " exType=" + ex.getClass().getName()
-								+ " msg=" + ex.getMessage(), ex);
+								+ " msg=" + ex.getMessage(),
+						ex);
 			}
 
 		} catch (IllegalStateException | IllegalArgumentException pIllegalException) {
@@ -231,7 +240,8 @@ public class BattleController {
 			BaseLogger.log(BaseLogLevel.ERROR,
 					"[traceId=" + traceId + "] turn.advance -> server error battleId=" + rawBattleId
 							+ " exType=" + pException.getClass().getName()
-							+ " msg=" + pException.getMessage(), pException);
+							+ " msg=" + pException.getMessage(),
+					pException);
 			ResponseUtils.serverError(pContext, "Internal server error", "turn_advance_error");
 		}
 	}

@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.json.deserialize.item;
 
 import com.google.gson.JsonDeserializationContext;
@@ -11,20 +18,20 @@ import java.util.List;
 public record ItemConditions(
 		List<String> requiresTags,
 		ItemConditionsBlockedIf blockedIf,
-		int minLevel
-) {
+		int minLevel) {
+
 	public static JsonDeserializer<ItemConditions> deserializer() {
 		return new Deserializer();
 	}
 
 	private static final class Deserializer extends RecordJsonDeserializer<ItemConditions> {
+
 		@Override
 		protected ItemConditions deserializeObject(JsonObject pObj, JsonDeserializationContext pContext) {
 			return new ItemConditions(
 					JsonUtils.jsonArrayToStringList(GsonHelper.getAsJsonArray(pObj, "requiresTags")),
 					GsonHelper.getAsObject(pObj, "blockedIf", pContext, ItemConditionsBlockedIf.class),
-					GsonHelper.getAsInt(pObj, "minLevel")
-			);
+					GsonHelper.getAsInt(pObj, "minLevel"));
 		}
 
 		@Override

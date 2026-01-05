@@ -1,8 +1,14 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.cache.ability;
 
 import com.mealam.showdown.loader.cache.common.MetadataCache;
 import com.mealam.showdown.loader.json.deserialize.ability.Ability;
-
 import java.util.List;
 
 public record AbilityCache(
@@ -15,8 +21,7 @@ public record AbilityCache(
 		List<AbilityEffectsEntryCache> effects,
 		AbilityScalingCache scaling,
 		AbilityConditionsCache conditions,
-		MetadataCache metadata
-) {
+		MetadataCache metadata) {
 
 	public static AbilityCache construct(Ability pAbility) {
 		return new AbilityCache(
@@ -29,7 +34,6 @@ public record AbilityCache(
 				AbilityEffectsEntryCache.construct(pAbility.effects()),
 				AbilityScalingCache.construct(pAbility.scaling()),
 				AbilityConditionsCache.construct(pAbility.conditions()),
-				MetadataCache.construct(pAbility.metadata())
-		);
+				MetadataCache.construct(pAbility.metadata()));
 	}
 }

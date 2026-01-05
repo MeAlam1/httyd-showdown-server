@@ -8,7 +8,6 @@
 package com.mealam.showdown.battle.context;
 
 import com.mealam.showdown.move.enums.Status;
-
 import java.util.List;
 
 public record DragonBattleContext(
@@ -19,5 +18,4 @@ public record DragonBattleContext(
 		int maxHp,
 		Status status,
 		List<MoveBattleContext> moves,
-		boolean isActive) {
-}
+		boolean isActive) {}

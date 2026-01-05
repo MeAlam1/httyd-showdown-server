@@ -15,12 +15,10 @@ public class NatureCacheFactory implements CacheFactory<NatureCache, Nature> {
 
 	public static final NatureCacheFactory INSTANCE = new NatureCacheFactory();
 
-	private NatureCacheFactory() {
-	}
+	private NatureCacheFactory() {}
 
 	@Override
 	public NatureCache construct(Nature pNature) {
 		return NatureCache.construct(pNature);
 	}
-
 }

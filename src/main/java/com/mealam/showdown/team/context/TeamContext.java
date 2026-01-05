@@ -1,15 +1,21 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.team.context;
 
 import com.mealam.showdown.team.data.TeamId;
-
 import java.util.List;
 
 public record TeamContext(
 		TeamId teamId,
 		String name,
 		//List<String> dragonIds
-		List<DragonContext> dragons
-) {
+		List<DragonContext> dragons) {
+
 	public TeamContext {
 		/*dragonIds = dragonIds == null
 				? List.of()

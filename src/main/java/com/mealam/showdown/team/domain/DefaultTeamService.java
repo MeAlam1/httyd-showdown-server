@@ -1,23 +1,28 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.team.domain;
 
 import com.mealam.showdown.loader.cache.ResourceCache;
 import com.mealam.showdown.team.api.TeamRepository;
 import com.mealam.showdown.team.api.TeamService;
-import com.mealam.showdown.team.context.TeamContext;
 import com.mealam.showdown.team.context.DragonContext;
+import com.mealam.showdown.team.context.TeamContext;
+import com.mealam.showdown.team.data.TeamId;
+import com.mealam.showdown.team.dto.request.CreateDragonRequest;
+import com.mealam.showdown.team.dto.request.CreateTeamRequest;
 import com.mealam.showdown.team.factory.DragonContextBuilder;
 import com.mealam.showdown.team.factory.TeamContextBuilder;
-import com.mealam.showdown.team.data.TeamId;
-import com.mealam.showdown.team.dto.request.CreateTeamRequest;
-import com.mealam.showdown.team.dto.request.CreateDragonRequest;
-
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class DefaultTeamService implements TeamService {
 
@@ -28,7 +33,6 @@ public class DefaultTeamService implements TeamService {
 	public DefaultTeamService(TeamRepository pRepo) {
 		this.repo = Objects.requireNonNull(pRepo, "TeamRepository is required");
 	}
-
 
 	@Override
 	public TeamContext createTeam(CreateTeamRequest pRequest) {
@@ -47,8 +51,7 @@ public class DefaultTeamService implements TeamService {
 		}
 
 		Set<String> normalizedIds = normalizeDragonIds(
-				dragonRequests.stream().map(CreateDragonRequest::id).toList()
-		);
+				dragonRequests.stream().map(CreateDragonRequest::id).toList());
 		validateDragonIdsExist(normalizedIds);
 
 		TeamId id = TeamId.generate();
@@ -88,8 +91,7 @@ public class DefaultTeamService implements TeamService {
 					s.stamina() != null ? s.stamina() : 0,
 					s.shotLimit() != null ? s.shotLimit() : 0,
 					s.venom() != null ? s.venom() : 0,
-					s.jawStrength() != null ? s.jawStrength() : 0
-			);
+					s.jawStrength() != null ? s.jawStrength() : 0);
 		}
 		if (req.heldItemId() != null) builder.heldItem(req.heldItemId());
 		if (req.moves() != null) {

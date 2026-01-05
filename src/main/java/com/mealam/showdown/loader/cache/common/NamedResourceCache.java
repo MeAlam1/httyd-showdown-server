@@ -1,18 +1,23 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.cache.common;
 
 import com.mealam.showdown.loader.json.deserialize.common.NamedResource;
-
 import java.util.List;
 
 public record NamedResourceCache(
 		String name,
-		String url
-) {
+		String url) {
+
 	public static NamedResourceCache construct(NamedResource pNamedResource) {
 		return new NamedResourceCache(
 				pNamedResource.name(),
-				pNamedResource.url()
-		);
+				pNamedResource.url());
 	}
 
 	public static List<NamedResourceCache> construct(List<NamedResource> pNamedResources) {

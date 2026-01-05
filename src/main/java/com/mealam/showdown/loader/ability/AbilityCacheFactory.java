@@ -15,12 +15,10 @@ public class AbilityCacheFactory implements CacheFactory<AbilityCache, Ability> 
 
 	public static final AbilityCacheFactory INSTANCE = new AbilityCacheFactory();
 
-	private AbilityCacheFactory() {
-	}
+	private AbilityCacheFactory() {}
 
 	@Override
 	public AbilityCache construct(Ability pAbility) {
 		return AbilityCache.construct(pAbility);
 	}
-
 }

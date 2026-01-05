@@ -1,19 +1,23 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.team.factory;
 
 import com.mealam.showdown.team.context.DragonContext;
 import com.mealam.showdown.team.context.TeamContext;
 import com.mealam.showdown.team.context.dragon.*;
-
 import com.mealam.showdown.team.data.TeamId;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public final class ContextFactories {
 
-	private ContextFactories() {
-	}
+	private ContextFactories() {}
 
 	public static AbilityContext createAbility(String pId) {
 		return new AbilityContext(pId);
@@ -59,7 +63,6 @@ public final class ContextFactories {
 			HeldItemContext pHeldItem,
 			List<MoveContext> pMoves,
 			TrainingEffortContext pTrainingEffort) {
-
 		List<MoveContext> safeMoves = pMoves == null ? List.of() : List.copyOf(pMoves);
 		return new DragonContext(
 				pDragonId,
@@ -70,8 +73,7 @@ public final class ContextFactories {
 				pStats,
 				pHeldItem,
 				safeMoves,
-				pTrainingEffort
-		);
+				pTrainingEffort);
 	}
 
 	public static TeamContext createTeam(TeamId pTeamId, String pName, List<DragonContext> pDragons) {

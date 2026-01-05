@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.battle.api;
 
 import com.mealam.showdown.battle.context.BattleContext;
@@ -10,6 +17,7 @@ import com.mealam.showdown.battle.dto.response.JoinBattleResponse;
 import com.mealam.showdown.user.data.UserId;
 
 public interface BattleService {
+
 	BattleContext createBattle(CreateBattleRequest pRequest);
 
 	BattleContext startBattle(BattleId pBattleId);

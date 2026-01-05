@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.json.deserialize.ability;
 
 import com.google.gson.JsonDeserializationContext;
@@ -11,20 +18,20 @@ import java.util.List;
 public record AbilityConditions(
 		List<String> blockedIn,
 		List<String> requiresTagOnCaster,
-		List<AbilityConditionsRequiresItemsEntry> requiresItems
-) {
+		List<AbilityConditionsRequiresItemsEntry> requiresItems) {
+
 	public static JsonDeserializer<AbilityConditions> deserializer() {
 		return new Deserializer();
 	}
 
 	private static final class Deserializer extends RecordJsonDeserializer<AbilityConditions> {
+
 		@Override
 		protected AbilityConditions deserializeObject(JsonObject pObj, JsonDeserializationContext pContext) {
 			return new AbilityConditions(
 					JsonUtils.jsonArrayToStringList(GsonHelper.getAsJsonArray(pObj, "blockedIn")),
 					JsonUtils.jsonArrayToStringList(GsonHelper.getAsJsonArray(pObj, "requiresTagOnCaster")),
-					JsonUtils.jsonArrayToObjectList(GsonHelper.getAsJsonArray(pObj, "requiresItems"), pContext, AbilityConditionsRequiresItemsEntry.class)
-			);
+					JsonUtils.jsonArrayToObjectList(GsonHelper.getAsJsonArray(pObj, "requiresItems"), pContext, AbilityConditionsRequiresItemsEntry.class));
 		}
 
 		@Override

@@ -1,14 +1,20 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.json.deserialize.dragon;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
-import com.mealam.showdown.loader.json.deserialize.dragon.stats.DragonStats;
 import com.mealam.showdown.loader.json.deserialize.dragon.stats.DragonPhysicalStats;
+import com.mealam.showdown.loader.json.deserialize.dragon.stats.DragonStats;
 import com.mealam.showdown.utils.json.GsonHelper;
 import com.mealam.showdown.utils.json.JsonUtils;
 import com.mealam.showdown.utils.json.deserialize.RecordJsonDeserializer;
-
 import java.util.List;
 
 public record Dragon(
@@ -28,13 +34,14 @@ public record Dragon(
 		DragonStats stats,
 		DragonMedia media,
 		List<String> tags,
-		DragonMetadata metadata
-) {
+		DragonMetadata metadata) {
+
 	public static JsonDeserializer<Dragon> deserializer() {
 		return new Deserializer();
 	}
 
 	private static final class Deserializer extends RecordJsonDeserializer<Dragon> {
+
 		@Override
 		protected Dragon deserializeObject(JsonObject pObj, JsonDeserializationContext pContext) {
 			return new Dragon(
@@ -54,8 +61,7 @@ public record Dragon(
 					GsonHelper.getAsObject(pObj, "stats", pContext, DragonStats.class),
 					GsonHelper.getAsObject(pObj, "media", pContext, DragonMedia.class),
 					JsonUtils.jsonArrayToStringList(GsonHelper.getAsJsonArray(pObj, "tags")),
-					GsonHelper.getAsObject(pObj, "metadata", pContext, DragonMetadata.class)
-			);
+					GsonHelper.getAsObject(pObj, "metadata", pContext, DragonMetadata.class));
 		}
 
 		@Override

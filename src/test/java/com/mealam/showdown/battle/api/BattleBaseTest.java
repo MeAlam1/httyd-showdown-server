@@ -1,17 +1,23 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.battle.api;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.mealam.showdown.BaseTest;
 import com.mealam.showdown.Main;
-import org.junit.jupiter.api.BeforeEach;
-
 import java.io.IOException;
 import java.net.http.WebSocket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.CountDownLatch;
-
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class BattleBaseTest extends BaseTest {
 
@@ -36,6 +42,7 @@ public abstract class BattleBaseTest extends BaseTest {
 	}
 
 	public record TestWebSocketListener(CountDownLatch openLatch) implements WebSocket.Listener {
+
 		@Override
 		public void onOpen(WebSocket pWebSocket) {
 			openLatch.countDown();

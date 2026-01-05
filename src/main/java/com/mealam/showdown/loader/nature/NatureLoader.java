@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.nature;
 
 import com.google.gson.Gson;
@@ -8,11 +15,10 @@ import com.mealam.showdown.loader.json.CacheFactory;
 import com.mealam.showdown.loader.json.JsonLoader;
 import com.mealam.showdown.loader.json.deserialize.nature.*;
 import com.mealam.showdown.utils.json.SharedGsonBuilder;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import org.jetbrains.annotations.NotNull;
 
 public class NatureLoader extends JsonLoader {
 

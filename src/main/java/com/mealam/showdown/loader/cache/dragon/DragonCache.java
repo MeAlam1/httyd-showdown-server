@@ -1,9 +1,15 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.cache.dragon;
 
 import com.mealam.showdown.loader.cache.dragon.stats.DragonStatsCache;
 import com.mealam.showdown.loader.cache.dragon.stats.PhysicalStatsCache;
 import com.mealam.showdown.loader.json.deserialize.dragon.Dragon;
-
 import java.util.List;
 
 public record DragonCache(
@@ -23,8 +29,7 @@ public record DragonCache(
 		DragonStatsCache stats,
 		MediaCache media,
 		List<String> tags,
-		DragonMetadataCache metadata
-) {
+		DragonMetadataCache metadata) {
 
 	public static DragonCache construct(Dragon pSource) {
 		return new DragonCache(
@@ -44,7 +49,6 @@ public record DragonCache(
 				DragonStatsCache.construct(pSource.stats()),
 				MediaCache.construct(pSource.media()),
 				pSource.tags(),
-				DragonMetadataCache.construct(pSource.metadata())
-		);
+				DragonMetadataCache.construct(pSource.metadata()));
 	}
 }

@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.json.deserialize.nature;
 
 import com.google.gson.JsonDeserializationContext;
@@ -19,13 +26,14 @@ public record Nature(
 		NatureStatMultipliers statMultipliers,
 		NatureGrowthCurves growthCurves,
 		List<NaturePassiveEffectsEntry> passiveEffects,
-		Metadata metadata
-) {
+		Metadata metadata) {
+
 	public static JsonDeserializer<Nature> deserializer() {
 		return new Deserializer();
 	}
 
 	private static final class Deserializer extends RecordJsonDeserializer<Nature> {
+
 		@Override
 		protected Nature deserializeObject(JsonObject pObj, JsonDeserializationContext pContext) {
 			return new Nature(
@@ -38,8 +46,7 @@ public record Nature(
 					GsonHelper.getAsObject(pObj, "statMultipliers", pContext, NatureStatMultipliers.class),
 					GsonHelper.getAsObject(pObj, "growthCurves", pContext, NatureGrowthCurves.class),
 					JsonUtils.jsonArrayToObjectList(GsonHelper.getAsJsonArray(pObj, "passiveEffects"), pContext, NaturePassiveEffectsEntry.class),
-					GsonHelper.getAsObject(pObj, "metadata", pContext, Metadata.class)
-			);
+					GsonHelper.getAsObject(pObj, "metadata", pContext, Metadata.class));
 		}
 
 		@Override

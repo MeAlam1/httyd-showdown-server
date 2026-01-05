@@ -10,9 +10,8 @@ package com.mealam.showdown.loader.json.deserialize.moves;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import java.util.List;
-
 import com.mealam.showdown.utils.json.JsonUtils;
+import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 public record Effect(

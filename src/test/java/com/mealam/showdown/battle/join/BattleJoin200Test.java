@@ -1,14 +1,20 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.battle.join;
-
-import com.mealam.showdown.battle.api.BattleBaseTest;
-import com.mealam.showdown.battle.utils.BattleTestUtils;
-import org.junit.jupiter.api.Test;
-
-import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.mealam.showdown.battle.api.BattleBaseTest;
+import com.mealam.showdown.battle.utils.BattleTestUtils;
+import java.net.http.HttpResponse;
+import org.junit.jupiter.api.Test;
 
 public class BattleJoin200Test extends BattleBaseTest {
 
@@ -98,7 +104,7 @@ public class BattleJoin200Test extends BattleBaseTest {
 	@Test
 	void shouldAcceptUnicodeNames() throws Exception {
 		String battleId = api.createBattleAndGetId();
-		String[] ids = {"用户", "игрок", "プレイヤー", "لاعب", "😀"};
+		String[] ids = { "用户", "игрок", "プレイヤー", "لاعب", "😀" };
 		for (int i = 0; i < ids.length; i++) {
 			String id = ids[i];
 			HttpResponse<String> res = api.join(battleId, id, "team-" + i);

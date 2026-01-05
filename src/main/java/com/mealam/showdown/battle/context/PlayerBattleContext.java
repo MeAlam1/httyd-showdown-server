@@ -8,10 +8,8 @@
 package com.mealam.showdown.battle.context;
 
 import com.mealam.showdown.user.context.UserContext;
-
 import java.util.List;
 
 public record PlayerBattleContext(
 		UserContext user,
-		List<DragonBattleContext> party) {
-}
+		List<DragonBattleContext> party) {}

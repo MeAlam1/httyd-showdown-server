@@ -1,12 +1,18 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.team.delete;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.mealam.showdown.team.api.TeamBaseTest;
 import com.mealam.showdown.team.utils.TeamTestUtils;
-import org.junit.jupiter.api.Test;
-
 import java.net.http.HttpResponse;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class TeamDelete200Test extends TeamBaseTest {
 

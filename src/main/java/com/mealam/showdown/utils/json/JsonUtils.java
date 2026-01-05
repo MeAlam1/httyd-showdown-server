@@ -1,21 +1,25 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.utils.json;
 
 import com.google.gson.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings({"unused"})
+@SuppressWarnings({ "unused" })
 public final class JsonUtils {
 
-	private JsonUtils() {
-	}
+	private JsonUtils() {}
 
 	public static String createJsonMessage(String pKey, String pValue) {
 		return String.format("{\"%s\":\"%s\"}", escapeJson(pKey), escapeJson(pValue));

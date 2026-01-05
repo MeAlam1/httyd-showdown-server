@@ -1,22 +1,27 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.utils.logging;
 
 import com.mealam.showdown.Constants;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 import java.util.logging.Level;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public class BaseLogger {
 
 	private static final ExecutorService LOG_EXECUTOR = Executors.newSingleThreadExecutor(r -> new Thread(r, "logger"));
 
-	private BaseLogger() {
-	}
+	private BaseLogger() {}
 
 	static {
 		LoggerConfig.configure(Constants.LOGGER, new DefaultLogColorProvider());

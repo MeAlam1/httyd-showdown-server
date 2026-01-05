@@ -7,39 +7,18 @@
  */
 package com.mealam.showdown.loader.json;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.mealam.showdown.Constants;
-import com.mealam.showdown.loader.cache.ability.AbilityCache;
-import com.mealam.showdown.loader.cache.dragon.DragonCache;
-import com.mealam.showdown.loader.cache.item.ItemCache;
-import com.mealam.showdown.loader.cache.moves.MovesCache;
-import com.mealam.showdown.loader.cache.nature.NatureCache;
-import com.mealam.showdown.loader.ability.AbilityCacheFactory;
 import com.mealam.showdown.loader.json.deserialize.ability.*;
-import com.mealam.showdown.loader.json.deserialize.common.Measurement;
-import com.mealam.showdown.loader.json.deserialize.common.Metadata;
-import com.mealam.showdown.loader.json.deserialize.common.NamedResource;
 import com.mealam.showdown.loader.json.deserialize.dragon.*;
 import com.mealam.showdown.loader.json.deserialize.dragon.stats.*;
 import com.mealam.showdown.loader.json.deserialize.item.*;
-import com.mealam.showdown.loader.json.deserialize.moves.Effect;
-import com.mealam.showdown.loader.json.deserialize.moves.EffectTarget;
-import com.mealam.showdown.loader.json.deserialize.moves.Moves;
 import com.mealam.showdown.loader.json.deserialize.nature.*;
-import com.mealam.showdown.loader.dragon.DragonCacheFactory;
-import com.mealam.showdown.loader.item.ItemCacheFactory;
-import com.mealam.showdown.loader.moves.MovesCacheFactory;
-import com.mealam.showdown.loader.nature.NatureCacheFactory;
 import com.mealam.showdown.utils.json.GsonHelper;
 import com.mealam.showdown.utils.logging.BaseLogLevel;
 import com.mealam.showdown.utils.logging.BaseLogger;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.eclipse.jetty.util.resource.Resource;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.net.JarURLConnection;
@@ -57,6 +36,8 @@ import java.util.function.Function;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.eclipse.jetty.util.resource.Resource;
+import org.jetbrains.annotations.NotNull;
 
 public class JsonLoader {
 
@@ -73,12 +54,12 @@ public class JsonLoader {
 					BaseLogger.log(BaseLogLevel.ERROR, "Exception while baking " + pPath + ": " + ex.getMessage());
 					return null;
 				}).whenComplete((result, ex) -> {
-			if (ex != null) {
-				BaseLogger.log(BaseLogLevel.ERROR, "Failed to load static " + pPath + ": " + ex.getMessage());
-			} else {
-				BaseLogger.log(BaseLogLevel.INFO, "Successfully loaded static " + pPath + ". Count: " + (result != null ? result.size() : 0));
-			}
-		});
+					if (ex != null) {
+						BaseLogger.log(BaseLogLevel.ERROR, "Failed to load static " + pPath + ": " + ex.getMessage());
+					} else {
+						BaseLogger.log(BaseLogLevel.INFO, "Successfully loaded static " + pPath + ". Count: " + (result != null ? result.size() : 0));
+					}
+				});
 	}
 
 	@NotNull

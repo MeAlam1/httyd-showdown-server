@@ -1,17 +1,23 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.team.create;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.mealam.showdown.team.api.TeamBaseTest;
 import com.mealam.showdown.team.utils.TeamTestUtils;
-import org.junit.jupiter.api.Test;
-
 import java.net.http.HttpResponse;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 class TeamCreate404Test extends TeamBaseTest {
 
 	private static final int STATUS_CODE = 404;
-	
+
 	@Test
 	void shouldReturnNotFoundForNonExistentTeam() throws Exception {
 		HttpResponse<String> response = api.getTeam("non-existent-team-id");

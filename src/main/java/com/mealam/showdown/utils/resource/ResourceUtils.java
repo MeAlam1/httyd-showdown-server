@@ -1,7 +1,13 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.utils.resource;
 
 import com.mealam.showdown.Main;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,7 +50,7 @@ public class ResourceUtils {
 			return null;
 		}
 	}
-	
+
 	public static List<String> listResources(ClassLoader pClassLoader, String pBasePath) {
 		List<String> results = new ArrayList<>();
 		if (pClassLoader == null || pBasePath == null || pBasePath.isBlank()) return results;

@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.battle.domain;
 
 import com.mealam.showdown.battle.api.BattleRepository;
@@ -21,7 +28,6 @@ import com.mealam.showdown.user.context.UserContext;
 import com.mealam.showdown.user.data.UserId;
 import com.mealam.showdown.utils.logging.BaseLogLevel;
 import com.mealam.showdown.utils.logging.BaseLogger;
-
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -72,8 +78,7 @@ public class DefaultBattleService implements BattleService {
 		var battle = new BattleContext(
 				battleId, teams, spectatorIds,
 				initialTurn, Phase.REGISTRY.defaultVersion(), null,
-				new ArrayList<>()
-		);
+				new ArrayList<>());
 
 		repo.save(battle);
 		return battle;
@@ -109,8 +114,7 @@ public class DefaultBattleService implements BattleService {
 		var updated = new BattleContext(
 				battle.battleId(), battle.teams(), battle.spectatorIds(),
 				startContext, inProgress, battle.winnerTeamId(),
-				history
-		);
+				history);
 
 		repo.update(updated);
 		return updated;
@@ -171,8 +175,7 @@ public class DefaultBattleService implements BattleService {
 			Instant submittedAt = Instant.now();
 			merged.put(
 					actingKey,
-					new TurnContext.PlayerTurnSubmission(actingKey, pTurnData.action(), submittedAt)
-			);
+					new TurnContext.PlayerTurnSubmission(actingKey, pTurnData.action(), submittedAt));
 
 			boolean activeTeamFinished = activeTeamPlayers.stream()
 					.map(UserId::toString)
@@ -181,22 +184,19 @@ public class DefaultBattleService implements BattleService {
 			List<TurnHistoryContext> history = new ArrayList<>(battle.turnHistory());
 			List<TurnHistoryContext.TurnEvent> events = new ArrayList<>();
 			events.add(new TurnHistoryContext.TurnEvent.ActionSubmitted(
-					submittedAt, pActingUserId, playerTeam, pTurnData.action()
-			));
+					submittedAt, pActingUserId, playerTeam, pTurnData.action()));
 
 			if (!activeTeamFinished) {
 				TurnContext sameTurn = new TurnContext(
 						ctx.turnNumber(),
 						TurnContext.TurnStatus.IN_PROGRESS,
 						activeTeam,
-						Map.copyOf(merged)
-				);
+						Map.copyOf(merged));
 
 				var updated = new BattleContext(
 						battle.battleId(), battle.teams(), battle.spectatorIds(),
 						sameTurn, battle.phase(), battle.winnerTeamId(),
-						history
-				);
+						history);
 
 				repo.update(updated);
 				return updated;
@@ -220,8 +220,7 @@ public class DefaultBattleService implements BattleService {
 
 			Instant advancedAt = Instant.now();
 			events.add(new TurnHistoryContext.TurnEvent.TurnAdvanced(
-					advancedAt, fromTurn, newTurn.turnNumber(), nextTurnOpeningTeam
-			));
+					advancedAt, fromTurn, newTurn.turnNumber(), nextTurnOpeningTeam));
 
 			Instant turnStartedAt = events.getFirst().at();
 
@@ -231,14 +230,12 @@ public class DefaultBattleService implements BattleService {
 					endedAt,
 					activeTeam,
 					List.copyOf(events),
-					new TurnHistoryContext.TurnResolution(Map.copyOf(finalActions))
-			));
+					new TurnHistoryContext.TurnResolution(Map.copyOf(finalActions))));
 
 			var updated = new BattleContext(
 					battle.battleId(), battle.teams(), battle.spectatorIds(),
 					newTurn, battle.phase(), battle.winnerTeamId(),
-					history
-			);
+					history);
 
 			repo.update(updated);
 
@@ -274,9 +271,9 @@ public class DefaultBattleService implements BattleService {
 		if (battle == null) return null;
 
 		TurnManager tm = turnManagers.get(pBattleId);
-		TurnContext finishedCtx = (tm != null) ? tm.finish() : new TurnContext(
-				-1, TurnContext.TurnStatus.FINISHED, null, null
-		);
+		TurnContext finishedCtx = (tm != null) ? tm.finish()
+				: new TurnContext(
+						-1, TurnContext.TurnStatus.FINISHED, null, null);
 
 		TeamId winnerTeam = pWinnerId != null ? battle.getTeamForPlayer(pWinnerId) : null;
 
@@ -287,14 +284,12 @@ public class DefaultBattleService implements BattleService {
 				Instant.now(),
 				null,
 				List.of(new TurnHistoryContext.TurnEvent.BattleFinished(Instant.now(), winnerTeam)),
-				null
-		));
+				null));
 
 		var updated = new BattleContext(
 				battle.battleId(), battle.teams(), battle.spectatorIds(),
 				finishedCtx, battle.phase(), winnerTeam,
-				history
-		);
+				history);
 
 		repo.update(updated);
 		turnManagers.remove(pBattleId);
@@ -318,17 +313,14 @@ public class DefaultBattleService implements BattleService {
 
 			UserId userId = UserId.parse(pRequest.userId());
 			UserContext profileContext = new UserContext(
-					userId, userId.toString()
-			);
+					userId, userId.toString());
 
 			if (battle.getAllPlayerIds().contains(userId)) {
 				return buildPlayerJoinResponse(pBattleId, profileContext, userId);
 			}
 
 			Map<TeamId, List<UserId>> mutableTeams = new LinkedHashMap<>();
-			battle.teams().forEach((teamId, players) ->
-					mutableTeams.put(teamId, new ArrayList<>(players))
-			);
+			battle.teams().forEach((teamId, players) -> mutableTeams.put(teamId, new ArrayList<>(players)));
 
 			List<UserId> spectators = new ArrayList<>(battle.spectatorIds());
 			spectators.remove(userId);
@@ -352,8 +344,7 @@ public class DefaultBattleService implements BattleService {
 			var updated = new BattleContext(
 					battle.battleId(), mutableTeams, spectators,
 					battle.turnContext(), battle.phase(), battle.winnerTeamId(),
-					battle.turnHistory()
-			);
+					battle.turnHistory());
 
 			repo.update(updated);
 			return buildPlayerJoinResponse(pBattleId, profileContext, userId);
@@ -400,8 +391,7 @@ public class DefaultBattleService implements BattleService {
 			var updated = new BattleContext(
 					battle.battleId(), mutableTeams, spectators,
 					battle.turnContext(), battle.phase(), battle.winnerTeamId(),
-					battle.turnHistory()
-			);
+					battle.turnHistory());
 
 			repo.update(updated);
 			return updated;

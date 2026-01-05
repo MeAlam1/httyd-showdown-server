@@ -1,16 +1,21 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.battle.http;
 
 import com.mealam.showdown.Main;
 import com.mealam.showdown.battle.api.BattleService;
 import com.mealam.showdown.battle.domain.DefaultBattleService;
-import com.mealam.showdown.battle.infra.FileBattleRepository;
 import com.mealam.showdown.battle.infra.DefaultBattleRepository;
+import com.mealam.showdown.battle.infra.FileBattleRepository;
 import com.mealam.showdown.battle.infra.InMemoryBattleRepository;
 import com.mealam.showdown.battle.infra.ws.BattleWebSocket;
 import com.mealam.showdown.battle.party.PartyService;
 import io.javalin.Javalin;
-
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -33,8 +38,7 @@ public class BattleRouter {
 
 			BattleService service = new DefaultBattleService(
 					hybrid,
-					new PartyService()
-			);
+					new PartyService());
 
 			new BattleRouter(service).register(pApp);
 			pApp.ws("/ws/battle/{id}", new BattleWebSocket(service)::configure);

@@ -1,12 +1,18 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.battle.context;
 
 import com.mealam.showdown.battle.data.BattleId;
 import com.mealam.showdown.battle.data.Phase;
 import com.mealam.showdown.battle.data.TeamId;
 import com.mealam.showdown.user.data.UserId;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.*;
+import org.jetbrains.annotations.Nullable;
 
 public record BattleContext(
 		BattleId battleId,
@@ -15,15 +21,12 @@ public record BattleContext(
 		TurnContext turnContext,
 		Phase phase,
 		@Nullable TeamId winnerTeamId,
-		List<TurnHistoryContext> turnHistory
-) {
+		List<TurnHistoryContext> turnHistory) {
 
 	public BattleContext {
 		Map<TeamId, List<UserId>> mutableTeams = new LinkedHashMap<>();
 		if (teams != null) {
-			teams.forEach((teamId, playerIds) ->
-					mutableTeams.put(teamId, List.copyOf(playerIds == null ? List.of() : playerIds))
-			);
+			teams.forEach((teamId, playerIds) -> mutableTeams.put(teamId, List.copyOf(playerIds == null ? List.of() : playerIds)));
 		}
 		teams = Collections.unmodifiableMap(mutableTeams);
 		spectatorIds = spectatorIds == null

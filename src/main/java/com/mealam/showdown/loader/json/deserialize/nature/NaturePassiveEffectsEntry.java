@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.json.deserialize.nature;
 
 import com.google.gson.JsonDeserializationContext;
@@ -8,19 +15,19 @@ import com.mealam.showdown.utils.json.deserialize.RecordJsonDeserializer;
 
 public record NaturePassiveEffectsEntry(
 		String effectId,
-		NaturePassiveEffectsEntryParameters parameters
-) {
+		NaturePassiveEffectsEntryParameters parameters) {
+
 	public static JsonDeserializer<NaturePassiveEffectsEntry> deserializer() {
 		return new Deserializer();
 	}
 
 	private static final class Deserializer extends RecordJsonDeserializer<NaturePassiveEffectsEntry> {
+
 		@Override
 		protected NaturePassiveEffectsEntry deserializeObject(JsonObject pObj, JsonDeserializationContext pContext) {
 			return new NaturePassiveEffectsEntry(
 					GsonHelper.getAsString(pObj, "effectId"),
-					GsonHelper.getAsObject(pObj, "parameters", pContext, NaturePassiveEffectsEntryParameters.class)
-			);
+					GsonHelper.getAsObject(pObj, "parameters", pContext, NaturePassiveEffectsEntryParameters.class));
 		}
 
 		@Override

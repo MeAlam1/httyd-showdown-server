@@ -1,14 +1,20 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.battle.create;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.mealam.showdown.battle.api.BattleBaseTest;
 import com.mealam.showdown.battle.utils.BattleTestUtils;
-import org.junit.jupiter.api.Test;
-
 import java.net.http.HttpResponse;
 import java.net.http.WebSocket;
 import java.util.concurrent.CountDownLatch;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class BattleCreate201Test extends BattleBaseTest {
 

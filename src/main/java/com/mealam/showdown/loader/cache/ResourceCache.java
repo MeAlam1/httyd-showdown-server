@@ -1,19 +1,25 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.cache;
 
 import com.mealam.showdown.loader.ability.AbilityLoader;
-import com.mealam.showdown.loader.dragon.DragonLoader;
-import com.mealam.showdown.loader.item.ItemLoader;
-import com.mealam.showdown.loader.json.JsonLoader;
 import com.mealam.showdown.loader.cache.ability.AbilityCache;
 import com.mealam.showdown.loader.cache.dragon.DragonCache;
 import com.mealam.showdown.loader.cache.item.ItemCache;
 import com.mealam.showdown.loader.cache.moves.MovesCache;
 import com.mealam.showdown.loader.cache.nature.NatureCache;
+import com.mealam.showdown.loader.dragon.DragonLoader;
+import com.mealam.showdown.loader.item.ItemLoader;
+import com.mealam.showdown.loader.json.JsonLoader;
 import com.mealam.showdown.loader.moves.MovesLoader;
 import com.mealam.showdown.loader.nature.NatureLoader;
 import com.mealam.showdown.utils.logging.BaseLogLevel;
 import com.mealam.showdown.utils.logging.BaseLogger;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;

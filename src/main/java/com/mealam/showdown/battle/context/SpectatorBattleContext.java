@@ -10,5 +10,4 @@ package com.mealam.showdown.battle.context;
 import com.mealam.showdown.user.context.UserContext;
 
 public record SpectatorBattleContext(
-		UserContext user) {
-}
+		UserContext user) {}

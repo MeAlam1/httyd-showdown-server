@@ -1,48 +1,56 @@
 {
-  "schemaVersion": "0.0.1",
+  "schemaVersion": "0.2.0",
+  "kind": "ability",
   "id": "paralyzing_mist",
-  "name": "Paralyzing Mist",
-  "description": "Releases a toxic mist that can immobilize enemies.",
+  "presentation": {
+    "name": "Paralyzing Mist",
+    "description": "Releases a toxic mist that disrupts enemy nervous systems, slowing or paralyzing those caught inside."
+  },
   "type": "active",
-  "target": "enemy",
-  "effects": [
+  "area": {
+    "shape": "sphere",
+    "center": "target",
+    "radiusMeters": 8
+  },
+  "requirements": {
+    "when": "hasAnyTag(caster, ['toxic','venomous']) && hasItem(caster, 'toxin_canister')"
+  },
+  "triggers": [
     {
-      "effectId": "area_status_effect",
-      "parameters": {
-        "status": "paralysis",
-        "durationSeconds": 6,
-        "radiusMeters": 8,
-        "chance": 0.75,
-        "maxStacks": 1,
-        "stackBehavior": "refresh",
-        "resistType": "statusResistance"
-      }
+      "trigger": "onCast",
+      "chanceExpr": "clamp(0.6 + caster.stats.control * 0.05 - battle.avgEnemy.statusResistance * 0.03, 0.25, 0.95)",
+      "effects": [
+        {
+          "effectId": "area_apply_status",
+          "target": "enemiesInArea",
+          "parameters": {
+            "status": "paralysis",
+            "durationSecondsExpr": "clamp(5 * (1 + caster.stats.firepower * 0.10) * (1 + caster.level * 0.02) * (contains(battle.weather, \"rain\") ? 0.6 : 1.0) * (1 - target.stats.statusResistance), 2, 12)",
+            "stacking": {
+              "maxStacks": 1,
+              "behavior": "refresh"
+            },
+            "falloff": {
+              "type": "linear",
+              "fromCenter": true,
+              "minMultiplier": 0.5
+            },
+            "resistType": "statusResistance",
+            "immunityCheck": "hasTag(target, 'construct') || hasTag(target, 'ethereal')"
+          }
+        }
+      ]
     }
   ],
-  "scaling": {
-    "withStat": "firepower",
-    "multiplier": 0.1,
-    "perLevelMultiplier": 0.02,
-    "maxMultiplier": 2.0,
-    "capAtLevel": 50
-  },
-  "conditions": {
-    "blockedIn": [
-      "rain"
-    ],
-    "requiresTagOnCaster": [
-      "toxic",
-      "venomous"
-    ],
-    "requiresItems": [
-      {
-        "itemId": "toxin_canister",
-        "consume": false
-      }
-    ]
+  "activation": {
+    "cooldownSeconds": "clamp(14 - caster.stats.haste * 0.5, 8, 14)",
+    "cost": {
+      "resource": "stamina",
+      "amountExpr": "18 + area.radiusMeters * 0.5"
+    }
   },
   "metadata": {
     "introducedIn": "1.0.0",
-    "lastUpdated": "2025-12-28"
+    "lastUpdated": "2026-01-05"
   }
 }

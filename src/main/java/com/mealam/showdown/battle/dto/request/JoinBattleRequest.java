@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mealam.showdown.battle.data.TeamId;
 
 public record JoinBattleRequest(@JsonProperty("userId") String userId, @JsonProperty("teamId") String teamId) {
+
 	public TeamId parseTeamId() {
 		return teamId != null && !teamId.isBlank() ? TeamId.parse(teamId) : null;
 	}

@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.json.deserialize.common;
 
 import com.google.gson.JsonDeserializationContext;
@@ -8,19 +15,19 @@ import com.mealam.showdown.utils.json.deserialize.RecordJsonDeserializer;
 
 public record Metadata(
 		String introducedIn,
-		String lastUpdated
-) {
+		String lastUpdated) {
+
 	public static JsonDeserializer<Metadata> deserializer() {
 		return new Deserializer();
 	}
 
 	private static final class Deserializer extends RecordJsonDeserializer<Metadata> {
+
 		@Override
 		protected Metadata deserializeObject(JsonObject pObj, JsonDeserializationContext pContext) {
 			return new Metadata(
 					GsonHelper.getAsString(pObj, "introducedIn"),
-					GsonHelper.getAsString(pObj, "lastUpdated")
-			);
+					GsonHelper.getAsString(pObj, "lastUpdated"));
 		}
 
 		@Override

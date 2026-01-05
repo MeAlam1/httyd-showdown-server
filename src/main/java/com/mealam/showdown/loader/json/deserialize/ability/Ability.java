@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.json.deserialize.ability;
 
 import com.google.gson.JsonDeserializationContext;
@@ -19,13 +26,14 @@ public record Ability(
 		List<AbilityEffectsEntry> effects,
 		AbilityScaling scaling,
 		AbilityConditions conditions,
-		Metadata metadata
-) {
+		Metadata metadata) {
+
 	public static JsonDeserializer<Ability> deserializer() {
 		return new Deserializer();
 	}
 
 	private static final class Deserializer extends RecordJsonDeserializer<Ability> {
+
 		@Override
 		protected Ability deserializeObject(JsonObject pObj, JsonDeserializationContext pContext) {
 			return new Ability(
@@ -38,8 +46,7 @@ public record Ability(
 					JsonUtils.jsonArrayToObjectList(GsonHelper.getAsJsonArray(pObj, "effects"), pContext, AbilityEffectsEntry.class),
 					GsonHelper.getAsObject(pObj, "scaling", pContext, AbilityScaling.class),
 					GsonHelper.getAsObject(pObj, "conditions", pContext, AbilityConditions.class),
-					GsonHelper.getAsObject(pObj, "metadata", pContext, Metadata.class)
-			);
+					GsonHelper.getAsObject(pObj, "metadata", pContext, Metadata.class));
 		}
 
 		@Override

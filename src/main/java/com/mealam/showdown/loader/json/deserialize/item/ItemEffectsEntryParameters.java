@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.json.deserialize.item;
 
 import com.google.gson.JsonDeserializationContext;
@@ -13,21 +20,21 @@ public record ItemEffectsEntryParameters(
 		String element,
 		float multiplier,
 		@Nullable String durationSeconds,
-		List<String> appliesTo
-) {
+		List<String> appliesTo) {
+
 	public static JsonDeserializer<ItemEffectsEntryParameters> deserializer() {
 		return new Deserializer();
 	}
 
 	private static final class Deserializer extends RecordJsonDeserializer<ItemEffectsEntryParameters> {
+
 		@Override
 		protected ItemEffectsEntryParameters deserializeObject(JsonObject pObj, JsonDeserializationContext pContext) {
 			return new ItemEffectsEntryParameters(
 					GsonHelper.getAsString(pObj, "element"),
 					GsonHelper.getAsFloat(pObj, "multiplier"),
 					JsonUtils.getOptionalString(pObj, "durationSeconds"),
-					JsonUtils.jsonArrayToStringList(GsonHelper.getAsJsonArray(pObj, "appliesTo"))
-			);
+					JsonUtils.jsonArrayToStringList(GsonHelper.getAsJsonArray(pObj, "appliesTo")));
 		}
 
 		@Override

@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.json.deserialize.dragon.stats;
 
 import com.google.gson.JsonDeserializationContext;
@@ -14,13 +21,14 @@ public record DragonExternalValues(
 		Float shotLimit,
 		Float venom,
 		Float jawStrength,
-		Float stealth
-) {
+		Float stealth) {
+
 	public static JsonDeserializer<DragonExternalValues> deserializer() {
 		return new Deserializer();
 	}
 
 	private static final class Deserializer extends RecordJsonDeserializer<DragonExternalValues> {
+
 		@Override
 		protected DragonExternalValues deserializeObject(JsonObject pObj, JsonDeserializationContext pContext) {
 			return new DragonExternalValues(
@@ -31,8 +39,7 @@ public record DragonExternalValues(
 					JsonUtils.getOptionalFloat(pObj, "shotLimit"),
 					JsonUtils.getOptionalFloat(pObj, "venom"),
 					JsonUtils.getOptionalFloat(pObj, "jawStrength"),
-					JsonUtils.getOptionalFloat(pObj, "stealth")
-			);
+					JsonUtils.getOptionalFloat(pObj, "stealth"));
 		}
 
 		@Override

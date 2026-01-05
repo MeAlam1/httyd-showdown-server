@@ -9,9 +9,8 @@ package com.mealam.showdown.battle.data;
 
 import com.mealam.showdown.utils.ExtensibleEnum;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 public class Phase extends ExtensibleEnum<Phase> {
 

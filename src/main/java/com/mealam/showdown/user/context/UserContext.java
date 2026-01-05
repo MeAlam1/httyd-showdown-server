@@ -11,5 +11,4 @@ import com.mealam.showdown.user.data.UserId;
 
 public record UserContext(
 		UserId userId,
-		String username) {
-}
+		String username) {}

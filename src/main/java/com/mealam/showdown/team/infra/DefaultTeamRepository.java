@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.team.infra;
 
 import com.mealam.showdown.team.api.TeamRepository;
@@ -5,7 +12,6 @@ import com.mealam.showdown.team.context.TeamContext;
 import com.mealam.showdown.team.data.TeamId;
 import com.mealam.showdown.utils.logging.BaseLogLevel;
 import com.mealam.showdown.utils.logging.BaseLogger;
-
 import java.util.Objects;
 
 public class DefaultTeamRepository implements TeamRepository {

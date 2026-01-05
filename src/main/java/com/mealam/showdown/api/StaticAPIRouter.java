@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.api;
 
 import com.mealam.showdown.Constants;
@@ -7,7 +14,6 @@ import com.mealam.showdown.utils.http.ResponseUtils;
 import com.mealam.showdown.utils.path.PathUtils;
 import com.mealam.showdown.utils.resource.ResourceUtils;
 import io.javalin.Javalin;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

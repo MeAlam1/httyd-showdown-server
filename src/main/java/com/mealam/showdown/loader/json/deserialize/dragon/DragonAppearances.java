@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.json.deserialize.dragon;
 
 import com.google.gson.JsonDeserializationContext;
@@ -6,26 +13,25 @@ import com.google.gson.JsonObject;
 import com.mealam.showdown.utils.json.GsonHelper;
 import com.mealam.showdown.utils.json.JsonUtils;
 import com.mealam.showdown.utils.json.deserialize.RecordJsonDeserializer;
-
 import java.util.List;
 
 public record DragonAppearances(
 		List<String> movies,
 		List<String> series,
-		List<String> games
-) {
+		List<String> games) {
+
 	public static JsonDeserializer<DragonAppearances> deserializer() {
 		return new Deserializer();
 	}
 
 	private static final class Deserializer extends RecordJsonDeserializer<DragonAppearances> {
+
 		@Override
 		protected DragonAppearances deserializeObject(JsonObject pObj, JsonDeserializationContext pContext) {
 			return new DragonAppearances(
 					JsonUtils.jsonArrayToStringList(GsonHelper.getAsJsonArray(pObj, "movies")),
 					JsonUtils.jsonArrayToStringList(GsonHelper.getAsJsonArray(pObj, "series")),
-					JsonUtils.jsonArrayToStringList(GsonHelper.getAsJsonArray(pObj, "games"))
-			);
+					JsonUtils.jsonArrayToStringList(GsonHelper.getAsJsonArray(pObj, "games")));
 		}
 
 		@Override

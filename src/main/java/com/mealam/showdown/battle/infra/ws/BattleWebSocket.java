@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.battle.infra.ws;
 
 import com.mealam.showdown.battle.api.BattleService;
@@ -9,7 +16,6 @@ import com.mealam.showdown.utils.ws.WebSocketMessage;
 import com.mealam.showdown.utils.ws.WebSocketUtils;
 import io.javalin.websocket.WsConfig;
 import io.javalin.websocket.WsContext;
-
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

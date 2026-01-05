@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.loader.cache.common;
 
 import com.mealam.showdown.loader.json.deserialize.common.Measurement;
@@ -10,8 +17,8 @@ public record MeasurementCache(
 		@Nullable Float centimeters,
 		@Nullable Float yards,
 		@Nullable Float kilometers,
-		@Nullable Float miles
-) {
+		@Nullable Float miles) {
+
 	public static MeasurementCache construct(Measurement pMeasurement) {
 		return new MeasurementCache(
 				pMeasurement.ft(),
@@ -20,7 +27,6 @@ public record MeasurementCache(
 				pMeasurement.centimeters(),
 				pMeasurement.yards(),
 				pMeasurement.kilometers(),
-				pMeasurement.miles()
-		);
+				pMeasurement.miles());
 	}
 }

@@ -1,14 +1,20 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.battle.get;
-
-import com.mealam.showdown.battle.api.BattleBaseTest;
-import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import com.mealam.showdown.battle.api.BattleBaseTest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
+import org.junit.jupiter.api.Test;
 
 public class BattleGet200Test extends BattleBaseTest {
 
