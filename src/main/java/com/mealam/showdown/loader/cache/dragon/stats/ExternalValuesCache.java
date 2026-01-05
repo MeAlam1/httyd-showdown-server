@@ -1,6 +1,6 @@
 package com.mealam.showdown.loader.cache.dragon.stats;
 
-import com.mealam.showdown.loader.json.deserialize.dragon.stats.ExternalValues;
+import com.mealam.showdown.loader.json.deserialize.dragon.stats.DragonExternalValues;
 import org.jetbrains.annotations.Nullable;
 
 public record ExternalValuesCache(
@@ -13,7 +13,7 @@ public record ExternalValuesCache(
 		@Nullable Float jawStrength,
 		@Nullable Float stealth
 ) {
-	public static ExternalValuesCache construct(ExternalValues pSource) {
+	public static ExternalValuesCache construct(DragonExternalValues pSource) {
 		return new ExternalValuesCache(
 				pSource.attack(),
 				pSource.speed(),

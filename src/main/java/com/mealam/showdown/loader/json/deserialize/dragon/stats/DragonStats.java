@@ -7,8 +7,8 @@ import com.mealam.showdown.utils.json.GsonHelper;
 import com.mealam.showdown.utils.json.deserialize.RecordJsonDeserializer;
 
 public record DragonStats(
-		InternalStats internal,
-		ExternalStats external
+		DragonInternalStats internal,
+		DragonExternalStats external
 ) {
 	public static JsonDeserializer<DragonStats> deserializer() {
 		return new Deserializer();
@@ -18,8 +18,8 @@ public record DragonStats(
 		@Override
 		protected DragonStats deserializeObject(JsonObject pObj, JsonDeserializationContext pContext) {
 			return new DragonStats(
-					GsonHelper.getAsObject(pObj, "internal", pContext, InternalStats.class),
-					GsonHelper.getAsObject(pObj, "external", pContext, ExternalStats.class)
+					GsonHelper.getAsObject(pObj, "internal", pContext, DragonInternalStats.class),
+					GsonHelper.getAsObject(pObj, "external", pContext, DragonExternalStats.class)
 			);
 		}
 

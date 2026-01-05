@@ -1,0 +1,26 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
+package com.mealam.showdown.loader.item;
+
+import com.mealam.showdown.loader.cache.item.ItemCache;
+import com.mealam.showdown.loader.json.CacheFactory;
+import com.mealam.showdown.loader.json.deserialize.item.Item;
+
+public class ItemCacheFactory implements CacheFactory<ItemCache, Item> {
+
+	public static final ItemCacheFactory INSTANCE = new ItemCacheFactory();
+
+	private ItemCacheFactory() {
+	}
+
+	@Override
+	public ItemCache construct(Item pItem) {
+		return ItemCache.construct(pItem);
+	}
+
+}

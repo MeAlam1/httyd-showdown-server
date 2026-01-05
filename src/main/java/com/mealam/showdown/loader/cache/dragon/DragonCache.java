@@ -23,7 +23,7 @@ public record DragonCache(
 		DragonStatsCache stats,
 		MediaCache media,
 		List<String> tags,
-		MetadataCache metadata
+		DragonMetadataCache metadata
 ) {
 
 	public static DragonCache construct(Dragon pSource) {
@@ -44,7 +44,7 @@ public record DragonCache(
 				DragonStatsCache.construct(pSource.stats()),
 				MediaCache.construct(pSource.media()),
 				pSource.tags(),
-				MetadataCache.construct(pSource.metadata())
+				DragonMetadataCache.construct(pSource.metadata())
 		);
 	}
 }

@@ -1,6 +1,6 @@
 package com.mealam.showdown.loader.cache.dragon;
 
-import com.mealam.showdown.loader.json.deserialize.dragon.Appearances;
+import com.mealam.showdown.loader.json.deserialize.dragon.DragonAppearances;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ public record AppearancesCache(
 		List<String> series,
 		List<String> games
 ) {
-	public static AppearancesCache construct(Appearances pAppearance) {
+	public static AppearancesCache construct(DragonAppearances pAppearance) {
 		return new AppearancesCache(
 				pAppearance.movies(),
 				pAppearance.series(),

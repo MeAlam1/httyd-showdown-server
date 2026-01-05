@@ -1,7 +1,7 @@
 package com.mealam.showdown.loader.cache.dragon;
 
 import com.google.gson.annotations.SerializedName;
-import com.mealam.showdown.loader.json.deserialize.dragon.Classification;
+import com.mealam.showdown.loader.json.deserialize.dragon.DragonClassification;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public record ClassificationCache(
 		String size,
 		String habitat
 ) {
-	public static ClassificationCache construct(Classification pClassification) {
+	public static ClassificationCache construct(DragonClassification pClassification) {
 		return new ClassificationCache(
 				pClassification.clazz(),
 				pClassification.former(),

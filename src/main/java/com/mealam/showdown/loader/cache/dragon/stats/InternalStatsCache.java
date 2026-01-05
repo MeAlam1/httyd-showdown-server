@@ -1,6 +1,6 @@
 package com.mealam.showdown.loader.cache.dragon.stats;
 
-import com.mealam.showdown.loader.json.deserialize.dragon.stats.InternalStats;
+import com.mealam.showdown.loader.json.deserialize.dragon.stats.DragonInternalStats;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public record InternalStatsCache(
 		float stealth,
 		float stamina
 ) {
-	public static InternalStatsCache construct(InternalStats pSource) {
+	public static InternalStatsCache construct(DragonInternalStats pSource) {
 		return new InternalStatsCache(
 				pSource.notes(),
 				pSource.attack(),

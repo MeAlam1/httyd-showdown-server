@@ -1,14 +1,14 @@
 package com.mealam.showdown.loader.cache.dragon.stats;
 
 import com.mealam.showdown.loader.cache.common.MeasurementCache;
-import com.mealam.showdown.loader.json.deserialize.dragon.stats.PhysicalStats;
+import com.mealam.showdown.loader.json.deserialize.dragon.stats.DragonPhysicalStats;
 
 public record PhysicalStatsCache(
 		MeasurementCache length,
 		MeasurementCache weight,
 		MeasurementCache wingspan
 ) {
-	public static PhysicalStatsCache construct(PhysicalStats pSource) {
+	public static PhysicalStatsCache construct(DragonPhysicalStats pSource) {
 		return new PhysicalStatsCache(
 				MeasurementCache.construct(pSource.length()),
 				MeasurementCache.construct(pSource.weight()),
