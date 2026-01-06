@@ -11,7 +11,12 @@ import com.mealam.showdown.script.core.Opcode;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Registers all built-in opcode handlers.
+ * Registers all built-in opcode handlers and provides a convenience factory
+ * for a registry populated with the default handlers.
+ *
+ * <p>Current built-in handlers include:
+ * - {@link NoopHandler} for {@link Opcode#NOOP}
+ * - {@link EmitHandler} for {@link Opcode#EMIT}</p>
  */
 public final class DefaultOpcodes {
 

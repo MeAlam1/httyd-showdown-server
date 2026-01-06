@@ -13,7 +13,11 @@ import com.mealam.showdown.script.runtime.ExecutionContext;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Handles execution of a specific opcode.
+ * Functional interface representing a handler for a single opcode.
+ *
+ * <p>Implementations are responsible for performing the action associated with a step
+ * and returning an {@link ExecutionResult} describing whether the step executed and
+ * any logs produced.</p>
  */
 @FunctionalInterface
 public interface OpcodeHandler {

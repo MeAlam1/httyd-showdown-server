@@ -15,11 +15,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Parses JSON scripts into executable {@link Step} lists.
- * <p>
- * Accepts either:
- * - { "script": { "onCast": [ ... ] } }
- * - { "onCast": [ ... ] }
+ * Lightweight parser that converts JSON script representations into a list of {@link Step}s.
+ *
+ * <p>Accepted JSON shapes:
+ * - A top-level object with a nested script block: `{ "script": { "onCast": [ ... ] } }`
+ * - A top-level object that directly contains an `onCast` array: `{ "onCast": [ ... ] }`</p>
+ *
+ * <p>Parsing rules:
+ * - Missing or invalid JSON results in an {@link IllegalArgumentException}.
+ * - Steps must contain a non-blank {@code opcode} string; unknown opcodes will cause an exception.
+ * - Arguments are recursively parsed into immutable Java values:
+ * strings, numbers, booleans, lists and maps. Null/missing fields yield empty maps or `null` values
+ * where appropriate.</p>
  */
 public final class JsonScriptLoader {
 
@@ -28,6 +35,11 @@ public final class JsonScriptLoader {
 
 	private JsonScriptLoader() {}
 
+	/**
+	 * Parses the top-level JSON and returns the list of steps under the first found \"onCast\" array.
+	 *
+	 * @throws IllegalArgumentException when JSON is invalid or parsing fails
+	 */
 	@NotNull
 	public static List<Step> parseOnCast(@NotNull String pJson) {
 		try {
@@ -45,6 +57,10 @@ public final class JsonScriptLoader {
 		}
 	}
 
+	/**
+	 * Parses a JsonNode that is expected to be an array of steps.
+	 * Returns an empty list if the node is not an array.
+	 */
 	@NotNull
 	public static List<Step> parseSteps(@NotNull JsonNode pArray) {
 		if (!pArray.isArray()) {
@@ -83,6 +99,10 @@ public final class JsonScriptLoader {
 		return pNode.hasNonNull(pField) ? pNode.get(pField).asText() : null;
 	}
 
+	/**
+	 * Parses a JSON object node into an immutable Map\<String,Object\>.
+	 * Non-object nodes (null/missing) return an empty map.
+	 */
 	@NotNull
 	private static Map<String, Object> parseObject(@NotNull JsonNode pNode) {
 		if (pNode.isMissingNode() || pNode.isNull() || !pNode.isObject()) {
@@ -98,6 +118,15 @@ public final class JsonScriptLoader {
 		return Map.copyOf(map);
 	}
 
+	/**
+	 * Parses a JsonNode into a corresponding Java value:
+	 * - text -> String
+	 * - number -> Number
+	 * - boolean -> Boolean
+	 * - array -> List\<Object\> (elements parsed recursively)
+	 * - object -> Map\<String,Object\> (parsed recursively)
+	 * - null/missing -> null
+	 */
 	private static @Nullable Object parseValue(@NotNull JsonNode pNode) {
 		if (pNode.isMissingNode() || pNode.isNull()) return null;
 		if (pNode.isTextual()) return pNode.asText();

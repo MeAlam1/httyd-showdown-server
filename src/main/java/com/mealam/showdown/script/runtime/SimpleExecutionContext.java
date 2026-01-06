@@ -1,12 +1,18 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.script.runtime;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.random.RandomGenerator;
+import org.jetbrains.annotations.NotNull;
 
 public final class SimpleExecutionContext implements ExecutionContext {
 
@@ -14,8 +20,7 @@ public final class SimpleExecutionContext implements ExecutionContext {
 	private final Map<String, Object> variables = new HashMap<>();
 	private final List<EmittedEvent> emitted = new ArrayList<>();
 
-	public SimpleExecutionContext() {
-	}
+	public SimpleExecutionContext() {}
 
 	@Override
 	public @NotNull RandomGenerator rng() {

@@ -10,16 +10,25 @@ package com.mealam.showdown.script.core;
 import com.mealam.showdown.script.expression.ExpressionEngine;
 import com.mealam.showdown.script.opcode.OpcodeRegistry;
 import com.mealam.showdown.script.runtime.ExecutionContext;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Executes a list of {@link Step}s against an {@link ExecutionContext}.
- * <p>
- * Supports conditional guards and chance-based execution.
+ * Orchestrates execution of a sequence of script {@link Step}s.
+ *
+ * <p>The interpreter evaluates optional conditional guards and chance expressions
+ * for each step using the provided {@link ExpressionEngine} and performs RNG checks
+ * using the {@link ExecutionContext}. Opcode execution is delegated to handlers
+ * resolved from the supplied {@link OpcodeRegistry}.</p>
+ *
+ * <p>Key behaviors:
+ * - If a step's {@code condition} is present and evaluates to false, the step is skipped.
+ * - If a step's {@code chance} is present, it is evaluated to a number in [0,1] and an RNG
+ * roll determines whether the step runs.
+ * - Opcode handler execution provides an {@link ExecutionResult} describing whether a step
+ * executed and any diagnostic logs.</p>
  */
 public final class Interpreter {
 
@@ -33,6 +42,11 @@ public final class Interpreter {
 		this.registry = pRegistry;
 	}
 
+	/**
+	 * Returns the opcode registry used by this interpreter.
+	 * The registry implementation is thread-safe; callers should avoid modifying it
+	 * concurrently unless intentional.
+	 */
 	@NotNull
 	public OpcodeRegistry registry() {
 		return registry;
@@ -67,13 +81,19 @@ public final class Interpreter {
 		return condition == null || expressions.evaluateBool(condition, pVariables);
 	}
 
+	/**
+	 * Evaluates a step's chance expression (if present) and compares against
+	 * the runtime RNG. Uses strict \(less-than\) semantics so 0.0 never executes
+	 * and 1.0 always executes.
+	 */
 	private boolean passesChance(@NotNull ExecutionContext pContext, @NotNull Step pStep, @NotNull Map<String, Object> pVariables) {
 		String chanceExpr = pStep.chance();
 		if (chanceExpr == null) {
 			return true;
 		}
 		double chance = clamp(expressions.evaluateNumber(chanceExpr, pVariables), 0.0, 1.0);
-		return pContext.rng().nextDouble() <= chance;
+		// Use < for conventional semantics: chance == 0.0 never executes, chance == 1.0 always executes
+		return pContext.rng().nextDouble() < chance;
 	}
 
 	// TODO: Extract to MathUtils

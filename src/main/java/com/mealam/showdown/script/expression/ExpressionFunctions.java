@@ -1,19 +1,28 @@
+/*
+ * Copyright (C) 2024 BlueLib Contributors
+ *
+ * This Source Code Form is subject to the terms of the MIT License.
+ * If a copy of the MIT License was not distributed with this file,
+ * You can obtain one at https://opensource.org/licenses/MIT.
+ */
 package com.mealam.showdown.script.expression;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Helper functions exposed to the scripting environment.
- * These correspond to the previous built-in expression functions.
- * <p>
- * Implementations are defensive and accept Strings, Collections, Maps and arrays.
+ * Utility functions exposed to scripting expression environments.
+ *
+ * <p>These helper methods provide consistent, defensive behaviors for common
+ * script operations such as containment checks, clamping numeric values, and
+ * tag membership testing. They accept a variety of container types (String,
+ * Collection, Map, array) and handle nulls gracefully.</p>
  */
 public final class ExpressionFunctions {
 
-	public ExpressionFunctions() {
-	}
+	public ExpressionFunctions() {}
 
 	/**
 	 * Returns true if container contains value.
@@ -22,23 +31,21 @@ public final class ExpressionFunctions {
 	 * - If container is a Map, checks keys for matching value.
 	 * - If container is an array, checks any element equals value.
 	 */
-	public boolean contains(Object container, Object value) {
-		if (container == null || value == null) return false;
+	public boolean contains(@NotNull Object pContainer, @NotNull Object pValue) {
+		return switch (pContainer) {
+			case String cs -> cs.contains(pValue.toString());
+			case Collection<?> coll -> coll.contains(pValue);
+			case Map<?, ?> map -> map.containsKey(pValue);
+			default -> handleArray(pContainer, pValue);
+		};
+	}
 
-		if (container instanceof String cs) {
-			return cs.contains(value.toString());
-		}
-		if (container instanceof Collection<?> coll) {
-			return coll.contains(value);
-		}
-		if (container instanceof Map<?, ?> map) {
-			return map.containsKey(value);
-		}
-		if (container.getClass().isArray()) {
-			int len = java.lang.reflect.Array.getLength(container);
+	private boolean handleArray(@NotNull Object pContainer, @NotNull Object pValue) {
+		if (pContainer.getClass().isArray()) {
+			int len = java.lang.reflect.Array.getLength(pContainer);
 			for (int i = 0; i < len; i++) {
-				Object el = java.lang.reflect.Array.get(container, i);
-				if (Objects.equals(el, value)) return true;
+				Object el = java.lang.reflect.Array.get(pContainer, i);
+				if (Objects.equals(el, pValue)) return true;
 			}
 			return false;
 		}
@@ -48,8 +55,8 @@ public final class ExpressionFunctions {
 	/**
 	 * Clamps a value between min and max.
 	 */
-	public double clamp(double value, double min, double max) {
-		return Math.max(min, Math.min(max, value));
+	public double clamp(double pValue, double pMin, double pMax) {
+		return Math.max(pMin, Math.min(pMax, pValue));
 	}
 
 	/**
@@ -59,27 +66,13 @@ public final class ExpressionFunctions {
 	 * - For Strings, checks substring equality.
 	 * - For arrays, checks any element equals item.
 	 */
-	public boolean hasItem(Object container, Object item) {
-		if (container == null || item == null) return false;
-
-		if (container instanceof Collection<?> coll) {
-			return coll.contains(item);
-		}
-		if (container instanceof Map<?, ?> map) {
-			return map.values().contains(item);
-		}
-		if (container instanceof String s) {
-			return s.contains(item.toString());
-		}
-		if (container.getClass().isArray()) {
-			int len = java.lang.reflect.Array.getLength(container);
-			for (int i = 0; i < len; i++) {
-				Object el = java.lang.reflect.Array.get(container, i);
-				if (Objects.equals(el, item)) return true;
-			}
-			return false;
-		}
-		return false;
+	public boolean hasItem(@NotNull Object pContainer, @NotNull Object pItem) {
+		return switch (pContainer) {
+			case Collection<?> coll -> coll.contains(pItem);
+			case Map<?, ?> map -> map.containsValue(pItem);
+			case String s -> s.contains(pItem.toString());
+			default -> handleArray(pContainer, pItem);
+		};
 	}
 
 	/**
@@ -87,18 +80,13 @@ public final class ExpressionFunctions {
 	 * - Accepts tags as Collection, Map (keys), array, or String (comma separated).
 	 * - Accepts wanted as Collection, array, or single value.
 	 */
-	public boolean hasAnyTag(Object tags, Object wanted) {
-		if (tags == null || wanted == null) return false;
-
-		// Normalize tags into a Collection<Object>
-		Collection<?> tagColl = toCollection(tags);
+	public boolean hasAnyTag(@NotNull Object pTags, @NotNull Object pWanted) {
+		Collection<?> tagColl = toCollection(pTags);
 		if (tagColl == null || tagColl.isEmpty()) return false;
 
-		// Normalize wanted into a Collection<Object>
-		Collection<?> wantColl = toCollection(wanted);
+		Collection<?> wantColl = toCollection(pWanted);
 		if (wantColl == null || wantColl.isEmpty()) {
-			// single wanted value
-			return tagColl.stream().anyMatch(t -> Objects.equals(t, wanted));
+			return tagColl.stream().anyMatch(t -> Objects.equals(t, pWanted));
 		}
 
 		for (Object w : wantColl) {
@@ -110,19 +98,19 @@ public final class ExpressionFunctions {
 		return false;
 	}
 
-	private Collection<?> toCollection(Object o) {
-		if (o instanceof Collection<?> c) return c;
-		if (o instanceof Map<?, ?> m) return m.keySet();
-		if (o.getClass().isArray()) {
-			int len = java.lang.reflect.Array.getLength(o);
+	@NotNull
+	private Collection<?> toCollection(@NotNull Object pObject) {
+		if (pObject instanceof Collection<?> c) return c;
+		if (pObject instanceof Map<?, ?> m) return m.keySet();
+		if (pObject.getClass().isArray()) {
+			int len = java.lang.reflect.Array.getLength(pObject);
 			java.util.List<Object> list = new java.util.ArrayList<>(len);
 			for (int i = 0; i < len; i++) {
-				list.add(java.lang.reflect.Array.get(o, i));
+				list.add(java.lang.reflect.Array.get(pObject, i));
 			}
 			return list;
 		}
-		if (o instanceof String s) {
-			// split comma/space separated tags
+		if (pObject instanceof String s) {
 			String[] parts = s.split("\\s*,\\s*|\\s+");
 			java.util.List<String> list = new java.util.ArrayList<>();
 			for (String p : parts) {

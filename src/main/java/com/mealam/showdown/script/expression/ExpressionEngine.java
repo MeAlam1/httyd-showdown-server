@@ -11,7 +11,12 @@ import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Evaluates string expressions against a variable context.
+ * Abstraction for evaluating string-based expressions against a variable context.
+ *
+ * <p>Implementations should convert the provided expression into either a numeric
+ * value via {@link #evaluateNumber(String, Map)} or a boolean via
+ * {@link #evaluateBool(String, Map)}. The evaluation is performed using the supplied
+ * variables map as the execution context.</p>
  */
 public interface ExpressionEngine {
 

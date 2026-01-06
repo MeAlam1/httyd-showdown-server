@@ -11,7 +11,11 @@ import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Represents an emitted event.
+ * Immutable value object representing an event emitted by a script.
+ *
+ * <p>The record stores a non-null string {@code id} and a defensive, immutable copy
+ * of the provided {@code payload} map. Consumers may inspect the payload safely
+ * without affecting the original map passed by the script.</p>
  */
 public record EmittedEvent(@NotNull String id, @NotNull Map<String, Object> payload) {
 

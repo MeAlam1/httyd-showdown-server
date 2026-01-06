@@ -9,13 +9,18 @@ package com.mealam.showdown.script.runtime;
 
 import java.util.Map;
 import java.util.random.RandomGenerator;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Runtime context for script execution.
- * <p>
- * Provides access to variables, RNG, and a generic event emission hook.
+ * Represents the runtime environment used while executing script steps.
+ *
+ * <p>Implementations must provide:
+ * - an RNG via {@link #rng()} for chance checks
+ * - a variables map via {@link #variables()} that expression evaluators may read
+ * - an {@link #emit(EmittedEvent)} hook that receives events produced by EMIT opcodes.</p>
+ *
+ * <p>The default {@link #emit(EmittedEvent)} implementation is a no-op. Consumers may
+ * provide a context implementation that records or dispatches events as needed.</p>
  */
 public interface ExecutionContext {
 
@@ -25,6 +30,12 @@ public interface ExecutionContext {
 	@NotNull
 	Map<String, Object> variables();
 
+	/**
+	 * Hook for receiving emitted events. Default implementation is a no-op;
+	 * callers can override to observe or handle events emitted by scripts.
+	 *
+	 * @param pEvent the event being emitted
+	 */
 	default void emit(@NotNull EmittedEvent pEvent) {
 		// No-op by default
 	}

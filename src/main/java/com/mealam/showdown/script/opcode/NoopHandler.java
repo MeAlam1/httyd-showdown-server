@@ -13,7 +13,10 @@ import com.mealam.showdown.script.runtime.ExecutionContext;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Does nothing - useful for placeholders or comments in scripts.
+ * No-operation handler for the NOOP opcode.
+ *
+ * <p>Useful as a placeholder, comment, or marker within scripts. Always returns
+ * an executed result with a simple diagnostic message.</p>
  */
 public final class NoopHandler implements OpcodeHandler {
 
