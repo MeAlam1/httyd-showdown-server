@@ -1,34 +1,20 @@
-/*
- * Copyright (C) 2024 BlueLib Contributors
- *
- * This Source Code Form is subject to the terms of the MIT License.
- * If a copy of the MIT License was not distributed with this file,
- * You can obtain one at https://opensource.org/licenses/MIT.
- */
 package com.mealam.showdown.script.runtime;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.random.RandomGenerator;
 
-/**
- * Simple in-memory execution context that captures emitted events.
- */
 public final class SimpleExecutionContext implements ExecutionContext {
 
-	@NotNull
-	private final RandomGenerator rng;
-	@NotNull
-	private final Map<String, Object> vars;
-	@NotNull
-	private final List<EmittedEvent> events = new ArrayList<>();
+	private final RandomGenerator rng = RandomGenerator.getDefault();
+	private final Map<String, Object> variables = new HashMap<>();
+	private final List<EmittedEvent> emitted = new ArrayList<>();
 
-	public SimpleExecutionContext(@NotNull RandomGenerator pRng, @NotNull Map<String, Object> pVariables) {
-		this.rng = pRng;
-		this.vars = Map.copyOf(pVariables);
+	public SimpleExecutionContext() {
 	}
 
 	@Override
@@ -38,20 +24,15 @@ public final class SimpleExecutionContext implements ExecutionContext {
 
 	@Override
 	public @NotNull Map<String, Object> variables() {
-		return vars;
+		return variables;
 	}
 
 	@Override
 	public void emit(@NotNull EmittedEvent pEvent) {
-		events.add(pEvent);
+		emitted.add(pEvent);
 	}
 
-	@NotNull
-	public List<EmittedEvent> events() {
-		return List.copyOf(events);
-	}
-
-	public void clearEvents() {
-		events.clear();
+	public List<EmittedEvent> emittedEvents() {
+		return List.copyOf(emitted);
 	}
 }
