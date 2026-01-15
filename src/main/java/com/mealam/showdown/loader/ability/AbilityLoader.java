@@ -15,9 +15,11 @@ import com.mealam.showdown.loader.json.CacheFactory;
 import com.mealam.showdown.loader.json.JsonLoader;
 import com.mealam.showdown.loader.json.deserialize.ability.*;
 import com.mealam.showdown.utils.json.SharedGsonBuilder;
+
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+
 import org.jetbrains.annotations.NotNull;
 
 public class AbilityLoader extends JsonLoader {
@@ -25,11 +27,8 @@ public class AbilityLoader extends JsonLoader {
 	@NotNull
 	private static final Gson ABILITY_GSON = SharedGsonBuilder.builder()
 			.registerTypeAdapter(Ability.class, Ability.deserializer())
-			.registerTypeAdapter(AbilityEffectsEntry.class, AbilityEffectsEntry.deserializer())
-			.registerTypeAdapter(AbilityEffectsEntryParameters.class, AbilityEffectsEntryParameters.deserializer())
-			.registerTypeAdapter(AbilityScaling.class, AbilityScaling.deserializer())
-			.registerTypeAdapter(AbilityConditions.class, AbilityConditions.deserializer())
-			.registerTypeAdapter(AbilityConditionsRequiresItemsEntry.class, AbilityConditionsRequiresItemsEntry.deserializer())
+			.registerTypeAdapter(AbilityEvent.class, AbilityEvent.deserializer())
+			.registerTypeAdapter(AbilityRequirements.class, AbilityRequirements.deserializer())
 			.create();
 
 	@NotNull

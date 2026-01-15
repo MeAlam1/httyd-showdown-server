@@ -7,6 +7,7 @@
  */
 package com.mealam.showdown.loader.json.deserialize.ability;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
@@ -14,6 +15,7 @@ import com.mealam.showdown.loader.json.deserialize.common.Metadata;
 import com.mealam.showdown.utils.json.GsonHelper;
 import com.mealam.showdown.utils.json.JsonUtils;
 import com.mealam.showdown.utils.json.deserialize.RecordJsonDeserializer;
+
 import java.util.List;
 
 public record Ability(
@@ -22,10 +24,8 @@ public record Ability(
 		String name,
 		String description,
 		String type,
-		String target,
-		List<AbilityEffectsEntry> effects,
-		AbilityScaling scaling,
-		AbilityConditions conditions,
+		AbilityRequirements requirements,
+		List<AbilityEvent> events,
 		Metadata metadata) {
 
 	public static JsonDeserializer<Ability> deserializer() {
@@ -37,15 +37,13 @@ public record Ability(
 		@Override
 		protected Ability deserializeObject(JsonObject pObj, JsonDeserializationContext pContext) {
 			return new Ability(
-					GsonHelper.getAsString(pObj, "schemaVersion"),
+					GsonHelper.getAsString(pObj, "version"),
 					GsonHelper.getAsString(pObj, "id"),
 					GsonHelper.getAsString(pObj, "name"),
 					GsonHelper.getAsString(pObj, "description"),
 					GsonHelper.getAsString(pObj, "type"),
-					GsonHelper.getAsString(pObj, "target"),
-					JsonUtils.jsonArrayToObjectList(GsonHelper.getAsJsonArray(pObj, "effects"), pContext, AbilityEffectsEntry.class),
-					GsonHelper.getAsObject(pObj, "scaling", pContext, AbilityScaling.class),
-					GsonHelper.getAsObject(pObj, "conditions", pContext, AbilityConditions.class),
+					GsonHelper.getAsObject(pObj, "requirements", pContext, AbilityRequirements.class),
+					JsonUtils.jsonArrayToObjectList(GsonHelper.getAsJsonArray(pObj, "events"), pContext, AbilityEvent.class),
 					GsonHelper.getAsObject(pObj, "metadata", pContext, Metadata.class));
 		}
 
