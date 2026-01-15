@@ -43,12 +43,13 @@ dependencies {
 
     implementation(libs.mysql)
 
+    testImplementation(platform(libs.junit.bom))
+
     testImplementation(libs.junit.api)
     testImplementation(libs.junit.params)
     testRuntimeOnly(libs.junit.engine)
 
     testImplementation(libs.javalin.testtools)
-
     testImplementation(libs.mockito.core)
 }
 
